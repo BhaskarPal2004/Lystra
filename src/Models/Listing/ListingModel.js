@@ -11,8 +11,9 @@ const listingSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    seller_id: {
+    sellerId: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
         required: true
     },
     isFeatured: {
@@ -36,7 +37,7 @@ const listingSchema = new mongoose.Schema({
     images: [{
         type: String,
     }],
-    address: [{type:mongoose.Schema.Types.ObjectId}]
+    address: [{type:mongoose.Schema.Types.ObjectId, ref: "addresses"}]
 }, baseOption);
 
 const Listing = mongoose.model("Listing", listingSchema);

@@ -1,5 +1,5 @@
-import Listing from "./Listing.js"
-
+import Listing from "./Listing.js";
+import mongoose from "mongoose";
 const SecondHand = Listing.discriminator('SecondHand',
     new mongoose.Schema({
         price: {

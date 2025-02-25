@@ -1,4 +1,4 @@
-import { Buyer } from "../src/Models/User.js";
+import { Buyer } from "../src/Models/UserModel.js";
 import { faker } from '@faker-js/faker';
 
 const createBuyer = async (n) => {
