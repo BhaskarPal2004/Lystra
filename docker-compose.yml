@@ -1,0 +1,16 @@
+services:
+  # MongoDB Service
+  mongo_db:
+    container_name: db_container
+    image: mongo:latest
+    ports:
+      - "4001:27017"
+    volumes:
+      - mongo_data:/data/db
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: lystra # Username
+      MONGO_INITDB_ROOT_PASSWORD: lystra # Password
+
+volumes:
+  mongo_data:
