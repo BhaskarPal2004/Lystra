@@ -1,22 +1,30 @@
 import mongoose from "mongoose";
 
-const addressSchema=new mongoose.Schema({
-    line1:{
-        type:String,
+const addressSchema = new mongoose.Schema({
+    line1: {
+        type: String,
         required: true
     },
-    line2:{
-        type:String
+    line2: {
+        type: String
     },
-    city:{
-        type:String,
+    state: {
+        type: String,
         required: true
     },
-    pinCode:{
-        type:Number,
+    city: {
+        type: String,
+        required: true
+    },
+    landMark: {
+        type: String,
+        required: false
+    },
+    pinCode: {
+        type: Number,
         required: true
     }
 })
 
-const Address = mongoose.model("Address",addressSchema);
+const Address = mongoose.model("Address", addressSchema);
 export default Address;
