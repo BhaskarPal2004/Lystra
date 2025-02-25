@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import Address from "../src/Models/Address.js";
+import Address from "../src/Models/AddressModel.js";
 
 const createAddress= async (n)=>{
     for(let i=0;i<n;i++){

@@ -1,6 +1,6 @@
-import Address from "../src/Models/Address.js";
-import Product from "../src/Models/Listing/Product.js";
-import { Seller } from "../src/Models/User.js";
+import Address from "../src/Models/AddressModel.js";
+import Product from "../src/Models/Listing/ProductModel.js";
+import { Seller } from "../src/Models/UserModel.js";
 import { faker } from '@faker-js/faker';
 
 const createProduct = async (n) => {

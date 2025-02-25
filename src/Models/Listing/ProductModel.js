@@ -1,4 +1,4 @@
-import Listing from "./Listing.js";
+import Listing from "./ListingModel.js";
 import mongoose from "mongoose";
 const Product = Listing.discriminator('Product',
     new mongoose.Schema({
