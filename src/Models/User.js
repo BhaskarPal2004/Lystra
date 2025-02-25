@@ -51,4 +51,4 @@ const Seller = User.discriminator('seller', new mongoose.Schema({
     }
 }));
 const Buyer = User.discriminator('Buyer', new mongoose.Schema());
-export { Seller, Buyer };
+export { Seller, Buyer, User };

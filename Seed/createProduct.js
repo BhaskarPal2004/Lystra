@@ -9,7 +9,7 @@ const createProduct = async (n) => {
     for (let i = 0; i < n; i++) {
         const product = new Product({
             name: faker.commerce.productName(),
-            seller_id: sellers[Math.floor(Math.random() * sellers.length)].id,
+            sellerId: sellers[Math.floor(Math.random() * sellers.length)].id,
             isFeatured: false,
             category: [faker.commerce.department(), faker.commerce.department()],
             description: faker.commerce.productDescription(),
