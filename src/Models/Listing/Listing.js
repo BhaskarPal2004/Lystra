@@ -11,7 +11,7 @@ const listingSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    seller_id: {
+    sellerId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
