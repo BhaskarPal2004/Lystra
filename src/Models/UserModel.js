@@ -1,9 +1,5 @@
 import mongoose from "mongoose";
-const baseOption = {
-    discriminatorKey: 'role',
-    collection: 'user'
 
-};
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -31,24 +27,14 @@ const userSchema = new mongoose.Schema({
     profilePicture: {
         type: String,
         default: null
+    },
+    role: {
+        type: String,
+        enum: ['buyer', 'seller'],
+        default: 'buyer'
     }
-}, baseOption)
+}, { timestamps: true });
+
 const User = mongoose.model("user", userSchema);
 
-
-const Seller = User.discriminator('seller', new mongoose.Schema({
-    registrationNumber: {
-        type: String,
-        required: true
-    },
-    rating: {
-        type: Number,
-        default: 0
-    },
-    ratingCount: {
-        type: Number,
-        default: 0
-    }
-}));
-const Buyer = User.discriminator('Buyer', new mongoose.Schema());
-export { Seller, Buyer, User };
+export default User;
