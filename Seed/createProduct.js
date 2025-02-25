@@ -1,10 +1,10 @@
 import Address from "../src/Models/AddressModel.js";
 import Product from "../src/Models/Listing/ProductModel.js";
-import { Seller } from "../src/Models/UserModel.js";
+import User from "../src/Models/UserModel.js";
 import { faker } from '@faker-js/faker';
 
 const createProduct = async (n) => {
-    const sellers = await Seller.find({});
+    const sellers = await User.find({});
     const address = await Address.find({});
     for (let i = 0; i < n; i++) {
         const product = new Product({
