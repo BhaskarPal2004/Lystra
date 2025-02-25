@@ -1,5 +1,5 @@
-import Listing from "./Listing.js";
-
+import Listing from "./ListingModel.js";
+import mongoose from "mongoose";
 const Service = Listing.discriminator('Service',
     new mongoose.Schema({
         rate: {//per hr or per day
