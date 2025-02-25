@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 const baseOption = {
-    discriminatorKey: 'type',
+    discriminatorKey: 'role',
     collection: 'user'
 
 };
@@ -33,10 +33,10 @@ const userSchema = new mongoose.Schema({
         default: null
     }
 }, baseOption)
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("user", userSchema);
 
 
-const Seller = User.discriminator('Seller', new mongoose.Schema({
+const Seller = User.discriminator('seller', new mongoose.Schema({
     registrationNumber: {
         type: String,
         required: true
