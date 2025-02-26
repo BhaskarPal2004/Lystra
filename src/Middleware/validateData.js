@@ -8,7 +8,8 @@ export function validateData(schema) {
     } catch (error) {
       if (error instanceof ZodError) {
         const errorMessages = error.errors.map((issue) => ({
-          message: `${issue.path.join('.')} => ${issue.message}`,
+          // message: `${issue.path.join('.')} => ${issue.message}`,
+          message:issue
 
         }));
         res.status(400).json({ error: 'Invalid data', details: errorMessages });

@@ -1,5 +1,6 @@
 import express from 'express'
-import testRoute from './src/Routes/testRoute.js'
+import testRoute from './src/Routes/testRoute'
+
 
 
 const app = express()
@@ -12,6 +13,7 @@ app.get('/', (req, res) => {
 app.use(express.json())
 
 app.use("/TEST",testRoute)
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
