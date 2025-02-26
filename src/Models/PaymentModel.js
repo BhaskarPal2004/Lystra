@@ -17,5 +17,5 @@ const paymentSchema = new mongoose.Schema({
     }
 })
 
-const Payment = mongoose.model("Order", paymentSchema);
+const Payment = mongoose.model("payment", paymentSchema);
 export default Payment;
