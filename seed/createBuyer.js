@@ -1,5 +1,5 @@
-import Buyer from "../src/Models/buyerModel.js";
 import bcrypt from "bcryptjs";
+import Buyer from "../src/models/buyerModel.js";
 const createBuyer = async n => {
     for(let i=0;i<n;i++){
         const buyer= new Buyer({

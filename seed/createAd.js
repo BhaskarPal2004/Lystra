@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
-import Ad from "../src/Models/adModel.js";
-import Seller from "../src/Models/sellerModel.js";
+import Seller from "../src/models/sellerModel.js";
 import Address from "../src/models/addressModel.js";
+import Ad from "../src/models/adModel.js";
 const createAd = async n => {
     const seller=await Seller.find({});
     const address=await Address.find({});

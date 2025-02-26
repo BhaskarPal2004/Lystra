@@ -1,4 +1,4 @@
-import Seller from "../src/Models/sellerModel.js";
+import Seller from "../src/models/sellerModel.js";
 import Address from "../src/models/addressModel.js";
 import bcrypt from "bcryptjs";
 import { faker } from "@faker-js/faker";
