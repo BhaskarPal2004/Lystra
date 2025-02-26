@@ -21,10 +21,16 @@ const sellerSchema = new mongoose.Schema({
         default: false
     },
     phoneNumber: {
-        type: Number,
+        type: String,
+        default: null
     },
     profilePicture: {
         type: String,
+        default: null
+    },
+    address: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'address',
         default: null
     },
     ads: [{
@@ -37,14 +43,18 @@ const sellerSchema = new mongoose.Schema({
     }],
     payments: [{
         type: mongoose.Schema.ObjectId,
-        ref: 'order'
+        ref: 'payments'
     }],
     reviews: [{
         type: mongoose.Schema.ObjectId,
         ref: 'review'
-    }]
+    }],
+    averageReviews: {
+        type: Number,
+        default: null
+    }
+
 }, { timestamps: true });
 
 const Seller = mongoose.model("seller", sellerSchema);
-
 export default Seller;

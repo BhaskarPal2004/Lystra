@@ -21,15 +21,31 @@ const buyerSchema = new mongoose.Schema({
         default: false
     },
     phoneNumber: {
-        type: Number,
-        required: true
+        type: String,
+        default: null
     },
     profilePicture: {
         type: String,
         default: null
     },
+    address: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'address',
+        default: null
+    },
+    interests: [{
+        type: String
+    }],
+    savedAds: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'ad'
+    }],
+    blockedBy: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'seller'
+    }]
+
 }, { timestamps: true });
 
 const Buyer = mongoose.model("buyer", buyerSchema);
-
 export default Buyer;
