@@ -1,4 +1,4 @@
-import { z, ZodError } from 'zod';
+import { z } from 'zod';
 const VALUES = ['created', 'confirmed', 'shipped', 'cancelled', 'delivered', 'failure']
 
 export const orderSchema = z.object({
