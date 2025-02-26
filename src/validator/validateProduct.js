@@ -9,6 +9,6 @@ export const productSchemaValidation = z.object({
     address:z.string().trim().min(10,"Address should have minimum 3 characters"),
     costPrice: z.number().min(1,"Costprice must have one number"),
     markedPrice: z.number().min(1,"Markedpricde must have one number"),
-    discount: z.number(),
+    discount: z.optional(z.number().min(1,"discount must have 1 number")),
     count: z.number()
 }).strict();
