@@ -9,11 +9,11 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "user"
     },
-    fromAddress: {
+    billingAddress: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Address'
     },
-    toAddress: {
+    shippingAddress: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Address'
     },

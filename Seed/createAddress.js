@@ -8,6 +8,7 @@ const createAddress= async (n)=>{
             line2: faker.location.country(),
             state: faker.location.state(),
             city: faker.location.city(),
+            country: faker.location.country(),
             landMark: faker.location.county(),
             pinCode: Math.floor(Math.random()*999999),
         })
