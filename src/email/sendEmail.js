@@ -2,12 +2,12 @@ import nodemailer from 'nodemailer'
 import hbs from "nodemailer-express-handlebars";
 import 'dotenv/config'
 
-const sendEmail = (emailID, token) => {
+const sendEmail = async (emailID, token) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: "hadi@itobuz.com",
-            pass: process.env.EMAIL_PASSWORD
+            user: process.env.MY_MAIL,
+            pass: process.env.MY_MAIL_PASSWORD
         }
     });
     transporter.use('compile', hbs({
@@ -27,13 +27,13 @@ const sendEmail = (emailID, token) => {
         subject: `Email Verification: ${emailID}`,
         template: 'emailTemplate',
         context: {
-            baseUrl: process.env.FRONT_END_URL,
-            registerToken: `${token}`
+            port: process.env.PORT,
+            token: `${token}`
         }
     };
 
     transporter.sendMail(mailConfigurations, function (error) {
-        if (error) throw Error(error);
+        if (error) throw Error(error.message);
         console.log('Email Sent Successfully');
     });
 }
