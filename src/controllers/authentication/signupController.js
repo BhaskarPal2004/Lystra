@@ -2,9 +2,9 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 import { BAD_REQUEST_CODE, CREATED_CODE, INTERNAL_SERVER_ERROR_CODE } from "../../config/constant.js"
-import Buyer from '../../Models/buyerModel.js'
 import sendEmail from '../../email/sendEmail.js'
-import Seller from '../../Models/sellerModel.js'
+import Buyer from '../../models/buyerModel.js'
+import Seller from '../../models/sellerModel.js'
 
 
 export const signup = async (req, res) => {

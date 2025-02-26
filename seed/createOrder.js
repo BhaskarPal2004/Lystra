@@ -1,9 +1,12 @@
+import { faker } from "@faker-js/faker";
+
 import Ad from "../src/models/adModel.js";
 import Buyer from "../src/models/buyerModel.js";
-import { faker } from "@faker-js/faker";
 import Order from "../src/models/OrderModel.js";
 import Payment from "../src/models/paymentModel.js";
 import Address from "../src/models/addressModel.js";
+
+
 const createPayment = async (ad) => {
     const paymentType = ['cod', 'upi', 'card'];
     const status = ['pending', 'paid', 'cancelled', 'refunded'];
@@ -15,19 +18,21 @@ const createPayment = async (ad) => {
     })
     await payment.save();
 }
+
 const createAddress = async () => {
-    const location=faker.location;
+    const location = faker.location;
     const address = new Address({
         line1: `${location.buildingNumber()}, ${location.street()}`,
         line2: location.streetAddress(),
         state: location.state(),
         city: location.city(),
         country: location.country(),
-        pinCode:Math.floor(Math.random()*999999)
+        pinCode: Math.floor(Math.random() * 999999)
     })
     await address.save();
     return address._id;
 }
+
 const createOrder = async n => {
     const buyers = await Buyer.find({});
     const ads = await Ad.find({});
@@ -46,4 +51,5 @@ const createOrder = async n => {
         await order.save();
     }
 }
+
 export default createOrder;

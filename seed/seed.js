@@ -1,5 +1,6 @@
-import mongoose from "mongoose";
 import "dotenv/config";
+import mongoose from "mongoose";
+
 import Buyer from "../src/models/buyerModel.js";
 import Seller from "../src/models/sellerModel.js";
 import Order from "../src/models/OrderModel.js";
@@ -12,6 +13,8 @@ import Address from "../src/models/addressModel.js";
 import Payment from "../src/models/paymentModel.js";
 import Review from "../src/models/reviewModel.js";
 import createReview from "./createReview.js";
+
+
 const main = async () => {
         await mongoose.connect(process.env.MONGO_URI);
         await Address.deleteMany({});
@@ -21,7 +24,7 @@ const main = async () => {
         await Ad.deleteMany({});
         await Order.deleteMany({});
         await Review.deleteMany({});
-        
+
         await createBuyer(5);
         await createSeller(5);
         await createAd(10);
