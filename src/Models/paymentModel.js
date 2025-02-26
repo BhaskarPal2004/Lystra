@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const paymentSchema = new mongoose.Schema({
+    adId: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'ad'
+    },
     amount: {
         type: Number,
         required: true
@@ -12,10 +16,11 @@ const paymentSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'paid', 'cancelled'],
+        enum: ['pending', 'paid', 'cancelled', 'refunded'],
         default: 'pending'
     }
-})
+
+}, { timestamps: true })
 
 const Payment = mongoose.model("payment", paymentSchema);
 export default Payment;

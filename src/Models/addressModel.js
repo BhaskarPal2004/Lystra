@@ -6,7 +6,8 @@ const addressSchema = new mongoose.Schema({
         required: true
     },
     line2: {
-        type: String
+        type: String,
+        default: null
     },
     state: {
         type: String,
@@ -28,7 +29,8 @@ const addressSchema = new mongoose.Schema({
         type: Number,
         required: true
     }
-})
+
+}, { timestamps: true })
 
 const Address = mongoose.model("address", addressSchema);
 export default Address;

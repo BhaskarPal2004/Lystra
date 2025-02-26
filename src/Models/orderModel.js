@@ -3,19 +3,23 @@ import mongoose from "mongoose";
 const orderSchema = new mongoose.Schema({
     adId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "ad"
+        ref: "ad",
+        required: true
     },
     buyerId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "buyer"
+        ref: "buyer",
+        required: true
     },
     billingAddress: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'address'
+        ref: 'address',
+        required: true
     },
     shippingAddress: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'address'
+        ref: 'address',
+        required: true
     },
     status: {
         type: String,
@@ -24,7 +28,7 @@ const orderSchema = new mongoose.Schema({
     },
     paymentId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:'payment'
+        ref: 'payment'
     }
 })
 
