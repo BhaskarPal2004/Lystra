@@ -10,3 +10,7 @@
 
 // const response = validateData(paymentSchema)
 // console.log(response)
+
+import { testSchema } from "../validator/validateAd.js";
+
+testSchema.parse({performance:{}})

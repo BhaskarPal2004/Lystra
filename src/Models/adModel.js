@@ -20,11 +20,11 @@ const adSchema = new mongoose.Schema({
         enum: ['service', 'product', 'secondHandProduct', 'others'],
         required: true
     },
-    category: [{
+    category: {
         type: String,
         enum: ['electronics', 'vehicles', 'real estate', 'home and furniture', 'jobs and services', 'fashion and beauty'],
         required: true
-    }],
+    },
     subCategory: {
         type: String,
         default: null
@@ -33,10 +33,10 @@ const adSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    details: [{
+    details: {
         type: Object,
         required: true
-    }],
+    },
     images: [{
         type: String,
         default: null
