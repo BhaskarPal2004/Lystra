@@ -24,9 +24,9 @@ const orderSchema = new mongoose.Schema({
     },
     paymentId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Payment'
+        ref:'payment'
     }
 })
 
-const Order = mongoose.model("Order", orderSchema);
+const Order = mongoose.model("order", orderSchema);
 export default Order;

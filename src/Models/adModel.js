@@ -39,12 +39,13 @@ const adSchema = new mongoose.Schema({
     }],
     images: [{
         type: String,
+        default:null
     }],
     price: {
         type: Number,
         required: true
     },
-    address: [{ type: mongoose.Schema.Types.ObjectId, ref: "addresses" }],
+    address: { type: mongoose.Schema.Types.ObjectId, ref: "addresses" },
     performance: {
         views: {
             type: Number,
