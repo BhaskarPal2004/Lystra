@@ -7,7 +7,7 @@ const adSchema = new mongoose.Schema({
     },
     sellerId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
+        ref: 'seller',
         required: true
     },
     isFeatured: {
@@ -22,10 +22,10 @@ const adSchema = new mongoose.Schema({
     },
     category: [{
         type: String,
-        enum:['electronics','vehicles','real estate', 'home and furniture', 'jobs and services', 'fashion and beauty'],
+        enum: ['electronics', 'vehicles', 'real estate', 'home and furniture', 'jobs and services', 'fashion and beauty'],
         required: true
     }],
-    subCategory:{
+    subCategory: {
         type: String,
         default: null
     },
@@ -39,13 +39,17 @@ const adSchema = new mongoose.Schema({
     }],
     images: [{
         type: String,
-        default:null
+        default: null
     }],
     price: {
         type: Number,
         required: true
     },
-    address: { type: mongoose.Schema.Types.ObjectId, ref: "addresses" },
+    address: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "address",
+        default: null
+    },
     performance: {
         views: {
             type: Number,
@@ -59,5 +63,4 @@ const adSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const Ad = mongoose.model("Ad", adSchema);
-
 export default Ad;
