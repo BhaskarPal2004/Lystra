@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
+const sellerSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -22,19 +22,21 @@ const userSchema = new mongoose.Schema({
     },
     phoneNumber: {
         type: Number,
-        required: true
     },
     profilePicture: {
         type: String,
         default: null
     },
-    role: {
-        type: String,
-        enum: ['buyer', 'seller'],
-        default: 'buyer'
-    }
+    ads: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'ad'
+    }],
+    reviews: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'review'
+    }]
 }, { timestamps: true });
 
-const User = mongoose.model("user", userSchema);
+const Seller = mongoose.model("seller", sellerSchema);
 
-export default User;
+export default Seller;

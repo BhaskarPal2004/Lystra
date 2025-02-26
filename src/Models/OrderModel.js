@@ -1,21 +1,21 @@
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
-    listingId: {
+    adId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Listing"
+        ref: "ad"
     },
     buyerId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user"
+        ref: "buyer"
     },
     billingAddress: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Address'
+        ref: 'address'
     },
     shippingAddress: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Address'
+        ref: 'address'
     },
     status: {
         type: String,
