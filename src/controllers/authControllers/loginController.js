@@ -18,7 +18,7 @@ export const login = async (req, res) => {
             ]
         }, { email: 1, password: 1, isVerified: 1 }).exec()
 
-        console.log(buyer)
+        // console.log(buyer)
         const seller = await Seller.findOne({
             $or: [
                 { email: email },
@@ -57,6 +57,8 @@ export const login = async (req, res) => {
         }
         else if (seller) {
             const compareSellerPassword = bcrypt.compareSync(password, seller.password)
+            console.log(password);
+            console.log(compareSellerPassword);
 
             if (!compareSellerPassword) {
                 return res.status(BAD_REQUEST_CODE).json({
