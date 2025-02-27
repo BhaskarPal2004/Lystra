@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken"
-
 //function to verify token and add userId to req
 const verifyToken = (req, res, next, token, type) => {//this isn't a middleware
     jwt.verify(token, process.env.SECRET_KEY, function (err, decoded) {
@@ -11,7 +10,8 @@ const verifyToken = (req, res, next, token, type) => {//this isn't a middleware
         }
         else {
             if (decoded.type === type) {
-                req.body.userId = decoded.id;//
+                req.body.userId = decoded.id;
+                req.body.role = decoded.role;
                 next();
             } else {
                 res.send({
