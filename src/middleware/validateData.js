@@ -1,11 +1,8 @@
-import { ZodError } from "zod";
+import { ZodError } from 'zod';
 
 export function validateData(schema) {
-  
   return (req, res, next) => {
     try {
-      console.log(req.body);
-      
       schema.parse(req.body);
       next();
     } catch (error) {
@@ -21,3 +18,4 @@ export function validateData(schema) {
     }
   };
 }
+
