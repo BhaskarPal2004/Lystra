@@ -5,7 +5,7 @@ const verifyToken = (req, res, next, token, type) => {//this isn't a middleware
         if (err) {
             console.log('err :>> ', err);
             res.status(401).send({
-                message: "Token verification failed, possibly the link is invalid or expired",
+                message: err.message,
                 success: false
             });
         }

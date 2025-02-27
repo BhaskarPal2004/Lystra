@@ -3,8 +3,12 @@ import Buyer from "../models/buyerModel.js";
 import { UNAUTHORIZED_CODE } from "../config/constant.js";
 const isVerified = async (req, res, next) => {
     const userId = req.body.userId;
+    console.log(req.body.userId);
+    console.log(req.body.role);
     const User = (req.body.role === 'buyer') ? Buyer : Seller;
     const user = await User.findById(userId);
+    console.log(user);
+    
     if(user.isVerified) next();
     else{
         res.status(UNAUTHORIZED_CODE).send({
