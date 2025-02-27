@@ -11,6 +11,6 @@
 // const response = validateData(paymentSchema)
 // console.log(response)
 
-import { testSchema } from "../validator/validateAd.js";
+import { adSchema } from "../validator/validateAd.js";
 
-testSchema.parse({performance:{}})
+// adSchema.parse({name:"ssr",listingType:})
