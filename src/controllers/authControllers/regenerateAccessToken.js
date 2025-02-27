@@ -1,7 +1,7 @@
 import generateToken from "../../helper/generateToken.js";
-import { UNAUTHORIZED_CODE,SUCCESS_CODE,INTERNAL_SERVER_ERROR_CODE } from "../../config/constant.js";
+import { SUCCESS_CODE,INTERNAL_SERVER_ERROR_CODE } from "../../config/constant.js";
 //validity of refresh token was checked in middleware
-const generateAccessToken = (req, res) => {
+const regenerateAccessToken = (req, res) => {
     try {
         res.status(SUCCESS_CODE).send({
             success: true,
@@ -16,4 +16,4 @@ const generateAccessToken = (req, res) => {
         })
     }
 }
-export default generateAccessToken;
+export default regenerateAccessToken;
