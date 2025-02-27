@@ -8,21 +8,14 @@ export function validateData(schema) {
     } catch (error) {
       if (error instanceof ZodError) {
         const errorMessages = error.errors.map((issue) => ({
-          // message: `${issue.path.join('.')} => ${issue.message}`,
-          message:issue
+          message: `${issue.path.join('.')} is ${issue.message}`,
 
         }));
-        res.status(400).json({ error: 'Invalid data', details: errorMessages });
-      } else {//
-        res.status(500).json({
-          message: error.message,
-          success: false,
-        });
+        res.status(400).json({ error: "Invalid data", details: error });
+      } else {
+        res.status(500).json({ error: "Internal Server Error" });
       }
     }
   };
 }
-
-
-
 
