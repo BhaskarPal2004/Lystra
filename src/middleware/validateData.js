@@ -13,6 +13,7 @@ export function validateData(schema) {
         }));
         res.status(400).json({ error: "Invalid data", details: error });
       } else {
+        console.log(error)
         res.status(500).json({ error: "Internal Server Error" });
       }
     }

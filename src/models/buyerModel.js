@@ -22,6 +22,7 @@ const buyerSchema = new mongoose.Schema({
     },
     phoneNumber: {
         type: String,
+        unique: true,
         default: null
     },
     profilePicture: {
