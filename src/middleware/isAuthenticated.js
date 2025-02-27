@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken"
 const verifyToken = (req, res, next, token, type) => {//this isn't a middleware
     jwt.verify(token, process.env.SECRET_KEY, function (err, decoded) {
         if (err) {
+            console.log('err :>> ', err);
             res.status(401).send({
                 message: "Token verification failed, possibly the link is invalid or expired",
                 success: false
@@ -34,8 +35,8 @@ const extractToken = (req) => { //function to extract token from header
 }
 
 const verifyRegistrationToken = (req, res, next) => {
-    const { token } = req.params;
-    verifyToken(req, res, next, token, 'registrationToken');
+    const { registrationToken } = req.params;
+    verifyToken(req, res, next, registrationToken, 'registrationToken');
 }
 
 const verifyAccessToken = (req, res, next) => {
