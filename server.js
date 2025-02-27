@@ -1,6 +1,6 @@
 import express from 'express'
+import testRoute from './src/Routes/testRoute'
 import env from 'dotenv'
-
 import { dbConnect } from './src/config/dbConnect.js'
 import authRoute from './src/routes/authRoutes.js'
 
@@ -14,6 +14,11 @@ const port = process.env.PORT || 5000
 app.use('/api/auth', authRoute)
 
 dbConnect()
+
+app.use(express.json())
+
+app.use("/TEST",testRoute)
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

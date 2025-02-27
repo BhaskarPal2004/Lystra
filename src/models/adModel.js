@@ -35,7 +35,7 @@ const adSchema = new mongoose.Schema({
     },
     details: {
         type: Object,
-        required: true
+        required: true 
     },
     images: [{
         type: String,
