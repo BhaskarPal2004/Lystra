@@ -1,11 +1,7 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv'
 
-
 dotenv.config()
-
-
-
 
 function generateToken(type, id, time, role) {
     const payload = { type, id, role };
@@ -15,7 +11,3 @@ function generateToken(type, id, time, role) {
 }
 export default generateToken;
 
-
-
-const token = generateToken( "accessToken", "67c01726d044c9a91c53a1f7", "30d")
-console.log(token)

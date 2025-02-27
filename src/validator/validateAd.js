@@ -20,7 +20,8 @@ export const adSchema = z.object({
   images:z.optional(z.array(z.string().trim().min(3)).nonempty()),
   price:z.number(),
   performance:z.optional(performanceSchema),
-  userId:z.string()
+  userId:z.string(),
+  role:z.string()
 }).strict()
 
 

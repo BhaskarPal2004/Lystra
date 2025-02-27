@@ -10,7 +10,7 @@ export const createNewAd = async(req,res) => {
 
         res.status(SUCCESS_CODE).json({
             success:true,
-            message: "new Ad created",
+            message: "New Ad created",
             data: newAd
         })
 
