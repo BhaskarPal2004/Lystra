@@ -1,10 +1,10 @@
 services:
   # MongoDB Service
   mongo_db:
-    container_name: db_container
+    container_name: lystra_container
     image: mongo:latest
     ports:
-      - "4001:27017"
+      - "4002:27017"
     volumes:
       - mongo_data:/data/db
 
