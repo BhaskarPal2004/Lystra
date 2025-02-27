@@ -1,0 +1,19 @@
+import generateToken from "../../helper/generateToken.js";
+import { UNAUTHORIZED_CODE,SUCCESS_CODE,INTERNAL_SERVER_ERROR_CODE } from "../../config/constant.js";
+//validity of refresh token was checked in middleware
+const generateAccessToken = (req, res) => {
+    try {
+        res.status(SUCCESS_CODE).send({
+            success: true,
+            message: "access token generated successfully",
+            accessToken: generateToken('accessToken', req.body.userId, '30m'),
+        })
+    } catch (err) {
+        console.log('err :>> ', err);
+        res.status(INTERNAL_SERVER_ERROR_CODE).send({
+            success: false,
+            message: "can't create access token",
+        })
+    }
+}
+export default generateAccessToken;
