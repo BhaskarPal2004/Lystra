@@ -2,6 +2,10 @@ import express from 'express'
 import env from 'dotenv'
 import { dbConnect } from './src/config/dbConnect.js'
 import authRoute from './src/routes/authRoutes.js'
+import userRoute from './src/routes/userRoutes.js'
+import buyerRoute from './src/routes/buyerRoutes.js'
+import sellerRoute from './src/routes/sellerRoute.js'
+import adRoute from './src/routes/adRoutes.js'
 
 env.config({})
 
@@ -11,6 +15,10 @@ app.use(express.json())
 const port = process.env.PORT || 5000
 
 app.use('/api/auth', authRoute)
+app.use('/api/user', userRoute)
+app.use('/api/buyer', buyerRoute)
+app.use('/api/seller', sellerRoute)
+app.use('/api/ad', adRoute)
 
 dbConnect()
 
