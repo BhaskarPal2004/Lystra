@@ -1,0 +1,2 @@
+all common controllers for both seller and buyer will be created in this folder.
+every function/controller will have different file for modularity
