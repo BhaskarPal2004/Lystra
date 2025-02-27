@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import { BAD_REQUEST_CODE, CREATED_CODE, INTERNAL_SERVER_ERROR_CODE } from "../../config/constant.js"
 import sendEmail from '../../email/sendEmail.js'
 import Buyer from '../../models/buyerModel.js'
-import Seller from '../../models/sellerModel.js'
+import Seller from '../../Models/sellerModel.js'
 
 
 export const signup = async (req, res) => {
@@ -20,13 +20,23 @@ export const signup = async (req, res) => {
       })
     }
 
-    const oldBuyer = await Buyer.findOne({ email: email })
-    const oldSeller = await Seller.findOne({ email: email })
+    const oldBuyer = await Buyer.findOne({
+      $or: [
+        { email: email },
+        { phoneNumber: phoneNumber }
+      ]
+    })
+    const oldSeller = await Seller.findOne({
+      $or: [
+        { email: email },
+        { phoneNumber: phoneNumber }
+      ]
+    })
 
     if (oldBuyer || oldSeller) {
       return res.status(BAD_REQUEST_CODE).json({
         success: false,
-        message: "Email id is already exists. Try another"
+        message: "Email id or phone number is already exists. Try another"
       })
     }
 
