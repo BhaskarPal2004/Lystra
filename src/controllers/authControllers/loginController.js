@@ -50,8 +50,8 @@ export const login = async (req, res) => {
                 })
             }
 
-            accessToken = generateToken('accessToken', buyer._id, '1h')
-            refreshToken = generateToken('refreshToken', buyer._id, '1d')
+            accessToken = generateToken('accessToken', buyer._id, '1h',"buyer")
+            refreshToken = generateToken('refreshToken', buyer._id, '1d',"buyer")
 
             await sessionsModel.create({ userId: seller._id })
         }
@@ -72,8 +72,8 @@ export const login = async (req, res) => {
                 })
             }
 
-            accessToken = generateToken('accessToken', seller._id, '1h')
-            refreshToken = generateToken('refreshToken', seller._id, '1d')
+            accessToken = generateToken('accessToken', seller._id, '1h',"seller")
+            refreshToken = generateToken('refreshToken', seller._id, '1d',"seller")
 
             await sessionsModel.create({ userId: seller._id })
         }

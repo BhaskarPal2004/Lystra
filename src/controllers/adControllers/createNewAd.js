@@ -1,4 +1,4 @@
-import Ad from "../../Models/adModel.js"
+import Ad from "../../models/adModel.js"
 import {SUCCESS_CODE,NOT_FOUND_CODE} from "../../config/constant.js"
 
 export const createNewAd = async(req,res) => {
