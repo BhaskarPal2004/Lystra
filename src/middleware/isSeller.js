@@ -1,5 +1,6 @@
-import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, UNAUTHORIZED_CODE } from "../config/constant";
-import Seller from "../models/sellerModel";
+import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, UNAUTHORIZED_CODE } from "../config/constant.js"
+import Seller from "../models/sellerModel.js";
+
 
 export const isSeller = async (req, res, next) => {
   try {
