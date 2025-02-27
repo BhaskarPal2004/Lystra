@@ -4,7 +4,7 @@ import { UNAUTHORIZED_CODE } from "../config/constant.js";
 const isVerified = async (req, res, next) => {
     const userId = req.body.userId;
     const User = (req.body.role === 'buyer') ? Buyer : Seller;
-    const user = User.findById(userId);
+    const user = await User.findById(userId);
     if(user.isVerified) next();
     else{
         res.status(UNAUTHORIZED_CODE).send({
