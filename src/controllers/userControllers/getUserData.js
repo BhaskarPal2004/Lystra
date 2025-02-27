@@ -1,47 +1,43 @@
-import Buyer from "../../models/buyerModel";
-import Seller from "../../models/sellerModel";
-// import isVerified from "../../middleware/isVerified";
-// import { verifyAccessToken } from "../../middleware/isAuthenticated";
+import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
+import Buyer from "../../models/buyerModel.js";
+import Seller from "../../models/sellerModel.js";
 
 export const findUserData = async (req, res) => {
-    try{
-        const { userId,role } = req.body;
-        if(role === user){
-            findUser =await Buyer.findOne({_id :userId});
-            if(findUser){
-                res.json({
-                    status: 200,
-                    message: "find successfully",
-                    findUser
-                });
-            }
-            else{
-                res.json({
-                    status: 404,
-                    message: "user not found",
-                });
-            }
-        }
-        else {
-            findUser =await Seller.findOne({_id :userId});
-            if(findUser){
-                res.json({
-                    status: 200,
-                    message: "find successfully",
-                    findUser
-                });
-            }
-            else{
-                res.json({
-                    status: 404,
-                    message: "user not found",
-                });
-            }
-        }
-    }catch(err){
-        res.json({
-            status: 500,
-            message: "can not get data",
+  try {
+    const { userId, role } = req.body;
+    if (role === "buyer") {
+      const findUser = await Buyer.findOne({ _id: userId });
+      if (findUser) {
+        return res.status(SUCCESS_CODE).json({
+          success: true,
+          message: "find successfully",
+          data: findUser,
         });
+      } else {
+        return res.status(NOT_FOUND_CODE).json({
+          success: false,
+          message: "user not found",
+        });
+      }
+    } else if (role === "seller") {
+      const findUser = await Seller.findOne({ _id: userId });
+      if (findUser) {
+        return res.status(SUCCESS_CODE).json({
+          success: true,
+          message: "find successfully",
+          data: findUser,
+        });
+      } else {
+        return res.status(NOT_FOUND_CODE).json({
+          success: false,
+          message: "user not found",
+        });
+      }
     }
+  } catch (err) {
+    return res.status(INTERNAL_SERVER_ERROR_CODE).json({
+        success: false,
+        message: "user not found",
+      });
+  }
 };

@@ -1,7 +1,7 @@
 import express from 'express'
-import isVerified from '../middleware/isVerified';
-import { verifyAccessToken } from '../middleware/isAuthenticated';
-import { findUserData } from '../controllers/userControllers/getUserData';
+import isVerified from '../middleware/isVerified.js';
+import { verifyAccessToken } from '../middleware/isAuthenticated.js';
+import { findUserData } from '../controllers/userControllers/getUserData.js';
 
 const userRoute = express.Router()
 

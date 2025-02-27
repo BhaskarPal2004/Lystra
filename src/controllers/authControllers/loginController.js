@@ -18,7 +18,6 @@ export const login = async (req, res) => {
             ]
         }, { email: 1, password: 1, isVerified: 1 }).exec()
 
-        console.log(buyer)
         const seller = await Seller.findOne({
             $or: [
                 { email: email },
@@ -50,10 +49,10 @@ export const login = async (req, res) => {
                 })
             }
 
-            accessToken = generateToken('accessToken', buyer._id, '1h')
-            refreshToken = generateToken('refreshToken', buyer._id, '1d')
+            accessToken = generateToken('accessToken', buyer._id, '1h','buyer')
+            refreshToken = generateToken('refreshToken', buyer._id, '1d','buyer')
 
-            await sessionsModel.create({ userId: seller._id })
+            await sessionsModel.create({ userId: buyer._id })
         }
         else if (seller) {
             const compareSellerPassword = bcrypt.compareSync(password, seller.password)
@@ -72,8 +71,8 @@ export const login = async (req, res) => {
                 })
             }
 
-            accessToken = generateToken('accessToken', seller._id, '1h')
-            refreshToken = generateToken('refreshToken', seller._id, '1d')
+            accessToken = generateToken('accessToken', seller._id, '1h','seller')
+            refreshToken = generateToken('refreshToken', seller._id, '1d','seller')
 
             await sessionsModel.create({ userId: seller._id })
         }
