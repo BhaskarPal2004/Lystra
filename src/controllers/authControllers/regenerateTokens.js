@@ -1,12 +1,13 @@
 import generateToken from "../../helper/generateToken.js";
 import { SUCCESS_CODE,INTERNAL_SERVER_ERROR_CODE } from "../../config/constant.js";
 //validity of refresh token was checked in middleware
-const regenerateAccessToken = (req, res) => {
+const regenerateTokens = (req, res) => {
     try {
         res.status(SUCCESS_CODE).send({
             success: true,
             message: "access token generated successfully",
-            accessToken: generateToken('accessToken', req.body.userId, '30m'),
+            accessToken: generateToken('accessToken', req.body.userId, '1h'),
+            refreshToken: generateToken('refreshToken',req.body.userId, '1d')
         })
     } catch (err) {
         console.log('err :>> ', err);
@@ -16,4 +17,4 @@ const regenerateAccessToken = (req, res) => {
         })
     }
 }
-export default regenerateAccessToken;
+export default regenerateTokens;

@@ -1,10 +1,10 @@
 import express from 'express'
-import { signup } from '../controllers/authentication/signupController.js'
-import regenerateAccessToken from '../controllers/authControllers/regenerateAccessToken.js'
+import regenerateTokens from '../controllers/authControllers/regenerateTokens.js'
 import { verifyRefreshToken } from '../middleware/isAuthenticated.js'
+import { signup } from '../controllers/authControllers/signupController.js'
 const authRoute = express.Router()
 
 //all api's for authentications
 authRoute.post('/signup/:role', signup)
-authRoute.get('/accessToken',verifyRefreshToken ,regenerateAccessToken);
+authRoute.get('/accessToken',verifyRefreshToken ,regenerateTokens);
 export default authRoute
