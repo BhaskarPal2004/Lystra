@@ -3,12 +3,12 @@ import generateToken from "../../helper/generateToken.js"
 import Buyer from "../../models/buyerModel.js"
 import bcrypt from "bcryptjs"
 import sessionsModel from "../../models/sessionModel.js"
-import Seller from "../../Models/sellerModel.js"
+import Seller from "../../models/sellerModel.js"
 
 export const login = async (req, res) => {
     try {
         const { email, phoneNumber, password } = req.body
-        let accessToke = null
+        let accessToken = null
         let refreshToken = null
 
         const buyer = await Buyer.findOne({
@@ -16,7 +16,7 @@ export const login = async (req, res) => {
                 { email: email },
                 { phoneNumber: phoneNumber }
             ]
-        })
+        }, { email: 1, password: 1, isVerified: 1 }).exec()
 
         console.log(buyer)
         const seller = await Seller.findOne({
@@ -24,10 +24,9 @@ export const login = async (req, res) => {
                 { email: email },
                 { phoneNumber: phoneNumber }
             ]
-        })
-        console.log(seller)
+        }, { email: 1, password: 1, isVerified: 1 }).exec()
 
-        if (!buyer || !seller) {
+        if (!buyer && !seller) {
             return res.status(NOT_FOUND_CODE).json({
                 success: false,
                 message: "Invalid credentials"
@@ -51,13 +50,14 @@ export const login = async (req, res) => {
                 })
             }
 
-            accessToke = generateToken('accessToken', buyer._id, '1h')
+            accessToken = generateToken('accessToken', buyer._id, '1h')
             refreshToken = generateToken('refreshToken', buyer._id, '1d')
 
             await sessionsModel.create({ userId: seller._id })
         }
         else if (seller) {
             const compareSellerPassword = bcrypt.compareSync(password, seller.password)
+
             if (!compareSellerPassword) {
                 return res.status(BAD_REQUEST_CODE).json({
                     success: false,
@@ -72,7 +72,7 @@ export const login = async (req, res) => {
                 })
             }
 
-            accessToke = generateToken('accessToken', seller._id, '1h')
+            accessToken = generateToken('accessToken', seller._id, '1h')
             refreshToken = generateToken('refreshToken', seller._id, '1d')
 
             await sessionsModel.create({ userId: seller._id })
@@ -81,7 +81,7 @@ export const login = async (req, res) => {
         return res.status(SUCCESS_CODE).json({
             success: true,
             message: "Logged in successfully",
-            accessToke,
+            accessToken,
             refreshToken
         })
 

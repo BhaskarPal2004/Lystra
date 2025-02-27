@@ -4,7 +4,8 @@ import jwt from 'jsonwebtoken'
 import { BAD_REQUEST_CODE, CREATED_CODE, INTERNAL_SERVER_ERROR_CODE } from "../../config/constant.js"
 import sendEmail from '../../email/sendEmail.js'
 import Buyer from '../../models/buyerModel.js'
-import Seller from '../../Models/sellerModel.js'
+import Seller from '../../models/sellerModel.js'
+import generateToken from '../../helper/generateToken.js'
 
 
 export const signup = async (req, res) => {
@@ -50,10 +51,10 @@ export const signup = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password.replace(/\s/g, '').trim(), salt);
 
-    const token = jwt.sign({ data: email }, process.env.SECRET_KEY, { expiresIn: '30m' })
+    const registrationToken = generateToken('registrationToken', email, '30m', role)
 
     try {
-      await sendEmail(email, token)
+      await sendEmail(email, registrationToken)
     } catch (error) {
       return res.status(INTERNAL_SERVER_ERROR_CODE).json({
         success: false,
@@ -74,8 +75,8 @@ export const signup = async (req, res) => {
       return res.status(CREATED_CODE).json({
         success: true,
         message: 'Account created successfully',
-        advice: 'Please verify your email at earliest, you have 10 minuets to verify yourself',
-        token,
+        advice: 'Please verify your email at earliest, you have 30 minuets to verify yourself',
+        registrationToken,
         data: user
       })
     }
@@ -87,7 +88,7 @@ export const signup = async (req, res) => {
         success: true,
         message: 'Account created successfully',
         advice: 'Please verify your email at earliest, you have 10 minuets to verify yourself',
-        token,
+        registrationToken,
         data: user
       })
     }
