@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import validator from "validator";
 
-export const buyerSchemaValidation = z.object({
+export const signUpValidation = z.object({
     name: z.string().trim().min(3,"Name should have minimum 3 characters"),
     email: z.string().email("Email is of invalid format"),
     password: z.string().min(6, "Password should be atleat 6 characters long")
@@ -11,8 +11,5 @@ export const buyerSchemaValidation = z.object({
         .refine((password) => /[!@#$%^&*]/.test(password), { message: "Password should contain special character", }),
     
     confirmPassword:z.string(),
-    phoneNumber:z.string().refine((validator.isMobilePhone),{ message: "invalid number" }),
-    isVerified: z.optional(z.boolean()),
-    profilePicture: z.optional(z.string()),
-    interests:  z.optional(z.array(z.string().trim().min(3,"interest must have three character"))),
+    phoneNumber:z.string().min(10,"number must have 10 digit").refine((validator.isMobilePhone),{ message: "invalid number" }),
 });
