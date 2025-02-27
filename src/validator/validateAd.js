@@ -16,10 +16,12 @@ export const adSchema = z.object({
   category:z.enum(category),
   subCategory:z.string().trim().min(3),
   description:z.string().trim().min(3),
-  details:z.record(z.string(),z.string()),
+  details:z.record(z.string(),z.union([z.string(),z.number()])),
   images:z.optional(z.array(z.string().trim().min(3)).nonempty()),
   price:z.number(),
-  performance:performanceSchema
+  performance:z.optional(performanceSchema),
+  userId:z.string(),
+  role:z.string()
 }).strict()
 
 
