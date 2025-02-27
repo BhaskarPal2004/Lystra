@@ -10,7 +10,6 @@ export const getAllAds = async (req, res) => {
       ads: ads
     });
   } catch (error) {
-    console.error(error);
     res.status(INTERNAL_SERVER_ERROR_CODE).send({
       message: error.message,
       success: false,
