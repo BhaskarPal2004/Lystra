@@ -35,7 +35,7 @@ const adSchema = new mongoose.Schema({
     },
     details: {
         type: Object,
-        required: true //check for multiple key value pairs
+        required: true 
     },
     images: [{
         type: String,
