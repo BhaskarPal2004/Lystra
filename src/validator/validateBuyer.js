@@ -14,5 +14,5 @@ export const buyerSchemaValidation = z.object({
     .lte(9999999999),
     isVerified: z.optional(z.boolean()),
     profilePicture: z.optional(z.string()),
-    interests:  z.optional(z.array(z.string().trim().min(3,"interese must have three character"))),
+    interests:  z.optional(z.array(z.string().trim().min(3,"interest must have three character"))),
 });
