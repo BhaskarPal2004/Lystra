@@ -1,4 +1,4 @@
-import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
+import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE, UNAUTHORIZED_CODE } from "../../config/constant.js";
 import Review from "../../models/reviewModel.js";
 const editReview = async (req, res) => {
     try {
@@ -16,9 +16,9 @@ const editReview = async (req, res) => {
                     success: true,
                     message: 'review updated successfully'
                 })
-            } else res.status(NOT_FOUND_CODE).send({
+            } else res.status(UNAUTHORIZED_CODE).send({
                 success: false,
-                message: "review not found"
+                message: "un authorized access, can't edit review"
             })
         } else res.status(NOT_FOUND_CODE).send({
             success: false,
