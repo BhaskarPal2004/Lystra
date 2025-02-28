@@ -26,7 +26,6 @@ export const isSeller = async (req, res, next) => {
     req.role = seller;
     next();
   } catch (error) {
-    console.error(error);
     return res.status(INTERNAL_SERVER_ERROR_CODE).send({
       message: error.message,
       success: false
