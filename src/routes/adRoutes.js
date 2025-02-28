@@ -11,6 +11,9 @@ import { updateAd } from '../controllers/adControllers/updateAd.js';
 import { getAdById } from '../controllers/adControllers/getAdById.js';
 import { deleteAllAds } from '../controllers/adControllers/deleteAllAds.js';
 import isVerified from '../middleware/isVerified.js';
+import { uploadAdPhotos } from '../middleware/multers/adPhotosMulter.js';
+import { uploadAdPhotosController } from '../controllers/adControllers/uploadAdPhotosController.js';
+
 
 const adRoute = express.Router()
 
@@ -18,7 +21,7 @@ const adRoute = express.Router()
 adRoute.post('/create', verifyAccessToken, isSeller, validateData(adSchema), createNewAd)
 
 // Route to update ad by id
-adRoute.post('/update/:id', verifyAccessToken, isSeller, validateData(updateAdSchema), updateAd)
+adRoute.post('/update/:id', verifyAccessToken, isVerified, isSeller, validateData(updateAdSchema), updateAd)
 
 // Route to get all ads
 adRoute.get('/getAllAds', getAllAds);
@@ -30,5 +33,6 @@ adRoute.get('/getAdById/:id', getAdById);
 
 // Route to delete all ad
 adRoute.delete('/deleteAllAds', verifyAccessToken, isVerified, isSeller, deleteAllAds)
+adRoute.post('/uploadPhoto/:adId', verifyAccessToken, isVerified, isSeller, uploadAdPhotos, uploadAdPhotosController)
 
 export default adRoute

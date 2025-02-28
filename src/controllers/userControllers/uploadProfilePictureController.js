@@ -18,10 +18,7 @@ export const uploadProfilePictureController = async (req, res) => {
 
         const user = role === 'buyer' ? await Buyer.findById(userId) : await Seller.findById(userId)
 
-        console.log(user)
-
         const existingProfilePicture = user.profilePicture.split('/').slice(-3).join('/')
-        console.log(existingProfilePicture)
 
         if (existingProfilePicture !== "") {
             fs.unlink(existingProfilePicture, async (error) => {

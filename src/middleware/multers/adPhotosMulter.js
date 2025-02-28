@@ -1,7 +1,7 @@
 import multer from 'multer'
 import path from 'path'
-import validateFile from '../../helper/validateFileType'
-import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE } from '../../config/constant'
+import validateFile from '../../helper/validateFileType.js'
+import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE } from '../../config/constant.js'
 
 const adPhotoExtensions = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 
@@ -22,7 +22,7 @@ const adPhotosUpload = multer({
 
 export const uploadAdPhotos = (req, res, next) => {
     try {
-        adPhotosUpload.array('adPhoto', 6)(req, res, (error) => {
+        adPhotosUpload.array('adPhotos', 6)(req, res, (error) => {
             if (error) return res.status(BAD_REQUEST_CODE).json({
                 success: false,
                 message: error.message
