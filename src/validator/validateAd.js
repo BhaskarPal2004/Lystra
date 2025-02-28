@@ -18,10 +18,26 @@ export const adSchema = z.object({
   description:z.string().trim().min(3),
   details:z.record(z.string(),z.union([z.string(),z.number()])),
   images:z.optional(z.array(z.string().trim().min(3)).nonempty()),
-  price:z.number(),
+  price:z.number().nonnegative(),
   performance:z.optional(performanceSchema),
   userId:z.string(),
   role:z.string()
+}).strict()
+
+
+export const updateAdSchema = z.object({
+  name: z.optional(z.string().trim().min(3)),
+  isFeatured: z.optional(z.boolean()),
+  listingType:z.optional(z.enum(listingType)),
+  category:z.optional(z.enum(category)),
+  subCategory:z.optional(z.string().trim().min(3)),
+  description:z.optional(z.string().trim().min(3)),
+  details:z.optional(z.record(z.string(),z.union([z.string(),z.number()]))),
+  images:z.optional(z.array(z.string().trim().min(3)).nonempty()),
+  price:z.optional(z.number().nonnegative()),
+  performance:z.optional(performanceSchema),
+  userId:z.optional(z.string()),
+  role:z.optional(z.string()),
 }).strict()
 
 
