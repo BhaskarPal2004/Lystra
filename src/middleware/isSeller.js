@@ -12,7 +12,6 @@ export const isSeller = async (req, res, next) => {
       });
     }
     const seller = await Seller.findById(userId);
-    console.log(seller)
 
     if (!seller) {
       return res.status(NOT_FOUND_CODE).send({
