@@ -11,8 +11,8 @@ const verifyToken = (req, res, next, token, type) => {//this isn't a middleware
         }
         else {
             if (decoded.type === type) {
-                req.body.userId = decoded.id;
-                req.body.role = decoded.role;
+                req.userId = decoded.id;
+                req.role = decoded.role;
                 next();
             } else {
                 res.send({
