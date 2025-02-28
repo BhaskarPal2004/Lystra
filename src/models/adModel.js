@@ -1,4 +1,6 @@
+import { fa } from "@faker-js/faker";
 import mongoose from "mongoose";
+import { boolean, string } from "zod";
 
 const adSchema = new mongoose.Schema({
     name: {
@@ -59,7 +61,25 @@ const adSchema = new mongoose.Schema({
             type: Number,
             default: 0
         },
-    }
+    },
+    report: [{
+        repoterId : {
+            type: mongoose.Schema.Types.ObjectId,
+            required :true,
+        },
+        message : {
+            type : String,
+            default: null
+        },
+        isFake : {
+            type: Boolean,
+            default : false
+        },
+        isFraudulent : {
+            type: Boolean,
+            default: false
+        }
+    }]
 }, { timestamps: true });
 
 const Ad = mongoose.model("Ad", adSchema);
