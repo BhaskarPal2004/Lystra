@@ -26,6 +26,7 @@ const createSeller = async n => {
             email: "seller" + i + "@itobuz.com",
             password: bcrypt.hashSync("Abc@123" + i, 10),
             isVerified: true,
+            phoneNumber: 12340+i,
             address: await createAddress()
         });
         await seller.save();
