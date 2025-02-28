@@ -6,6 +6,6 @@ import isVerified from '../middleware/isVerified.js'
 const reviewRoute = express.Router();
 
 //all api's of buyer
-reviewRoute.post('/review/:adId', verifyAccessToken, isVerified, reviewAd);
+reviewRoute.post('/create/:adId', verifyAccessToken, isVerified, reviewAd);
 
 export default reviewRoute
