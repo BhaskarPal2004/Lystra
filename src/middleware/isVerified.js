@@ -5,6 +5,7 @@ const isVerified = async (req, res, next) => {
     const userId = req.userId;
     const User = (req.role === 'buyer') ? Buyer : Seller;
     const user = await User.findById(userId);
+    console.log('user from usVerified :>> ', user);
     if(user){
         if(user.isVerified) next();
         else{

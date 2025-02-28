@@ -3,6 +3,7 @@ import isVerified from '../middleware/isVerified.js';
 import { verifyAccessToken } from '../middleware/isAuthenticated.js';
 import { findUserData } from '../controllers/userControllers/getUserData.js';
 import updateProfile from '../controllers/userControllers/updateProfile.js';
+import logout from '../controllers/userControllers/logout.js';
 
 const userRoute = express.Router();
 
@@ -10,5 +11,5 @@ const userRoute = express.Router();
 userRoute.post('');
 userRoute.get('/userData',verifyAccessToken,isVerified,findUserData);
 userRoute.put('/updateProfile',verifyAccessToken,isVerified,updateProfile);
-
+userRoute.delete('/logout',verifyAccessToken,isVerified,logout)
 export default userRoute
