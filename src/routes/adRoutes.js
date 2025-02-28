@@ -18,4 +18,6 @@ adRoute.get('/getAllAds', getAllAds);
 // Route to get an ad by ID
 adRoute.get('/getAdById/:id', getAdById);
 
+
+
 export default adRoute
