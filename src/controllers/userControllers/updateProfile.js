@@ -10,7 +10,7 @@ const updateProfile = async (req, res) => {
         const {userId,role}=req;
         const User = (role === 'buyer') ? Buyer : Seller;
         const user = await User.findById(userId);
-        user.name = (name) ?? name;
+        if(name) user.name = name
         user.phoneNumber = (phoneNumber) ?? phoneNumber;
         if (address) {
             await Address.findByIdAndDelete(user.address);
