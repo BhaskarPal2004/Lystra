@@ -10,7 +10,7 @@ export const getAllAds = async (req, res) => {
   if (searchKeyword || searchCategory) {
     // console.log("user searched")
     if(searchCategory && searchKeyword===undefined){
-      const filtered_notes = await Ad.find({category: new RegExp(searchCategory)})
+      const filtered_notes = await Ad.find({category: {"$regex":searchCategory}})
       
       // const filtered_notes = await Ad.find({category: "vehicles"})
       return res.status(SUCCESS_CODE).send({
