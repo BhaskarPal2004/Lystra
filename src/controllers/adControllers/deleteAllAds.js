@@ -6,7 +6,7 @@ import {
   import Ad from "../../models/adModel.js";
   
   export const deleteAllAds = async (req, res) => {
-    const {userId} = req.body;
+    const {userId} = req;
     try {
       const findAd = await Ad.findOne({sellerId: userId});
       if (findAd) {
