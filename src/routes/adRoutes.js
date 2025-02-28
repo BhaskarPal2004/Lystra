@@ -29,6 +29,6 @@ adRoute.delete('/deleteAd/:id', verifyAccessToken, isVerified, isSeller, deleteA
 adRoute.get('/getAdById/:id', getAdById);
 
 // Route to delete all ad
-adRoute.delete('/deleteAllAds',verifyAccessToken, isVerified, isSeller,deleteAllAds)
+adRoute.delete('/deleteAllAds', verifyAccessToken, isVerified, isSeller, deleteAllAds)
 
 export default adRoute
