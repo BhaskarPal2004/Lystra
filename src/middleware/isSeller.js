@@ -5,6 +5,7 @@ import Seller from "../models/sellerModel.js";
 export const isSeller = async (req, res, next) => {
   try {
     const userId = req.body.userId;
+    console.log("id",userId)
 
     if (!userId) {
       return res.status(UNAUTHORIZED_CODE).send({
@@ -13,6 +14,7 @@ export const isSeller = async (req, res, next) => {
       });
     }
     const seller = await Seller.findById(userId);
+    console.log(seller)
 
     if (!seller) {
       return res.status(NOT_FOUND_CODE).send({
