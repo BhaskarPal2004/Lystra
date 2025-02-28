@@ -7,5 +7,5 @@ const buyerRoute = express.Router()
 
 //all api's of buyer
 buyerRoute.post('/', (req, res) => { res.send("abc") })
-buyerRoute.post('/saveAd/:adId',verifyAccessToken,isVerified,saveAd);
+buyerRoute.post('/saveAd/:adId', verifyAccessToken, isVerified, saveAd);
 export default buyerRoute
