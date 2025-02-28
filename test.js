@@ -1,3 +1,3 @@
 import generateToken from "./src/helper/generateToken.js";
 import 'dotenv/config'
-console.log('object :>> ', generateToken('refreshToken','67c13be11fc7b4ab741d12dc','30m','buyer'));
+console.log('object :>> ', generateToken('refreshToken','67c158fbb37ed5173346628c','30m','buyer'));

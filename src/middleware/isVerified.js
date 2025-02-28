@@ -5,12 +5,18 @@ const isVerified = async (req, res, next) => {
     const userId = req.body.userId;
     const User = (req.body.role === 'buyer') ? Buyer : Seller;
     const user = await User.findById(userId);
-    if(user.isVerified) next();
-    else{
-        res.status(UNAUTHORIZED_CODE).send({
-            success:false,
-            message: "user is not verified"
-        })
-    }
+    if(user){
+        if(user.isVerified) next();
+        else{
+            res.status(UNAUTHORIZED_CODE).send({
+                success:false,
+                message: "user is not verified"
+            })
+        }
+    }else res.status(UNAUTHORIZED_CODE).send({
+        success:false,
+        message: "user not found"
+    })
+    
 }
 export default isVerified;

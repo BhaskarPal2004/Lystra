@@ -8,6 +8,7 @@ import isVerified from '../middleware/isVerified.js'
 import { login } from '../controllers/authControllers/loginController.js'
 import verifyUser from '../controllers/authControllers/verifyUser.js'
 import { resendMail } from '../controllers/authControllers/resendMailController.js'
+import { logInValidation } from '../validator/validateLogin.js'
 
 
 const authRoute = express.Router()
@@ -15,7 +16,7 @@ const authRoute = express.Router()
 //all api's for authentications
 authRoute.post('/signup/:role', validateData(signUpValidation), signup)
 authRoute.get('/accessToken', verifyRefreshToken, isVerified, regenerateTokens);
-authRoute.post('/login/:role', login)
+authRoute.post('/login/:role', validateData(logInValidation),login)
 authRoute.post('/verifyUser/:registrationToken', verifyRegistrationToken, verifyUser);
 authRoute.post('/resendMail', resendMail)
 
