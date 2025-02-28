@@ -4,7 +4,6 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 function generateToken(type, id, time, role) {
-    console.log("role",role)
     const payload = { type, id, role };
     const secret = process.env.SECRET_KEY;
     const options = { expiresIn: `${time}` };

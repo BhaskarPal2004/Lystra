@@ -6,7 +6,8 @@ import Address from "../../models/addressModel.js";
 
 const updateProfile = async (req, res) => {
     try {
-        const { userId, role, name, phoneNumber, address } = req.body;
+        const {name, phoneNumber, address } = req.body;
+        const {userId,role}=req;
         const User = (role === 'buyer') ? Buyer : Seller;
         const user = await User.findById(userId);
         user.name = (name) ?? name;

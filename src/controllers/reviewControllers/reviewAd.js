@@ -8,7 +8,8 @@ const reviewAd = async (req, res) => {
         const ad = await Ad.findById(adId);
         if (ad) {
             //creating review
-            const { userId, rating, review } = req.body;
+            const {rating, review } = req.body;
+            const userId=req.userId;
             const newReview = new Review({
                 buyerId: userId, adId, rating, review
             })

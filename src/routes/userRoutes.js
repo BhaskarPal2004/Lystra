@@ -3,6 +3,9 @@ import isVerified from '../middleware/isVerified.js';
 import { verifyAccessToken } from '../middleware/isAuthenticated.js';
 import { findUserData } from '../controllers/userControllers/getUserData.js';
 import updateProfile from '../controllers/userControllers/updateProfile.js';
+import logout from '../controllers/userControllers/logout.js';
+import { uploadProfilePicture } from '../middleware/multers/profilePictureMulter.js';
+import { uploadProfilePictureController } from '../controllers/userControllers/uploadProfilePictureController.js';
 
 const userRoute = express.Router();
 
@@ -10,5 +13,6 @@ const userRoute = express.Router();
 userRoute.post('');
 userRoute.get('/userData',verifyAccessToken,isVerified,findUserData);
 userRoute.put('/updateProfile',verifyAccessToken,isVerified,updateProfile);
-
+userRoute.delete('/logout',verifyAccessToken,isVerified,logout)
+userRoute.post('/uploadProfilePicture', verifyAccessToken, isVerified, uploadProfilePicture, uploadProfilePictureController);
 export default userRoute

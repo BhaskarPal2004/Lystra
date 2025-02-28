@@ -10,7 +10,7 @@ import { deleteAd } from '../controllers/adControllers/deleteAd.js';
 import { updateAd } from '../controllers/adControllers/updateAd.js';
 import { getAdById } from '../controllers/adControllers/getAdById.js';
 import { deleteAllAds } from '../controllers/adControllers/deleteAllAds.js';
-import isVerified from "../middleware/isVerified.js"
+import isVerified from '../middleware/isVerified.js';
 
 const adRoute = express.Router()
 
@@ -29,6 +29,6 @@ adRoute.delete('/deleteAd/:id', verifyAccessToken, isVerified, isSeller, deleteA
 adRoute.get('/getAdById/:id', getAdById);
 
 // Route to delete all ad
-adRoute.delete('/deleteAllAds',verifyAccessToken, isVerified, isSeller,deleteAllAds)
+adRoute.delete('/deleteAllAds', verifyAccessToken, isVerified, isSeller, deleteAllAds)
 
 export default adRoute

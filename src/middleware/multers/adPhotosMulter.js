@@ -6,7 +6,7 @@ import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE } from '../../config/const
 const adPhotoExtensions = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 
 const adPhotoStorage = multer.diskStorage({
-    destination: './upload/adPhotos',
+    destination: './uploads/adPhotos',
     filename: (req, file, cb) => {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
     }

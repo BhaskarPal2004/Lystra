@@ -9,7 +9,7 @@ const createBuyer = async n => {
             name: "buyer" + i,
             email: "buyer" + i + "@itobuz.com",
             password: bcrypt.hashSync("Abc@123" + i, 10),
-            phoneNumber: 12340+i,
+            phoneNumber: 1234567890+i,
             isVerified: true
         });
         await buyer.save();

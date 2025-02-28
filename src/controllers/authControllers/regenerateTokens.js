@@ -6,8 +6,8 @@ const regenerateTokens = (req, res) => {
         res.status(SUCCESS_CODE).send({
             success: true,
             message: "access token generated successfully",
-            accessToken: generateToken('accessToken', req.body.userId, '1h',req.body.role),
-            refreshToken: generateToken('refreshToken',req.body.userId, '1d',req.body.role)
+            accessToken: generateToken('accessToken', req.userId, '1h',req.role),
+            refreshToken: generateToken('refreshToken',req.userId, '1d',req.role)
         })
     } catch (err) {
         res.status(INTERNAL_SERVER_ERROR_CODE).send({
