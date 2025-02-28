@@ -12,7 +12,9 @@ const adRoute = express.Router()
 
 //all api's of ad
 adRoute.post('/create',verifyAccessToken,isSeller,validateData(adSchema),createNewAd)
-adRoute.post('/update/:id',verifyAccessToken,updateAd)
+
+// Route to update ad by id
+adRoute.post('/update/:id',verifyAccessToken,isSeller,validateData(updateAdSchema),updateAd)
 
 // Route to get all ads
 adRoute.get('/getAllAds', getAllAds);
