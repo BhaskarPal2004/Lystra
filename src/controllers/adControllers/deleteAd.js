@@ -10,7 +10,6 @@ export const deleteAd = async (req, res) => {
   const {userId} = req.body;
   try {
     const findAd = await Ad.find({ _id: id , sellerId: userId});
-    console.log(findAd);
     if (findAd.length > 0) {
       await Ad.deleteOne(findAd[0]);
       res.status(SUCCESS_CODE).send({
