@@ -12,7 +12,6 @@ export const signup = async (req, res) => {
   try {
     const { name, email, phoneNumber, password, confirmPassword } = req.body
     const { role } = req.params
-    console.log(role)
 
     if (!role) {
       return res.status(BAD_REQUEST_CODE).json({
