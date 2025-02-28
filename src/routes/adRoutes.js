@@ -10,6 +10,7 @@ import { deleteAd } from '../controllers/adControllers/deleteAd.js';
 import { updateAd } from '../controllers/adControllers/updateAd.js';
 import { getAdById } from '../controllers/adControllers/getAdById.js';
 import { deleteAllAds } from '../controllers/adControllers/deleteAllAds.js';
+import isVerified from "../middleware/isVerified.js"
 
 const adRoute = express.Router()
 
