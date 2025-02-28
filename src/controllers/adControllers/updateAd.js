@@ -5,19 +5,20 @@ export const updateAd = async(req,res) => {
    try{
      const adId = req.params.id
      console.log("id",adId)
-    const { name, listingType, category, subCategory,  description, details, images, price, userId } = req.body
-    const ad = await Ad.findOne({_id:adId,sellerId:userId})
+    const updatedFields = req.body
+    const ad = await Ad.findByIdAndUpdate(adId, {$set:updatedFields},function(err,docs){
+        if(err){
+            console.log(err)
+            res.status(NOT_FOUND_CODE).json({
+                success:false,
+                message:err
+            })
+        }
+        else{
+            console.log(docs)
+        }
+    })
 
-    ad.name = name
-    ad.listingType = listingType
-    ad.category = category
-    ad.subCategory = subCategory
-    ad.description = description
-    ad.details = details 
-    ad.images = images 
-    ad.price = price
-
-    await ad.save()
     res.status(SUCCESS_CODE).json({
         success:true,
         data:ad,
@@ -29,7 +30,7 @@ export const updateAd = async(req,res) => {
     console.log(error)
     res.status(NOT_FOUND_CODE).json({
         success:false,
-        message:"Ad is not updated"
+        message:error
     })
    }
 
