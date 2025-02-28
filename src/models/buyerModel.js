@@ -27,7 +27,7 @@ const buyerSchema = new mongoose.Schema({
     },
     profilePicture: {
         type: String,
-        default: null
+        default: ""
     },
     address: {
         type: mongoose.Schema.ObjectId,
