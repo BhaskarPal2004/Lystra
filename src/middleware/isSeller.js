@@ -4,9 +4,7 @@ import Seller from "../models/sellerModel.js";
 
 export const isSeller = async (req, res, next) => {
   try {
-    const userId = req.body.userId;
-    console.log("id",userId)
-
+    const userId = req.userId;
     if (!userId) {
       return res.status(UNAUTHORIZED_CODE).send({
         message: "Unauthorized access",

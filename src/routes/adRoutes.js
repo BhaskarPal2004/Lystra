@@ -7,7 +7,6 @@ import { validateData } from "../middleware/validateData.js"
 import { adSchema, updateAdSchema } from '../validator/validateAd.js'
 import { isSeller } from '../middleware/isSeller.js'
 import { deleteAd } from '../controllers/adControllers/deleteAd.js';
-import isVerified from '../middleware/isVerified.js';
 import { updateAd } from '../controllers/adControllers/updateAd.js';
 import { getAdById } from '../controllers/adControllers/getAdById.js';
 import { deleteAllAds } from '../controllers/adControllers/deleteAllAds.js';

@@ -3,8 +3,8 @@ import Buyer from "../../models/buyerModel.js";
 import Seller from "../../models/sellerModel.js";
 const verifyUser=async (req,res,next)=>{
     try{
-        const email=req.body.userId;
-        const User = (req.body.role === 'buyer') ? Buyer : Seller;
+        const email=req.userId;
+        const User = (req.role === 'buyer') ? Buyer : Seller;
         await User.findOneAndUpdate({email},{isVerified: true});
         res.status(SUCCESS_CODE).send({
             success:true,
