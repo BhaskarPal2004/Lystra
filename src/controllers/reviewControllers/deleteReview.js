@@ -5,7 +5,7 @@ import Ad from "../../models/adModel.js"
 const deleteReview = async (req, res) => {
     try {
         const { reviewId } = req.params;
-        const { userId } = req.body;
+        const { userId } = req;
         const review = await Review.findById(reviewId);
         if (review) {
             if (review.buyerId == userId) {
