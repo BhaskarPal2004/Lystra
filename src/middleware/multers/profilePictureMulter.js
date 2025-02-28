@@ -1,12 +1,12 @@
 import multer from 'multer'
 import path from 'path'
-import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE } from '../../config/constant'
-import validateFile from '../../helper/validateFileType'
+import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE } from '../../config/constant.js'
+import validateFile from '../../helper/validateFileType.js'
 
 const profilePictureExtensions = ['image/jpeg', 'image/jpg', 'image/png']
 
 const profilePictureStorage = multer.diskStorage({
-    destination: './upload/profilePhotos',
+    destination: './uploads/profilePictures',
     filename: (req, file, cb) => {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
     }
