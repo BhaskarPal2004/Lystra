@@ -11,7 +11,7 @@ export const buyerSchemaValidation = z.object({
         .refine((password) => /[!@#$%^&*]/.test(password), { message: "Password should contain special character", }),
     
     confirmPassword:z.string(),
-    phoneNumber:z.string().refine((validator.isMobilePhone),{ message: "invalid number" }),
+    phoneNumber: z.string().min(10, "number must have 10 digit").refine((validator.isMobilePhone), { message: "invalid number" }),
     isVerified: z.optional(z.boolean()),
     profilePicture: z.optional(z.string()),
     interests:  z.optional(z.array(z.string().trim().min(3,"interest must have three character"))),
