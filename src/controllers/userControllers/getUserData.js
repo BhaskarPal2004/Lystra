@@ -4,7 +4,7 @@ import Seller from "../../models/sellerModel.js";
 
 export const findUserData = async (req, res) => {
   try {
-    const { userId, role } = req.body;
+    const { userId, role } = req;
     if (role === "buyer") {
       const findUser = await Buyer.findOne({ _id: userId });
       if (findUser) {
