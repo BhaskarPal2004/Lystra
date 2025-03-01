@@ -38,8 +38,9 @@ export const resendMail = async (req, res) => {
                 })
             }
             return res.status(SUCCESS_CODE).json({
-                success: false,
-                message: "Email send successfully"
+                success: true,
+                message: "Email send successfully",
+                registrationToken
             })
         }
 

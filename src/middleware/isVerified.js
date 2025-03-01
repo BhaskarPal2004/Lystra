@@ -1,6 +1,7 @@
 import Seller from "../models/sellerModel.js";
 import Buyer from "../models/buyerModel.js";
-import { BAD_REQUEST_CODE, NOT_FOUND_CODE } from "../config/constant.js";
+import { BAD_REQUEST_CODE, NOT_FOUND_CODE, UNAUTHORIZED_CODE } from "../config/constant.js";
+import sessionsModel from "../models/sessionModel.js";
 
 
 const isVerified = async (req, res, next) => {
@@ -22,8 +23,15 @@ const isVerified = async (req, res, next) => {
             message: "User is not verified"
         })
 
-    else next()
+    const session = await sessionsModel.findOne({ userId })
 
+    if (!session)
+        return res.status(UNAUTHORIZED_CODE).json({
+            success: false,
+            message: "Unauthorized Access, Please Login first"
+        })
+
+    else next()
 }
 
 export default isVerified;
