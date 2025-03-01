@@ -2,28 +2,26 @@ import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../
 import Ad from "../../models/adModel.js";
 
 export const getAdById = async (req, res) => {
-  const { id } = req.params;
+    try {
+        const adId = req.params.adId;
+        const ad = await Ad.findById(adId).populate('sellerId', 'name email');
 
-  try {
-      const ad = await Ad.findById(id).populate('sellerId', 'name email');
+        if (!ad)
+            return res.status(NOT_FOUND_CODE).send({
+                success: false,
+                message: "Ad not found"
+            });
 
-      if (!ad) {
-          return res.status(NOT_FOUND_CODE).send({
-              success: false,
-              message: "Ad not found"
-          });
-      }
+        return res.status(SUCCESS_CODE).send({
+            success: true,
+            message: "Ad fetched successfully",
+            data: ad
+        });
 
-      res.status(SUCCESS_CODE).send({
-          success: true,
-          message: "Ad fetched successfully",
-          data: ad
-      });
-
-  } catch (error) {
-      res.status(INTERNAL_SERVER_ERROR_CODE).send({
-          success: false,
-          message: error.message,
-      });
-  }
+    } catch (error) {
+        return res.status(INTERNAL_SERVER_ERROR_CODE).send({
+            success: false,
+            message: error.message,
+        });
+    }
 };
