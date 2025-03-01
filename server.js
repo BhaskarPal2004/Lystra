@@ -22,12 +22,22 @@ app.use('/api/user', userRoute)
 app.use('/api/buyer', buyerRoute)
 app.use('/api/seller', sellerRoute)
 app.use('/api/ad', adRoute)
-app.use('/api/review',reviewRoute)
+app.use('/api/review', reviewRoute)
 
 dbConnect()
 
 app.use(express.json())
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.log(`Port ${port} is already in use!`);
+    console.log("Retrying in 5 seconds...");
+    setTimeout(() => {
+      process.exit(1)
+    }, 5000);
+  }
+});
