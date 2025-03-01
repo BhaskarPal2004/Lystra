@@ -16,7 +16,7 @@ const authRoute = express.Router()
 //all api's for authentications
 authRoute.post('/signup/:role', validateData(signUpValidation), signup)
 authRoute.get('/accessToken', verifyRefreshToken, isVerified, regenerateTokens);
-authRoute.post('/login/:role', validateData(logInValidation),login)
+authRoute.post('/login', validateData(logInValidation), login)
 authRoute.post('/verifyUser/:registrationToken', verifyRegistrationToken, verifyUser);
 authRoute.post('/resendMail', resendMail)
 
