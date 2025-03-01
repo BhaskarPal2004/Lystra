@@ -3,22 +3,25 @@ import Ad from "../../models/adModel.js"
 
 export const updateAd = async (req, res) => {
     try {
-        const adId = req.params.id
-
+        const adId = req.params.adId
         const updatedFields = req.body
-        console.log("updatedFields", updatedFields)
-        const ad = await Ad.updateOne({ _id: adId }, { $set: updatedFields })
 
-        res.status(SUCCESS_CODE).json({
+        const ad = await Ad.findOneAndUpdate({ _id: adId }, { $set: updatedFields })
+
+        if (!ad)
+            return res.status(NOT_FOUND_CODE).json({
+                success: false,
+                message: "Ad not found"
+            })
+
+        return res.status(SUCCESS_CODE).json({
             success: true,
-            data: ad,
-            message: "Ad is updated"
-
+            message: "Ad is updated successfully",
+            data: await Ad.findById(adId),
         })
-    }
-    catch (error) {
-        console.log(error)
-        res.status(NOT_FOUND_CODE).json({
+
+    } catch (error) {
+        return res.status(NOT_FOUND_CODE).json({
             success: false,
             message: error
         })
