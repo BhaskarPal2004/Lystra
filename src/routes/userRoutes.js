@@ -14,10 +14,11 @@ const userRoute = express.Router();
 
 //all api's of user
 userRoute.post('');
-userRoute.get('/userData',verifyAccessToken,isVerified,findUserData);
-userRoute.put('/updateProfile',validateData(profileUpdateValidation),verifyAccessToken,isVerified,updateProfile);
-userRoute.post('/report/:adId',verifyAccessToken, isVerified,createAddReport);
-
-userRoute.delete('/logout',verifyAccessToken,isVerified,logout)
+userRoute.get('/userData', verifyAccessToken, isVerified, findUserData);
+userRoute.put('/updateProfile', verifyAccessToken, isVerified, validateData(profileUpdateValidation), updateProfile);
+userRoute.post('/report/:adId', verifyAccessToken, isVerified, createAddReport);
+userRoute.delete('/logout', verifyAccessToken, isVerified, logout)
 userRoute.post('/uploadProfilePicture', verifyAccessToken, isVerified, uploadProfilePicture, uploadProfilePictureController);
+
+
 export default userRoute
