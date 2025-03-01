@@ -19,29 +19,29 @@ export const createAddReport = async (req, res) => {
       role === "buyer"
         ? await Buyer.findById(userId)
         : await Seller.findById(userId);
-    
+
     const ad = await Ad.findById(adId);
     if (user && ad) {
-      let findUserInReportArray=false;
-      ad.report.forEach((ele)=>{
-        if(ele.repoterId == userId){
-            findUserInReportArray=true
+      let findUserInReportArray = false;
+      ad.report.forEach((ele) => {
+        if (ele.reporterId == userId) {
+          findUserInReportArray = true
         }
       });
-      if(findUserInReportArray===true){
+      if (findUserInReportArray === true) {
         res.status(UNAUTHORIZED_CODE).json({
-            success: true,
-            message: "you already reported",
-          });
+          success: true,
+          message: "you already reported",
+        });
       }
-      else{
+      else {
         await Ad.findByIdAndUpdate(adId, {
-            $push: { report: { repoterId: userId, message, isFake, isFraudulent } },
-          });
-          res.status(SUCCESS_CODE).json({
-            success: true,
-            message: "Report send successfully",
-          });
+          $push: { report: { reporterId: userId, message, isFake, isFraudulent } },
+        });
+        res.status(SUCCESS_CODE).json({
+          success: true,
+          message: "Report send successfully",
+        });
       }
     } else {
       res.status(NOT_FOUND_CODE).json({
