@@ -62,7 +62,7 @@ const adSchema = new mongoose.Schema({
             default: 0
         },
     },
-    report: [{
+    reports: [{
         reporterId: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
