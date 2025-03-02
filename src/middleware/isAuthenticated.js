@@ -3,7 +3,7 @@ import { BAD_REQUEST_CODE, UNAUTHORIZED_CODE } from "../config/constant.js";
 
 
 const verifyToken = (req, res, next, token, type) => {
-    jwt.verify(token, process.env.SECRET_KEY, function (error, decoded) {
+    jwt.verify(token, 'Good Morning Everyone', function (error, decoded) {
         if (error) {
             return res.status(UNAUTHORIZED_CODE).json({
                 success: false,

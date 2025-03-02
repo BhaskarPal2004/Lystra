@@ -16,19 +16,20 @@ export const getAllAds = async (req, res) => {
       sortCriteria = { createdAt: "desc" }
     }
 
-
+    //searching
 
     if (searchCategory && searchKeyword === "") {
-      const filteredNotes = await Ad.find({
+      const filteredAds = await Ad.find({
         category: new RegExp(searchCategory.trim(), 'i')
       }).sort(sortCriteria).limit(3);
+
       return res.status(SUCCESS_CODE).send({
         success: true,
-        ads: filteredNotes
+        ads: filteredAds
       });
 
     } else if (searchKeyword && searchCategory === "") {
-      const filteredNotes = await Ad.find({
+      const filteredAds = await Ad.find({
         $or: [
           { name: new RegExp(searchKeyword.trim(), 'i') },
           { listingType: new RegExp(searchKeyword.trim(), 'i') },
@@ -38,7 +39,7 @@ export const getAllAds = async (req, res) => {
         ]
       });
 
-      const filteredNotesOnDetails = await Ad.aggregate([{
+      const filteredAdsOnDetails = await Ad.aggregate([{
         $project: {
           name: 1,
           sellerId: 1,
@@ -64,13 +65,23 @@ export const getAllAds = async (req, res) => {
       {
         $replaceRoot: { newRoot: "$$ROOT" }
       }])
+      // Log the IDs for debugging
+      console.log("Filtered Ads IDs:", filteredAds.map(ad => ad._id));
+      console.log("Filtered Ads On Details IDs:", filteredAdsOnDetails.map(ad => ad._id));
 
+      // Create a Set of IDs from filteredAds for quick lookup
+      const filteredAdsIds = new Set(filteredAds.map(ad => ad._id.toString())); // Ensure IDs are strings
+      console.log("jo")
+      console.log("set",filteredAdsIds)
 
-      let combinedResult = [...filteredNotes, ...filteredNotesOnDetails]
+      // Combine results, keeping only unique ads from filteredAds and ignoring duplicates from filteredAdsOnDetails
+      let combinedResult = [...filteredAds];
 
-      let temp = new Set(combinedResult)
-
-      combinedResult = [...temp]
+      filteredAdsOnDetails.forEach(ad => {
+        if (!filteredAdsIds.has(ad._id.toString())) { // Ensure IDs are strings
+          combinedResult.push(ad);
+        }
+      });
 
       combinedResult.sort((a, b) => {
         const dateA = new Date(a.createdAt);
