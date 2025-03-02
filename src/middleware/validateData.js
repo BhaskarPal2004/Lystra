@@ -1,23 +1,29 @@
 import { ZodError } from 'zod';
+import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE } from '../config/constant.js';
 
-export function validateData(schema) {
+
+export const validateData = (schema) => {
   return (req, res, next) => {
     try {
-      console.log(req.body)
       schema.parse(req.body);
       next();
+
     } catch (error) {
       if (error instanceof ZodError) {
         const errorMessages = error.errors.map((issue) => ({
-          message: `${issue.path.join('.')} is ${issue.message}`,
-
+          path: issue.path.toString(),
+          message: issue.message,
         }));
-        res.status(400).json({ error: "Invalid data", details: error });
-      } else {
-        console.log(error)
-        res.status(500).json({ error: "Internal Server Error" });
-      }
+
+        return res.status(BAD_REQUEST_CODE).json({
+          success: false,
+          message: errorMessages
+        });
+
+      } else
+        return res.status(INTERNAL_SERVER_ERROR_CODE).json({
+          error: "Internal Server Error"
+        });
     }
   };
 }
-

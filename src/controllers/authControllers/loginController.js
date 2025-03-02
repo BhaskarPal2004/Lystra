@@ -8,38 +8,19 @@ import Seller from "../../models/sellerModel.js"
 
 export const login = async (req, res) => {
     try {
-        const { email, phoneNumber, password } = req.body
-        const role = req.params.role
+        const { email, password } = req.body
 
-        if (!role) {
-            return res.status(BAD_REQUEST_CODE).json({
-                success: false,
-                message: "Role required"
-            })
-        }
+        const buyer = await Buyer.findOne({ email: email }, { name: 1, password: 1, isVerified: 1 }).exec()
+        const seller = await Seller.findOne({ email: email }, { name: 1, password: 1, isVerified: 1 }).exec()
 
-        const buyer = await Buyer.findOne({
-            $or: [
-                { email: email },
-                { phoneNumber: phoneNumber }
-            ]
-        }, { name: 1, email: 1, password: 1, isVerified: 1 }).exec()
-
-        const seller = await Seller.findOne({
-            $or: [
-                { email: email },
-                { phoneNumber: phoneNumber }
-            ]
-        }, { name: 1, email: 1, password: 1, isVerified: 1 }).exec()
-
-        const user = role === 'buyer' ? buyer : seller
-
-        if (!user) {
+        if (!buyer && !seller) {
             return res.status(NOT_FOUND_CODE).json({
                 success: false,
                 message: "Invalid credentials"
             })
         }
+
+        const user = buyer || seller
 
         const comparePassword = bcrypt.compareSync(password, user.password)
 
@@ -57,7 +38,9 @@ export const login = async (req, res) => {
             })
         }
 
-        const accessToken = generateToken('accessToken', user._id, '1h', role)
+        const role = buyer ? 'buyer' : 'seller'
+
+        const accessToken = generateToken('accessToken', user._id, '9h', role)
         const refreshToken = generateToken('refreshToken', user._id, '1d', role)
 
         await sessionsModel.create({ userId: user._id })
@@ -65,7 +48,7 @@ export const login = async (req, res) => {
         return res.status(SUCCESS_CODE).json({
             success: true,
             message: "Logged in successfully",
-            user,
+            greet: `Welcome ${user.name}`,
             accessToken,
             refreshToken
         })

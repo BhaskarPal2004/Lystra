@@ -37,7 +37,7 @@ const adSchema = new mongoose.Schema({
     },
     details: {
         type: Object,
-        required: true 
+        required: true
     },
     images: [{
         type: String,
@@ -62,25 +62,25 @@ const adSchema = new mongoose.Schema({
             default: 0
         },
     },
-    report: [{
-        repoterId : {
+    reports: [{
+        reporterId: {
             type: mongoose.Schema.Types.ObjectId,
-            required :true,
+            required: true,
         },
-        message : {
-            type : String,
+        message: {
+            type: String,
             default: null
         },
-        isFake : {
+        isFake: {
             type: Boolean,
-            default : false
+            default: false
         },
-        isFraudulent : {
+        isFraudulent: {
             type: Boolean,
             default: false
         }
     }]
 }, { timestamps: true });
 
-const Ad = mongoose.model("Ad", adSchema);
+const Ad = mongoose.model("ad", adSchema);
 export default Ad;

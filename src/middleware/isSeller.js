@@ -5,28 +5,29 @@ import Seller from "../models/sellerModel.js";
 export const isSeller = async (req, res, next) => {
   try {
     const userId = req.userId;
+
     if (!userId) {
-      return res.status(UNAUTHORIZED_CODE).send({
-        message: "Unauthorized access",
-        success: false
+      return res.status(NOT_FOUND_CODE).json({
+        success: false,
+        message: "User id not found"
       });
     }
+
     const seller = await Seller.findById(userId);
-    console.log(seller)
 
     if (!seller) {
-      return res.status(NOT_FOUND_CODE).send({
-        message: "Seller not found",
-        success: false
+      return res.status(UNAUTHORIZED_CODE).send({
+        success: false,
+        message: "Unauthorized Access"
       });
     }
 
-    req.role = seller;
     next();
+
   } catch (error) {
     return res.status(INTERNAL_SERVER_ERROR_CODE).send({
-      message: error.message,
-      success: false
+      success: false,
+      message: error.message
     });
   }
 };
