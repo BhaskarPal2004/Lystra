@@ -12,7 +12,7 @@ const sellerSchema = new mongoose.Schema({
     },
     password: {//already hashed
         type: String,
-        require: true,
+        required: true,
         select: false
     },
     isVerified: {//email verification
