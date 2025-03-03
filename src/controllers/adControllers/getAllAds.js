@@ -4,24 +4,28 @@ import Ad from "../../models/adModel.js";
 export const getAllAds = async (req, res) => {
 
   try {
-    const { searchKeyword = "", searchCategory = "", sortBy } = req.query; //either "" or some value
+    const { searchKeyword = "", searchCategory = "" } = req.query; //either "" or some value
+
 
 
     //sorting
-    let sortCriteria = null
-    if (sortBy === "asc") {
-      sortCriteria = { createdAt: "asc" }
-    }
-    else {
-      sortCriteria = { createdAt: "desc" }
-    }
+    // let sortCriteria = null
+    // if (sortBy === "asc") {
+    //   sortCriteria = { createdAt: "asc" }
+    // }
+    // else {
+    //   sortCriteria = { createdAt: "desc" }
+    // }
 
     //searching
 
     if (searchCategory && searchKeyword === "") {
+
       const filteredAds = await Ad.find({
         category: new RegExp(searchCategory.trim(), 'i')
-      }).sort(sortCriteria).limit(3);
+      })
+
+      // .sort(sortCriteria).limit(3);
 
       return res.status(SUCCESS_CODE).send({
         success: true,
@@ -39,59 +43,42 @@ export const getAllAds = async (req, res) => {
         ]
       });
 
-      const filteredAdsOnDetails = await Ad.aggregate([{
-        $project: {
-          name: 1,
-          sellerId: 1,
-          isFeatured: 1,
-          listingType: 1,
-          category: 1,
-          subCategory: 1,
-          description: 1,
-          images: 1,
-          price: 1,
-          details: 1,
-          createdAt: 1,
-          updatedAt: 1,
-          __v: 1,
-          address: 1,
-          performance: 1, detailsArray: { $objectToArray: "$details" }
+      const filteredAdsOnDetails = await Ad.aggregate([
+        {
+          $addFields: {
+            detailsArray: { $objectToArray: "$details" }
+          }
+        },
+        { $unwind: "$detailsArray" },
+        {
+          $match: {
+            "detailsArray.v": new RegExp(searchKeyword.trim(), 'i')
+          }
+        },
+        {
+          $replaceRoot: { newRoot: "$$ROOT" }
         }
-      }, { $unwind: "$detailsArray" }, {
-        $match: {
-          "detailsArray.v": new RegExp(searchKeyword.trim(), 'i')
-        }
-      },
-      {
-        $replaceRoot: { newRoot: "$$ROOT" }
-      }])
-      // Log the IDs for debugging
-      console.log("Filtered Ads IDs:", filteredAds.map(ad => ad._id));
-      console.log("Filtered Ads On Details IDs:", filteredAdsOnDetails.map(ad => ad._id));
+      ])
 
-      // Create a Set of IDs from filteredAds for quick lookup
-      const filteredAdsIds = new Set(filteredAds.map(ad => ad._id.toString())); // Ensure IDs are strings
-      console.log("jo")
-      console.log("set",filteredAdsIds)
+      const filteredAdsIds = new Set(filteredAds.map(ad => ad._id.toString()));
 
-      // Combine results, keeping only unique ads from filteredAds and ignoring duplicates from filteredAdsOnDetails
       let combinedResult = [...filteredAds];
 
       filteredAdsOnDetails.forEach(ad => {
-        if (!filteredAdsIds.has(ad._id.toString())) { // Ensure IDs are strings
+        if (!filteredAdsIds.has(ad._id.toString())) {
           combinedResult.push(ad);
         }
       });
 
-      combinedResult.sort((a, b) => {
-        const dateA = new Date(a.createdAt);
-        const dateB = new Date(b.createdAt);
-        if (sortCriteria.createdAt === "asc") {
-          return dateA - dateB;
-        } else {
-          return dateB - dateA;
-        }
-      })
+      // combinedResult.sort((a, b) => {
+      //   const dateA = new Date(a.createdAt);
+      //   const dateB = new Date(b.createdAt);
+      //   if (sortCriteria.createdAt === "asc") {
+      //     return dateA - dateB;
+      //   } else {
+      //     return dateB - dateA;
+      //   }
+      // })
 
       return res.status(SUCCESS_CODE).send({
         success: true,
@@ -101,6 +88,7 @@ export const getAllAds = async (req, res) => {
     } else if (searchKeyword && searchCategory) {
 
       try {
+
         const filteredAds = await Ad.find({
           $and: [
             { category: new RegExp(searchCategory.trim(), 'i') },
@@ -117,10 +105,47 @@ export const getAllAds = async (req, res) => {
 
           ]
 
-        }).sort(sortCriteria).limit(3);
+        })
+
+        const filteredAdsOnDetails = await Ad.aggregate([
+          {
+            $match: {
+              category: new RegExp(searchCategory.trim(), 'i') 
+            }
+          },
+          {
+            $addFields: {
+              detailsArray: { $objectToArray: "$details" }
+            }
+          },
+          { $unwind: "$detailsArray" },
+          {
+            $match: {
+              "detailsArray.v": new RegExp(searchKeyword.trim(), 'i')
+            }
+          },
+          {
+            $replaceRoot: { newRoot: "$$ROOT" }
+          }
+        ]);
+
+      
+        const combinedResult = [...filteredAds];
+
+        const filteredAdsIds = new Set(filteredAds.map(ad => ad._id.toString()));
+
+        filteredAdsOnDetails.forEach(ad => {
+          if (!filteredAdsIds.has(ad._id.toString())) {
+            combinedResult.push(ad);
+          }
+        });
+
+
+        // .sort(sortCriteria).limit(3);
+
         res.status(SUCCESS_CODE).send({
           success: true,
-          ads: filteredAds
+          ads: combinedResult
         });
       }
       catch (error) {
