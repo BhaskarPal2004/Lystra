@@ -41,8 +41,8 @@ const buyerSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'ad'
     }],
-    blockedBy: [{
-        type: mongoose.Schema.ObjectId,
+    blockedList: [{
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
     }],
     reports: [{
