@@ -34,10 +34,11 @@ export const findUserData = async (req, res) => {
         });
       }
     }
-  } catch (err) {
+
+  } catch (error) {
     return res.status(INTERNAL_SERVER_ERROR_CODE).json({
-        success: false,
-        message: "user not found",
-      });
+      success: false,
+      message: error.message,
+    });
   }
 };
