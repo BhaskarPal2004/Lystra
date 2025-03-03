@@ -11,6 +11,7 @@ import { uploadProfilePictureController } from '../controllers/userControllers/u
 import { createAdReport } from '../controllers/userControllers/createAdReport.js';
 import { createUserReport } from '../controllers/userControllers/createUserReport.js';
 import { blockedUser } from '../controllers/userControllers/blockedUser.js';
+import { unBlockedUser } from '../controllers/userControllers/unBlockedUser.js';
 
 const userRoute = express.Router();
 
@@ -22,5 +23,6 @@ userRoute.post('/reportUser', verifyAccessToken, isVerified, createUserReport);
 userRoute.delete('/logout', verifyAccessToken, isVerified, logout)
 userRoute.post('/uploadProfilePicture', verifyAccessToken, isVerified, uploadProfilePicture, uploadProfilePictureController);
 userRoute.post('/blockUser/:blockId',verifyAccessToken,isVerified,blockedUser);
+userRoute.post('/unblockUser/:unBlockId',verifyAccessToken,isVerified,unBlockedUser);
 
 export default userRoute
