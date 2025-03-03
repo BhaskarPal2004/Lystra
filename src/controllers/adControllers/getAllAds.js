@@ -8,20 +8,13 @@ export const getAllAds = async (req, res) => {
 
     let priceFilter = { $gte: 0, $lte: Infinity }
 
-    minPrice = Number(minPrice)
-    maxPrice = Number(maxPrice)
-
-    if(minPrice===NaN || maxPrice===NaN){
-      console.log("1")
+    if(isNaN(minPrice) || isNaN(maxPrice)){
       priceFilter = { $gte: 0, $lte: Infinity }
     }
-    else if (minPrice !== 0 || maxPrice !== Infinity) {
-      console.log("2")
-      priceFilter = { $gte: minPrice, $lte: maxPrice }
+    else if (Number(minPrice) !== 0 || Number(maxPrice) !== Infinity) {
+     
+      priceFilter = { $gte: Number(minPrice), $lte: Number(maxPrice) }
     }
-
-    console.log(priceFilter.$gte)
-    console.log(typeof(priceFilter.$gte))
 
     const filteredAds = await Ad.aggregate([
       {
