@@ -53,8 +53,21 @@ const sellerSchema = new mongoose.Schema({
     averageReviews: {
         type: Number,
         default: null
-    }
-
+    },
+    blockedBy: [{
+        type: mongoose.Schema.ObjectId,
+        required: true,
+    }],
+    reports: [{
+        reporterId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+        },
+        message: {
+            type: String,
+            default: null
+        }
+    }]
 }, { timestamps: true });
 
 const Seller = mongoose.model("seller", sellerSchema);
