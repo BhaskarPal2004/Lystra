@@ -5,6 +5,13 @@ export const isSeller = async (req, res, next) => {
   try {
     const userId = req.userId;
 
+    if (!userId) {
+      return res.status(NOT_FOUND_CODE).json({
+        success: false,
+        message: "User id not found"
+      });
+    }
+
     const seller = await Seller.findById(userId);
 
     if (!seller) {
@@ -13,11 +20,13 @@ export const isSeller = async (req, res, next) => {
         message: "Unauthorized Access"
       });
     }
-    else next();
+
+    next();
+
   } catch (error) {
     return res.status(INTERNAL_SERVER_ERROR_CODE).send({
-      message: error.message,
-      success: false
+      success: false,
+      message: error.message
     });
   }
 };
