@@ -4,7 +4,7 @@ import Ad from "../../models/adModel.js";
 export const getAllAds = async (req, res) => {
 
   try {
-    const { searchKeyword = "", searchCategory = ""}  = req.query; 
+    const { searchKeyword = "", searchCategory = ""}  = req.query;  //default value is empty string
 
    
 
