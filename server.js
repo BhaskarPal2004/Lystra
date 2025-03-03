@@ -4,9 +4,9 @@ import { dbConnect } from './src/config/dbConnect.js'
 import authRoute from './src/routes/authRoutes.js'
 import userRoute from './src/routes/userRoutes.js'
 import buyerRoute from './src/routes/buyerRoutes.js'
-import sellerRoute from './src/routes/sellerRoute.js'
 import adRoute from './src/routes/adRoutes.js'
-import reviewRoute from './src/routes/reviewRoute.js'
+import sellerRoute from './src/routes/sellerRoutes.js'
+import reviewRoute from './src/routes/reviewRoutes.js'
 
 env.config({})
 
