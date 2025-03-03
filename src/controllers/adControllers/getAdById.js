@@ -12,6 +12,9 @@ export const getAdById = async (req, res) => {
                 message: "Ad not found"
             });
 
+        ad.performance.clicks += 1;
+        await ad.save();
+
         return res.status(SUCCESS_CODE).send({
             success: true,
             message: "Ad fetched successfully",
