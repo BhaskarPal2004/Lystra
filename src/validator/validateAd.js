@@ -34,9 +34,4 @@ export const updateAdSchema = z.object({
   images: z.optional(z.array(z.string().trim().min(3)).nonempty()),
   price: z.optional(z.number().nonnegative()),
   performance: z.optional(performanceSchema),
-  userId: z.optional(z.string()),
-  role: z.optional(z.string()),
 }).strict()
-
-
-
