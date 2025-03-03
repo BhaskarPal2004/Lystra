@@ -54,8 +54,8 @@ const sellerSchema = new mongoose.Schema({
         type: Number,
         default: null
     },
-    blockedBy: [{
-        type: mongoose.Schema.ObjectId,
+    blockedList: [{
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
     }],
     reports: [{
