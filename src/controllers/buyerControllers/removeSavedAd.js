@@ -2,30 +2,42 @@ import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../
 import Ad from "../../models/adModel.js";
 import Buyer from "../../models/buyerModel.js";
 
+
 const removeSavedAd = async (req, res) => {
     try {
         const userId = req.userId;
         const adId = req.params.adId;
+
         const buyer = await Buyer.findById(userId);
         const ad = await Ad.findById(adId);
-        if(!ad || !buyer.savedAds.includes(adId)){
-            res.status(NOT_FOUND_CODE).send({
+
+        if (!ad) {
+            return res.status(NOT_FOUND_CODE).json({
                 success: false,
                 message: "ad not found"
             })
-        }else{
-            buyer.savedAds.remove(adId);
-            await buyer.save();
-            res.status(SUCCESS_CODE).send({
-                success: true,
-                message: "ad removed successfully"
+        }
+        if (!buyer.savedAds.includes(adId)) {
+            return res.status(NOT_FOUND_CODE).json({
+                success: false,
+                message: "Ad is not saved in your wishlist"
             })
         }
+
+        buyer.savedAds.remove(adId);
+        await buyer.save();
+
+        return res.status(SUCCESS_CODE).json({
+            success: true,
+            message: "ad removed successfully"
+        })
+
     } catch (error) {
-        res.status(INTERNAL_SERVER_ERROR_CODE).send({
+        return res.status(INTERNAL_SERVER_ERROR_CODE).json({
             success: false,
             message: error.message
         })
     }
 }
+
 export default removeSavedAd;
