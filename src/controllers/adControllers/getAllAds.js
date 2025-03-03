@@ -8,11 +8,20 @@ export const getAllAds = async (req, res) => {
 
     let priceFilter = { $gte: 0, $lte: Infinity }
 
-    if (Number(minPrice) !== 0 || Number(maxPrice) !== Infinity) {
-      priceFilter = { $gte: Number(minPriceRange), $lte: Number(maxPriceRange) }
+    minPrice = Number(minPrice)
+    maxPrice = Number(maxPrice)
+
+    if(minPrice===NaN || maxPrice===NaN){
+      console.log("1")
+      priceFilter = { $gte: 0, $lte: Infinity }
+    }
+    else if (minPrice !== 0 || maxPrice !== Infinity) {
+      console.log("2")
+      priceFilter = { $gte: minPrice, $lte: maxPrice }
     }
 
-
+    console.log(priceFilter.$gte)
+    console.log(typeof(priceFilter.$gte))
 
     const filteredAds = await Ad.aggregate([
       {
@@ -62,6 +71,7 @@ export const getAllAds = async (req, res) => {
   }
 
   catch (error) {
+    console.log(error)
     res.status(INTERNAL_SERVER_ERROR_CODE).send({
       message: error.message,
       success: false,
