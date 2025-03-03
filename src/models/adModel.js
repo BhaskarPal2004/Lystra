@@ -1,6 +1,4 @@
-import { fa } from "@faker-js/faker";
 import mongoose from "mongoose";
-import { boolean, string } from "zod";
 
 const adSchema = new mongoose.Schema({
     name: {
