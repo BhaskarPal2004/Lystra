@@ -9,6 +9,7 @@ import logout from '../controllers/userControllers/logout.js';
 import { uploadProfilePicture } from '../middleware/multers/profilePictureMulter.js';
 import { uploadProfilePictureController } from '../controllers/userControllers/uploadProfilePictureController.js';
 import { createAdReport } from '../controllers/userControllers/createAdReport.js';
+import { createUserReport } from '../controllers/userControllers/createUserReport.js';
 
 const userRoute = express.Router();
 
@@ -16,6 +17,7 @@ const userRoute = express.Router();
 userRoute.get('/userData', verifyAccessToken, isVerified, findUserData);
 userRoute.put('/updateProfile', verifyAccessToken, isVerified, validateData(profileUpdateValidation), updateProfile);
 userRoute.post('/report/:adId', verifyAccessToken, isVerified, createAdReport);
+userRoute.post('/reportUser', verifyAccessToken, isVerified, createUserReport);
 userRoute.delete('/logout', verifyAccessToken, isVerified, logout)
 userRoute.post('/uploadProfilePicture', verifyAccessToken, isVerified, uploadProfilePicture, uploadProfilePictureController);
 

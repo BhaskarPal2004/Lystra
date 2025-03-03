@@ -1,6 +1,4 @@
 import Ad from "../../models/adModel.js";
-import Buyer from "../../models/buyerModel.js";
-import Seller from "../../models/sellerModel.js";
 import { SUCCESS_CODE, NOT_FOUND_CODE, INTERNAL_SERVER_ERROR_CODE, BAD_REQUEST_CODE } from "../../config/constant.js";
 
 export const createAdReport = async (req, res) => {
