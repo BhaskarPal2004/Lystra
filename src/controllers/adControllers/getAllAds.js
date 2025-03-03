@@ -4,18 +4,31 @@ import Ad from "../../models/adModel.js";
 export const getAllAds = async (req, res) => {
 
   try {
-    const { searchKeyword = "", searchCategory = "" } = req.query; //either "" or some value
+    const { searchKeyword = "", searchCategory = "", sortBy = "createdAt" , sortOrder = "asc"}  = req.query; //either "" or some value
+    console.log("sortBy",sortBy)
+    console.log("sortCategory",sortOrder)
 
 
+    // sorting
 
-    //sorting
-    // let sortCriteria = null
-    // if (sortBy === "asc") {
-    //   sortCriteria = { createdAt: "asc" }
-    // }
-    // else {
-    //   sortCriteria = { createdAt: "desc" }
-    // }
+    let sortCriteria = null
+    if (sortBy === "createdAt"){
+      if(sortOrder === "asc"){
+        sortCriteria = {createdAt:"asc"}
+      }
+      else{
+        sortCriteria = {createdAt:"desc"}
+      }
+    }
+    else if (sortBy === "price"){
+      if(sortOrder === "asc"){
+        sortCriteria = {price:"asc"}
+      }
+      else{
+        sortCriteria = {price:"desc"}
+      }
+    }
+   
 
     //searching
 
@@ -23,15 +36,15 @@ export const getAllAds = async (req, res) => {
 
       const filteredAds = await Ad.find({
         category: new RegExp(searchCategory.trim(), 'i')
-      })
+      }).sort(sortCriteria)
 
-      // .sort(sortCriteria).limit(3);
 
       return res.status(SUCCESS_CODE).send({
         success: true,
         ads: filteredAds
       });
 
+      
     } else if (searchKeyword && searchCategory === "") {
       const filteredAds = await Ad.find({
         $or: [
