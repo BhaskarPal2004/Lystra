@@ -17,6 +17,8 @@ app.use('/uploads', express.static('uploads'))
 
 const port = process.env.PORT || 5000
 
+
+
 app.use('/api/auth', authRoute)
 app.use('/api/user', userRoute)
 app.use('/api/buyer', buyerRoute)

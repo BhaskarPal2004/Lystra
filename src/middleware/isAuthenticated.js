@@ -7,7 +7,7 @@ const verifyToken = (req, res, next, token, type) => {
         if (error) {
             return res.status(UNAUTHORIZED_CODE).json({
                 success: false,
-                message: error.message
+                message: error.message,
             });
         }
         else {
