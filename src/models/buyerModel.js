@@ -12,7 +12,7 @@ const buyerSchema = new mongoose.Schema({
     },
     password: {//already hashed
         type: String,
-        require: true,
+        required: true,
         select: false
     },
     isVerified: {//email verification
@@ -43,9 +43,18 @@ const buyerSchema = new mongoose.Schema({
     }],
     blockedBy: [{
         type: mongoose.Schema.ObjectId,
-        ref: 'seller'
+        required: true,
+    }],
+    reports: [{
+        reporterId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+        },
+        message: {
+            type: String,
+            default: null
+        }
     }]
-
 }, { timestamps: true });
 
 const Buyer = mongoose.model("buyer", buyerSchema);

@@ -39,7 +39,7 @@ const adSchema = new mongoose.Schema({
         type: Object,
         required: true
     },
-    images: [{
+    files: [{
         type: String,
         default: null
     }],
