@@ -4,12 +4,17 @@ import Ad from "../../models/adModel.js";
 export const getAllAds = async (req, res) => {
 
   try {
-    const { searchKeyword = "", searchCategory = "", sortBy = "createdAt" , sortOrder = "asc"}  = req.query;  
+    const { searchKeyword = "", searchCategory = "", sortBy = "createdAt" , sortOrder = "asc" , searchSubCategory = ""}  = req.query;  
 
     const filteredAds = await Ad.aggregate([
             {
               $match: {
                 category: new RegExp(searchCategory.trim(), 'i'),
+              }
+            },
+            {
+              $match:{
+                subCategory:new RegExp(searchSubCategory.trim(), 'i'),
               }
             },
             {
