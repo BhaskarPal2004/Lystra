@@ -4,7 +4,6 @@ import Seller from "../../models/sellerModel.js";
 
 export const createNewAd = async (req, res) => {
     try {
-
         const { name, listingType, category, subCategory, description, details, images, price } = req.body;
         const userId = req.userId;
 
@@ -24,7 +23,7 @@ export const createNewAd = async (req, res) => {
     } catch (error) {
         return res.status(NOT_FOUND_CODE).json({
             success: false,
-            message: "Ad was not created",
+            message: error.message,
         })
     }
 }
