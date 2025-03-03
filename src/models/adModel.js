@@ -27,7 +27,7 @@ const adSchema = new mongoose.Schema({
     },
     subCategory: {
         type: String,
-        default: null
+        default: ""
     },
     description: {
         type: String,

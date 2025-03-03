@@ -41,11 +41,20 @@ const buyerSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'ad'
     }],
-    blockedBy: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'seller'
+    blockedList: [{
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+    }],
+    reports: [{
+        reporterId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+        },
+        message: {
+            type: String,
+            default: null
+        }
     }]
-
 }, { timestamps: true });
 
 const Buyer = mongoose.model("buyer", buyerSchema);
