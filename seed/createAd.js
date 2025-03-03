@@ -10,6 +10,7 @@ const createAd = async n => {
     const address = await Address.find({});
     const listingTypes = ['service', 'product', 'secondHandProduct', 'others'];
     const categories = ['electronics', 'vehicles', 'real estate', 'home and furniture', 'jobs and services', 'fashion and beauty'];
+    const condition = ["new", "used", "refurbished"]
     for (let i = 0; i < n; i++) {
         const product = faker.commerce;
         const ad = new Ad({
@@ -25,7 +26,8 @@ const createAd = async n => {
             performance: {
                 views: Math.floor(Math.random() * 100),
                 clicks: Math.floor(Math.random() * 100)
-            }
+            },
+            condition: condition[(Math.floor(Math.random() * condition.length))]
         })
         await ad.save();
     }

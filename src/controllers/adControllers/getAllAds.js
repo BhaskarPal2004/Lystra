@@ -4,7 +4,7 @@ import Ad from "../../models/adModel.js";
 export const getAllAds = async (req, res) => {
 
   try {
-    const { searchKeyword = "", searchCategory = "", sortBy = "createdAt", sortOrder = "asc", searchSubCategory = "", minPrice = 0, maxPrice = Infinity } = req.query;
+    const { searchKeyword = "", searchCategory = "", sortBy = "createdAt", sortOrder = "asc", searchSubCategory = "", minPrice = 0, maxPrice = Infinity , condition = ""} = req.query;
 
     let priceFilter = { $gte: 0, $lte: Infinity }
 
@@ -30,6 +30,11 @@ export const getAllAds = async (req, res) => {
       {
         $match: {
           price: priceFilter
+        }
+      },
+      {
+        $match: {
+          condition:condition
         }
       },
       {
@@ -64,7 +69,6 @@ export const getAllAds = async (req, res) => {
   }
 
   catch (error) {
-    console.log(error)
     res.status(INTERNAL_SERVER_ERROR_CODE).send({
       message: error.message,
       success: false,
@@ -73,3 +77,5 @@ export const getAllAds = async (req, res) => {
 }
 
 
+//404 dish jokhon ads.len = 0
+//for random value in condition query show all ! (most probably enum is used)
