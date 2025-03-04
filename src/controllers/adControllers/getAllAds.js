@@ -1,18 +1,21 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
-import { getFeaturedAds } from "./getFeaturedAds.js";
 
 export const getAllAds = async (req, res) => {
-
   try {
-    const { searchKeyword = "", searchCategory = "", sortBy = "createdAt", sortOrder = "asc", searchSubCategory = "", minPrice = 0, maxPrice = Infinity, condition = "" } = req.query;
-
-
-    const featuredAds = await getFeaturedAds(req.query)
+    const {
+      searchKeyword = "",
+      searchCategory = "",
+      sortBy = "createdAt",
+      sortOrder = "asc",
+      searchSubCategory = "",
+      minPrice = 0,
+      maxPrice = Infinity,
+      condition = ""
+    } = req.query;
 
     const conditionArray = ["new", "used", "refurbished"]
     const isValidCondition = conditionArray.includes(condition)
-
 
     let priceFilter = { $gte: 0, $lte: Infinity }
     if (isNaN(minPrice) || isNaN(maxPrice)) {
@@ -21,27 +24,25 @@ export const getAllAds = async (req, res) => {
     else if (Number(minPrice) !== 0 || Number(maxPrice) !== Infinity) {
       priceFilter = { $gte: Number(minPrice), $lte: Number(maxPrice) }
     }
+
     const matchConditions = {
       category: new RegExp(searchCategory.trim(), 'i'),
       subCategory: new RegExp(searchSubCategory.trim(), 'i'),
       price: priceFilter,
-      expiryDate: {$gte: new Date()}
+      expiryDate: { $gte: new Date() }
     }
 
     if (isValidCondition) {
       matchConditions.condition = condition
     }
 
-
     const filteredAds = await Ad.aggregate([
-      {
-        $match:
-          matchConditions
-
-      },
+      { $match: matchConditions },
       {
         $addFields: {
-          detailsArray: { $objectToArray: "$details" }
+          detailsArray: {
+            $objectToArray: "$details"
+          }
         }
       },
       {
@@ -53,7 +54,6 @@ export const getAllAds = async (req, res) => {
             { subCategory: new RegExp(searchKeyword.trim(), 'i') },
             { description: new RegExp(searchKeyword.trim(), 'i') },
             { "detailsArray.v": new RegExp(searchKeyword.trim(), 'i') }
-
           ]
         }
       },
@@ -64,44 +64,26 @@ export const getAllAds = async (req, res) => {
       }
     ]);
 
+    filteredAds.sort((a, b) => b.isFeatured - a.isFeatured)
 
-    // if (featuredAds) {
-    //   const combinedResult = featuredAds.concat(filteredAds)
-    //   const total = combinedResult.length
-
-    //   if (total === 0) {
-    //     return res.status(NOT_FOUND_CODE).send({
-    //       message: "Ad not found",
-    //       success: false
-    //     });
-    //   }
-    //   return res.status(SUCCESS_CODE).send({
-    //     success: true,
-    //     total: total,
-    //     ads: combinedResult
-    //   });
-    // }
-
-
-    const total = filteredAds.length
-
-    if (total === 0) {
-      return res.status(NOT_FOUND_CODE).send({
+    if (filteredAds.length === 0) {
+      return res.status(NOT_FOUND_CODE).json({
         message: "Ad not found",
         success: false,
       });
     }
-    return res.status(SUCCESS_CODE).send({
+
+    return res.status(SUCCESS_CODE).json({
       success: true,
-      total: total,
+      total: filteredAds.length,
       ads: filteredAds
     });
   }
 
   catch (error) {
-    return res.status(INTERNAL_SERVER_ERROR_CODE).send({
-      message: error.message,
+    return res.status(INTERNAL_SERVER_ERROR_CODE).json({
       success: false,
+      message: error.message
     });
   }
 }
