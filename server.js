@@ -7,7 +7,6 @@ import userRoute from './src/routes/userRoutes.js'
 import adRoute from './src/routes/adRoutes.js'
 import sellerRoute from './src/routes/sellerRoutes.js'
 import reviewRoute from './src/routes/reviewRoutes.js'
-import { getLocationCoords } from './src/helper/getLocationCoords.js'
 import buyerRoute from './src/routes/buyerRoutes.js'
 
 env.config({})
@@ -42,5 +41,3 @@ server.on('error', (err) => {
     }, 5000);
   }
 });
-
-getLocationCoords('kakdwip', 'westbengal')

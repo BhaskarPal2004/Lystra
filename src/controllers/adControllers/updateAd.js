@@ -1,10 +1,36 @@
-import { NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js"
+import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js"
+import createAddress from "../../helper/createAddress.js"
+import { getLocationCoords } from "../../helper/getLocationCoords.js"
+import Address from "../../models/addressModel.js"
 import Ad from "../../models/adModel.js"
 
 export const updateAd = async (req, res) => {
     try {
         const adId = req.params.adId
         const updatedFields = req.body
+
+        if (updatedFields.address) {
+            const ad = await Ad.findById(adId, { address: 1 }).populate('address')
+            const existingAddress = await Address.findById(ad.address._id.toHexString())
+
+            const updatedAddress = {
+                line1: updatedFields.address.line1 || existingAddress.line1,
+                line2: updatedFields.address.line2 || existingAddress.line2,
+                state: updatedFields.address.state || existingAddress.state,
+                city: updatedFields.address.city || existingAddress.city,
+                country: updatedFields.address.country || existingAddress.country,
+                pinCode: updatedFields.address.pinCode || existingAddress.pinCode
+            }
+
+            const coordinates = await getLocationCoords(updatedAddress.city, updatedAddress.state)
+
+            updatedAddress.coordinates = [coordinates.lat, coordinates.lng]
+
+            const newAddressId = await createAddress(updatedAddress)
+            await Address.findByIdAndDelete(ad.address._id.toHexString())
+            updatedFields.address = newAddressId
+        }
+
         if (req.body.expireInDays) {
             const expiryDate = new Date();
             expiryDate.setDate(expiryDate.getDate() + req.body.expireInDays);
@@ -26,7 +52,7 @@ export const updateAd = async (req, res) => {
         })
 
     } catch (error) {
-        return res.status(NOT_FOUND_CODE).json({
+        return res.status(INTERNAL_SERVER_ERROR_CODE).json({
             success: false,
             message: error.message
         })
