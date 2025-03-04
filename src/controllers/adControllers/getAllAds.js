@@ -1,16 +1,20 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
+import { getFeaturedAds } from "./getFeaturedAds.js";
 
 export const getAllAds = async (req, res) => {
 
   try {
     const { searchKeyword = "", searchCategory = "", sortBy = "createdAt", sortOrder = "asc", searchSubCategory = "", minPrice = 0, maxPrice = Infinity , condition = ""} = req.query;
 
+    const featuredAds = await getFeaturedAds(req.query)
+    console.log(featuredAds)
+    
+
     const conditionArray = ["new", "used", "refurbished"]
 
     const isValidCondition = conditionArray.includes(condition) 
    
-    
     
     let priceFilter = { $gte: 0, $lte: Infinity }
 
@@ -34,8 +38,6 @@ export const getAllAds = async (req, res) => {
       matchConditions.condition = condition
     }
 
-
-    console.log(matchConditions)
 
 
     const filteredAds = await Ad.aggregate([
@@ -71,7 +73,10 @@ export const getAllAds = async (req, res) => {
 
     const total = filteredAds.length
     if (total === 0){
-      throw new Error("No ads exist")
+      return res.status(NOT_FOUND_CODE).send({
+        message: "Ad not found",
+        success: false,
+      });
     }
     res.status(SUCCESS_CODE).send({
       success: true,
@@ -81,12 +86,6 @@ export const getAllAds = async (req, res) => {
   }
 
   catch (error) {
-    if (error.message === "No ads exist"){
-      return res.status(NOT_FOUND_CODE).send({
-        message: error.message,
-        success: false,
-      });
-    }
     res.status(INTERNAL_SERVER_ERROR_CODE).send({
       message: error.message,
       success: false,
