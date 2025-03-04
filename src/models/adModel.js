@@ -64,6 +64,12 @@ const adSchema = new mongoose.Schema({
             default: 0
         },
     },
+    condition: {
+        type: String,
+        required: true,
+        enum: ["new", "used", "refurbished"]
+
+    },
     reports: [{
         reporterId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -81,7 +87,8 @@ const adSchema = new mongoose.Schema({
             type: Boolean,
             default: false
         }
-    }]
+    }],
+
 }, { timestamps: true });
 
 const Ad = mongoose.model("ad", adSchema);
