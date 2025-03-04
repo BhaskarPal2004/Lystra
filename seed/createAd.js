@@ -14,7 +14,7 @@ const createAd = async n => {
     for (let i = 0; i < n; i++) {
         const product = faker.commerce;
         const expiryDate= new Date();
-        expiryDate.setSeconds(expiryDate.getSeconds()+ Math.floor(Math.random()*60));
+        expiryDate.setSeconds(expiryDate.getSeconds()+ Math.floor(Math.random()*60000));
         const ad = new Ad({
             name: product.product(),
             sellerId: seller[Math.floor(Math.random() * seller.length)]._id,

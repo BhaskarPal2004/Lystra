@@ -10,6 +10,6 @@ export const signUpValidation = z.object({
         .refine((password) => /[0-9]/.test(password), { message: "Password should contain number" })
         .refine((password) => /[-._!"`'#%&,:;<>=@{}~$()*+/\\?[\]^|]+/.test(password), { message: "Password should contain special character" }),
 
-    confirmPassword: z.string(),
-    phoneNumber: z.string().min(10, "number must have 10 digit").refine((validator.isMobilePhone), { message: "invalid number" }),
-});
+    confirmPassword: z.string(), 
+    phoneNumber: z.string().min(10, "number must have 10 digit").refine((validator.isMobilePhone), { message: "invalid number" }), 
+}).strict();
