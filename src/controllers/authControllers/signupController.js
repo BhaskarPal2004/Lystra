@@ -73,7 +73,7 @@ export const signup = async (req, res) => {
       return res.status(CREATED_CODE).json({
         success: true,
         message: 'Account created successfully',
-        advice: 'Please verify your email at earliest, you have 30 minuets to verify yourself',
+        advice: 'Please verify your email at earliest, you have 30 minutes to verify yourself',
         registrationToken,
         data: user
       })
@@ -85,7 +85,7 @@ export const signup = async (req, res) => {
       return res.status(CREATED_CODE).json({
         success: true,
         message: 'Account created successfully',
-        advice: 'Please verify your email at earliest, you have 10 minuets to verify yourself',
+        advice: 'Please verify your email at earliest, you have 10 minutes to verify yourself',
         registrationToken,
         data: user
       })
