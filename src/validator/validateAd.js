@@ -21,6 +21,7 @@ export const adSchema = z.object({
   details: z.record(z.string(), z.union([z.string(), z.number()])),
   images: z.optional(z.array(z.string().trim().min(3)).nonempty()),
   price: z.number().nonnegative(),
+  expireInDays: z.number().nonnegative().max(90),
   performance: z.optional(performanceSchema),
   address: addressSchemaValidation,
   condition: z.enum(condition)
@@ -38,6 +39,7 @@ export const updateAdSchema = z.object({
   images: z.optional(z.array(z.string().trim().min(3)).nonempty()),
   price: z.optional(z.number().nonnegative()),
   performance: z.optional(performanceSchema),
-  condition: z.optional(z.enum(condition))
+  condition: z.optional(z.enum(condition)),
+  expireInDays: z.number().nonnegative().max(90),
 
 }).strict()

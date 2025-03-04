@@ -50,6 +50,10 @@ const adSchema = new mongoose.Schema({
         ref: "address",
         required: true
     },
+    expiryDate:{
+        type: Date,
+        required: true
+    },
     performance: {
         views: {
             type: Number,
