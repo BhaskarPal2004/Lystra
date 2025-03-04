@@ -4,12 +4,12 @@ import Seller from "../../models/sellerModel.js";
 
 export const createNewAd = async (req, res) => {
     try {
-        const { name, listingType, category, subCategory, description, details, images, price, expireInDays } = req.body;
+        const { name, listingType, category, subCategory, description, details, images, price, expireInDays, condition } = req.body;
         const userId = req.userId;
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + expireInDays);
 
-        const newAd = await Ad.create({ sellerId: userId, name, listingType, category, subCategory, description, details, images, price, expiryDate })
+        const newAd = await Ad.create({ sellerId: userId, name, listingType, category, subCategory, description, details, images, price, expiryDate, condition })
 
         const seller = await Seller.findById(userId)
         seller.ads.push(newAd)
