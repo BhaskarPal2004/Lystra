@@ -12,4 +12,4 @@ export const updatePasswordValidation = z.object({
         .refine((password) => /[0-9]/.test(password), { message: "Password should contain number" })
         .refine((password) => /[-._!"`'#%&,:;<>=@{}~$()*+/\\?[\]^|]+/.test(password), { message: "Password should contain special character" }),
     confirmNewPassword: z.string(),
-});
+}).strict();
