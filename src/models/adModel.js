@@ -50,6 +50,10 @@ const adSchema = new mongoose.Schema({
         ref: "address",
         default: null
     },
+    expiryDate:{
+        type: Date,
+        required: true
+    },
     performance: {
         views: {
             type: Number,
@@ -59,6 +63,12 @@ const adSchema = new mongoose.Schema({
             type: Number,
             default: 0
         },
+    },
+    condition: {
+        type: String,
+        required: true,
+        enum: ["new", "used", "refurbished"]
+
     },
     reports: [{
         reporterId: {
@@ -77,7 +87,8 @@ const adSchema = new mongoose.Schema({
             type: Boolean,
             default: false
         }
-    }]
+    }],
+
 }, { timestamps: true });
 
 const Ad = mongoose.model("ad", adSchema);

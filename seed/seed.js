@@ -16,8 +16,7 @@ import createReview from "./createReview.js";
 
 
 const main = async () => {
-        // await mongoose.connect(process.env.MONGO_URI);
-        await mongoose.connect("mongodb://localhost:27017/Lystra");
+        await mongoose.connect(process.env.MONGO_URI);
         await Address.deleteMany({});
         await Payment.deleteMany({});
         await Buyer.deleteMany({});
