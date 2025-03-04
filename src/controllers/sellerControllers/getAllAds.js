@@ -4,6 +4,8 @@ import Ad from "../../models/adModel.js"
 
 export const getAllAds = async (req, res) => {
     try {
+        //change file name to getMyAds
+        //add field to check expiry date and return all/expired/active ads
         const userId = req.userId
 
         const ads = await Ad.find({ sellerId: userId })
