@@ -3,10 +3,11 @@ import env from 'dotenv'
 import { dbConnect } from './src/config/dbConnect.js'
 import authRoute from './src/routes/authRoutes.js'
 import userRoute from './src/routes/userRoutes.js'
-import buyerRoute from './src/routes/buyerRoutes.js'
+
 import adRoute from './src/routes/adRoutes.js'
 import sellerRoute from './src/routes/sellerRoutes.js'
 import reviewRoute from './src/routes/reviewRoutes.js'
+import buyerRoute from './src/Routes/buyerRoutes.js'
 
 env.config({})
 
