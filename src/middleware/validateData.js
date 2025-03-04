@@ -22,7 +22,8 @@ export const validateData = (schema) => {
 
       } else
         return res.status(INTERNAL_SERVER_ERROR_CODE).json({
-          error: "Internal Server Error"
+          success: false,
+          error: error.message
         });
     }
   };
