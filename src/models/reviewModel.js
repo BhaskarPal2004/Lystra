@@ -22,7 +22,6 @@ const reviewSchema = new mongoose.Schema({
     },
     reviewResponse:{
         type: String,
-        required: true,
         default: null
     }
 
