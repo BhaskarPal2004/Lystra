@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server",
+    "start": "nodemon --exec \"npx eslint . && nodemon server\"",
     "seed": "node seed/seed.js"
   },
   "author": "",
@@ -15,7 +15,9 @@
     "@faker-js/faker": "^9.5.0",
     "bcryptjs": "^3.0.2",
     "dotenv": "^16.4.7",
+    "eslint": "^9.21.0",
     "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "libphonenumber-js": "^1.11.20",

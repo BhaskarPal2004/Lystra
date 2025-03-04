@@ -1,4 +1,4 @@
-import { BAD_REQUEST_CODE, CREATED_CODE, INTERNAL_SERVER_ERROR_CODE } from "../../config/constant.js"
+import { BAD_REQUEST_CODE, CREATED_CODE, INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE } from "../../config/constant.js"
 import Buyer from "../../models/buyerModel.js"
 import Seller from "../../models/sellerModel.js"
 import fs from 'fs'

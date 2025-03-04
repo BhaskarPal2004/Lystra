@@ -9,14 +9,15 @@ import { login } from '../controllers/authControllers/loginController.js'
 import verifyUser from '../controllers/authControllers/verifyUser.js'
 import { resendMail } from '../controllers/authControllers/resendMailController.js'
 import { logInValidation } from '../validator/validateLogin.js'
+import limiter from '../middleware/rateLimit.js'
 
 
 const authRoute = express.Router()
 
 //all api's for authentications
-authRoute.post('/signup/:role', validateData(signUpValidation), signup)
+authRoute.post('/signup/:role',limiter, validateData(signUpValidation), signup)
 authRoute.get('/accessToken', verifyRefreshToken, isVerified, regenerateTokens);
-authRoute.post('/login', validateData(logInValidation), login)
+authRoute.post('/login',limiter, validateData(logInValidation), login)
 authRoute.post('/verifyUser/:registrationToken', verifyRegistrationToken, verifyUser);
 authRoute.post('/resendMail', resendMail)
 
