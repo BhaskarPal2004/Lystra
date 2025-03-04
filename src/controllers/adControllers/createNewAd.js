@@ -5,12 +5,13 @@ import createAddress from "../../helper/createAddress.js";
 
 export const createNewAd = async (req, res) => {
     try {
-        const { name, listingType, category, subCategory, description, details, images, price, expireInDays } = req.body;
+        const { name, listingType, category, subCategory, description, details, images, address, price, expireInDays } = req.body;
         const userId = req.userId;
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + expireInDays);
+        const adAddress = createAddress(address)
 
-        const newAd = await Ad.create({ sellerId: userId, name, listingType, category, subCategory, description, details, images, price, expiryDate })
+        const newAd = await Ad.create({ sellerId: userId, name, listingType, category, subCategory, description, details, images, price, address, adAddress, expiryDate })
 
         const seller = await Seller.findById(userId)
         seller.ads.push(newAd)
