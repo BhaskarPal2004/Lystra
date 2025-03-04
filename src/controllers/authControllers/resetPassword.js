@@ -12,7 +12,6 @@ const resetPassword =async (req, res) => {
             message: "user not found"
         })
         if(password===confirmPassword){
-            console.log('user :>> ', user);
             user.password=bcrypt.hashSync(password,10);
             await user.save();
             res.status(SUCCESS_CODE).send({
