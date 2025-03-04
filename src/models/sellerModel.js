@@ -50,9 +50,15 @@ const sellerSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'review'
     }],
-    averageReviews: {
-        type: Number,
-        default: null
+    averageReview: {
+        averageRating:{
+            type:Number,
+            default:null
+        },
+        Topreviews:[{
+            type: String,
+            default: null
+        }]
     },
     blockedList: [{
         type: mongoose.Schema.Types.ObjectId,

@@ -19,6 +19,10 @@ const reviewSchema = new mongoose.Schema({
     review: {
         type: String,
         default: null
+    },
+    reviewResponse:{
+        type: String,
+        default: null
     }
 
 }, { timestamps: true });

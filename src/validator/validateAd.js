@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { addressSchemaValidation, updateAddressSchemaValidation } from './validateAddress.js';
 
 const category = ['electronics', 'vehicles', 'real estate', 'home and furniture', 'jobs and services', 'fashion and beauty']
 const listingType = ['service', 'product', 'secondHandProduct', 'others']
@@ -22,7 +23,8 @@ export const adSchema = z.object({
   price: z.number().nonnegative(),
   expireInDays: z.number().nonnegative().max(90),
   performance: z.optional(performanceSchema),
-  condition: z.enum(condition)
+  address: addressSchemaValidation,
+  condition: z.enum(condition),
 }).strict()
 
 
@@ -38,10 +40,10 @@ export const updateAdSchema = z.object({
   price: z.optional(z.number().nonnegative()),
   performance: z.optional(performanceSchema),
   condition: z.optional(z.enum(condition)),
-  expireInDays: z.number().nonnegative().max(90),
-
+  expireInDays: z.optional(z.number().nonnegative().max(90)),
+  address: z.optional(updateAddressSchemaValidation),
 }).strict()
 
-export const renewAdSchema =z.object({
+export const renewAdSchema = z.object({
   expireInDays: z.number().min(1).max(90)
 }).strict()
