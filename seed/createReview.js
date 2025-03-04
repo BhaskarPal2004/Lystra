@@ -15,7 +15,8 @@ const createReview = async n => {
             sellerId: ad.sellerId ,
             adId: order.adId,
             rating: Math.ceil(Math.random() * 5),
-            review: faker.lorem.lines(3)
+            review: faker.lorem.lines(3),
+            reviewResponse: faker.lorem.lines(3)
         })
         await review.save();
     }
