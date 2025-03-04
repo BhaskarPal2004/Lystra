@@ -1,13 +1,17 @@
 import Ad from "../../models/adModel.js"
 import { SUCCESS_CODE, NOT_FOUND_CODE } from "../../config/constant.js"
 import Seller from "../../models/sellerModel.js";
+import createAddress from "../../helper/createAddress.js";
 
 export const createNewAd = async (req, res) => {
     try {
-        const { name, listingType, category, subCategory, description, details, images, price } = req.body;
+        const { name, listingType, category, subCategory, description, details, images, price, address } = req.body;
         const userId = req.userId;
+        console.log(address)
 
-        const newAd = await Ad.create({ sellerId: userId, name, listingType, category, subCategory, description, details, images, price })
+        const adAddress = await createAddress(address);
+
+        const newAd = await Ad.create({ sellerId: userId, name, listingType, category, subCategory, description, details, images, price, address: adAddress })
 
         const seller = await Seller.findById(userId)
         seller.ads.push(newAd)

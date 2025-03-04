@@ -48,7 +48,7 @@ const adSchema = new mongoose.Schema({
     address: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "address",
-        default: null
+        required: true
     },
     performance: {
         views: {

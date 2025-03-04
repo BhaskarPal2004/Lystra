@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { addressSchemaValidation } from './validateAddress.js';
 
 const category = ['electronics', 'vehicles', 'real estate', 'home and furniture', 'jobs and services', 'fashion and beauty']
 const listingType = ['service', 'product', 'secondHandProduct', 'others']
@@ -19,7 +20,8 @@ export const adSchema = z.object({
   details: z.record(z.string(), z.union([z.string(), z.number()])),
   images: z.optional(z.array(z.string().trim().min(3)).nonempty()),
   price: z.number().nonnegative(),
-  performance: z.optional(performanceSchema)
+  performance: z.optional(performanceSchema),
+  address: addressSchemaValidation
 }).strict()
 
 
