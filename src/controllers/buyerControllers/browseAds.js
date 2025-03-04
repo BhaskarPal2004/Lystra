@@ -1,6 +1,7 @@
 import {
   BAD_REQUEST_CODE,
   INTERNAL_SERVER_ERROR_CODE,
+  NOT_FOUND_CODE,
   SUCCESS_CODE,
 } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
@@ -23,12 +24,18 @@ export const browseAds = async (req, res) => {
 
     user.interests.forEach((interest) => {
         allAds.forEach((ad)=>{
-            console.log(ad.category);
             if(ad.category === interest || ad.subCategory === interest) {
                 filterAds.push(ad)
             }
         })
     })
+
+    if(filterAds.length === 0){
+        return res.status(NOT_FOUND_CODE).json({
+            success: false,
+            message: "No matching Ads found",
+        });
+    }
 
     return res.status(SUCCESS_CODE).json({
       success: true,
