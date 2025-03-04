@@ -12,6 +12,8 @@ const createAd = async n => {
     const categories = ['electronics', 'vehicles', 'real estate', 'home and furniture', 'jobs and services', 'fashion and beauty'];
     for (let i = 0; i < n; i++) {
         const product = faker.commerce;
+        const expiryDate= new Date();
+        expiryDate.setSeconds(expiryDate.getSeconds()+ Math.floor(Math.random()*60));
         const ad = new Ad({
             name: product.product(),
             sellerId: seller[Math.floor(Math.random() * seller.length)]._id,
@@ -22,6 +24,7 @@ const createAd = async n => {
             details: { brand: 'randomBrand', dimension: '5x7x2', weight: Math.floor(Math.random() * 500) + 'g' },
             price: product.price(),
             address: address[Math.floor(Math.random() * address.length)]._id,
+            expiryDate,
             performance: {
                 views: Math.floor(Math.random() * 100),
                 clicks: Math.floor(Math.random() * 100)
