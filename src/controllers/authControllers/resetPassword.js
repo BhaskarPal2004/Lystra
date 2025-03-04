@@ -6,12 +6,13 @@ const resetPassword =async (req, res) => {
     try{
         const { password, confirmPassword } = req.body;
         const User = (req.role === 'buyer') ? Buyer : Seller;
-        const user =await User.find({ email: req.id });
+        const user =await User.findOne({ email: req.userId });
         if(!user) return res.status(NOT_FOUND_CODE).send({
             success: false,
             message: "user not found"
         })
         if(password===confirmPassword){
+            console.log('user :>> ', user);
             user.password=bcrypt.hashSync(password,10);
             await user.save();
             res.status(SUCCESS_CODE).send({
@@ -23,6 +24,7 @@ const resetPassword =async (req, res) => {
             message: "password mismatch"
         })
     }catch(error){
+        console.log('error :>> ', error);
         res.status(INTERNAL_SERVER_ERROR_CODE).send({
             success:false,
             message:error.message
