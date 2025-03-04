@@ -12,26 +12,21 @@ export const getAllAds = async (req, res) => {
     
 
     const conditionArray = ["new", "used", "refurbished"]
-
     const isValidCondition = conditionArray.includes(condition) 
    
     
     let priceFilter = { $gte: 0, $lte: Infinity }
-
     if(isNaN(minPrice) || isNaN(maxPrice)){
       priceFilter = { $gte: 0, $lte: Infinity }
     }
     else if (Number(minPrice) !== 0 || Number(maxPrice) !== Infinity) {
-     
       priceFilter = { $gte: Number(minPrice), $lte: Number(maxPrice) }
     }
-
-
-
     const matchConditions = {
       category: new RegExp(searchCategory.trim(), 'i'),
       subCategory: new RegExp(searchSubCategory.trim(), 'i'),
-      price: priceFilter
+      price: priceFilter,
+      expiryDate: {$gte: new Date()}
     }
 
     if(isValidCondition){
