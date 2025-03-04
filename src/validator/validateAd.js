@@ -19,6 +19,7 @@ export const adSchema = z.object({
   details: z.record(z.string(), z.union([z.string(), z.number()])),
   images: z.optional(z.array(z.string().trim().min(3)).nonempty()),
   price: z.number().nonnegative(),
+  expireInDays: z.number().nonnegative().max(90),
   performance: z.optional(performanceSchema)
 }).strict()
 
