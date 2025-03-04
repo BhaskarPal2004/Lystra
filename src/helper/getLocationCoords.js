@@ -10,5 +10,6 @@ export const getLocationCoords = async (city, state) => {
     } else {
         console.log('Status', response.status.message);
         console.log('total_results', response.total_results);
+        return null
     }
 }

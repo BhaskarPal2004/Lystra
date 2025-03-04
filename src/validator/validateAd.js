@@ -24,7 +24,7 @@ export const adSchema = z.object({
   expireInDays: z.number().nonnegative().max(90),
   performance: z.optional(performanceSchema),
   address: addressSchemaValidation,
-  condition: z.enum(condition)
+  condition: z.enum(condition),
 }).strict()
 
 
@@ -44,6 +44,6 @@ export const updateAdSchema = z.object({
 
 }).strict()
 
-export const renewAdSchema =z.object({
+export const renewAdSchema = z.object({
   expireInDays: z.number().min(1).max(90)
 }).strict()
