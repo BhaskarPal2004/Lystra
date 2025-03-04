@@ -1,4 +1,4 @@
-import { INTERNAL_SERVER_ERROR_CODE, SUCCESS_CODE } from "../../config/constant.js";
+import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
 
 export const getAllAds = async (req, res) => {
@@ -6,6 +6,12 @@ export const getAllAds = async (req, res) => {
   try {
     const { searchKeyword = "", searchCategory = "", sortBy = "createdAt", sortOrder = "asc", searchSubCategory = "", minPrice = 0, maxPrice = Infinity , condition = ""} = req.query;
 
+    const conditionArray = ["new", "used", "refurbished"]
+
+    const isValidCondition = conditionArray.includes(condition) 
+   
+    
+    
     let priceFilter = { $gte: 0, $lte: Infinity }
 
     if(isNaN(minPrice) || isNaN(maxPrice)){
@@ -16,26 +22,27 @@ export const getAllAds = async (req, res) => {
       priceFilter = { $gte: Number(minPrice), $lte: Number(maxPrice) }
     }
 
+
+
+    const matchConditions = {
+      category: new RegExp(searchCategory.trim(), 'i'),
+      subCategory: new RegExp(searchSubCategory.trim(), 'i'),
+      price: priceFilter
+    }
+
+    if(isValidCondition){
+      matchConditions.condition = condition
+    }
+
+
+    console.log(matchConditions)
+
+
     const filteredAds = await Ad.aggregate([
       {
-        $match: {
-          category: new RegExp(searchCategory.trim(), 'i'),
-        }
-      },
-      {
-        $match: {
-          subCategory: new RegExp(searchSubCategory.trim(), 'i'),
-        }
-      },
-      {
-        $match: {
-          price: priceFilter
-        }
-      },
-      {
-        $match: {
-          condition:condition
-        }
+        $match: 
+         matchConditions
+        
       },
       {
         $addFields: {
@@ -61,14 +68,25 @@ export const getAllAds = async (req, res) => {
         }
       }
     ]);
+
+    const total = filteredAds.length
+    if (total === 0){
+      throw new Error("No ads exist")
+    }
     res.status(SUCCESS_CODE).send({
       success: true,
-      total: filteredAds.length,
+      total: total,
       ads: filteredAds
     });
   }
 
   catch (error) {
+    if (error.message === "No ads exist"){
+      return res.status(NOT_FOUND_CODE).send({
+        message: error.message,
+        success: false,
+      });
+    }
     res.status(INTERNAL_SERVER_ERROR_CODE).send({
       message: error.message,
       success: false,
@@ -76,6 +94,3 @@ export const getAllAds = async (req, res) => {
   }
 }
 
-
-//404 dish jokhon ads.len = 0
-//for random value in condition query show all ! (most probably enum is used)
