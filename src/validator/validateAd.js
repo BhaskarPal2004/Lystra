@@ -43,5 +43,5 @@ export const updateAdSchema = z.object({
 }).strict()
 
 export const renewAdSchema =z.object({
-  expireInDays: z.number().nonnegative().default(7)
-})
+  expireInDays: z.number().min(1).max(90)
+}).strict()
