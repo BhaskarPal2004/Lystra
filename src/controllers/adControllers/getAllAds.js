@@ -1,10 +1,11 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
+import Address from "../../models/addressModel.js";
 import Ad from "../../models/adModel.js";
 
 export const getAllAds = async (req, res) => {
 
   try {
-    const { searchKeyword = "", searchCategory = "", sortBy = "createdAt", sortOrder = "asc", searchSubCategory = "", minPrice = 0, maxPrice = Infinity , condition = ""} = req.query;
+    const { searchKeyword = "", searchCategory = "", sortBy = "createdAt", sortOrder = "asc", searchSubCategory = "", minPrice = 0, maxPrice = Infinity , condition = "", city=""} = req.query;
     const conditionArray = ["new", "used", "refurbished"]
     const isValidCondition = conditionArray.includes(condition) 
     let priceFilter = { $gte: 0, $lte: Infinity }
@@ -24,7 +25,7 @@ export const getAllAds = async (req, res) => {
     if(isValidCondition){
       matchConditions.condition = condition
     }
-
+    
     const filteredAds = await Ad.aggregate([
       {
         $match: 
@@ -54,7 +55,7 @@ export const getAllAds = async (req, res) => {
           [sortBy]: sortOrder === "asc" ? 1 : -1
         }
       }
-    ]);
+    ]).populate("address");
 
     const total = filteredAds.length
     if (total === 0){
