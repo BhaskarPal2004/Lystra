@@ -9,11 +9,16 @@ import sellerRoute from './src/routes/sellerRoutes.js'
 import reviewRoute from './src/routes/reviewRoutes.js'
 import buyerRoute from './src/routes/buyerRoutes.js'
 
+import cors from 'cors'
+import Razorpay from 'razorpay'
+import paymentRoute from './src/routes/paymentRoute.js'
+
 env.config({})
 
 const app = express()
 app.use(express.json())
 app.use('/uploads', express.static('uploads'))
+app.use(cors())
 
 const port = process.env.PORT || 5000
 
@@ -23,6 +28,7 @@ app.use('/api/buyer', buyerRoute)
 app.use('/api/seller', sellerRoute)
 app.use('/api/ad', adRoute)
 app.use('/api/review', reviewRoute)
+app.use('/api/payment', paymentRoute)
 
 dbConnect()
 
@@ -40,4 +46,9 @@ server.on('error', (err) => {
       process.exit(1)
     }, 5000);
   }
+});
+
+export const instance = new Razorpay({
+  key_id: process.env.RAZORPAY_API_KEY,
+  key_secret: process.env.RAZORPAY_API_SECRET,
 });
