@@ -14,6 +14,11 @@ export const getAllAds = async (req, res) => {
       condition = ""
     } = req.query;
 
+    // const latitude = 28.626137;
+    // const longitude = 79.821602;
+    // const distance = 1;
+    // const unitValue = 1000;
+
     const conditionArray = ["new", "used", "refurbished"]
     const isValidCondition = conditionArray.includes(condition)
 
@@ -61,14 +66,28 @@ export const getAllAds = async (req, res) => {
         $sort: {
           [sortBy]: sortOrder === "asc" ? -1 : 1
         }
-      },
+      }
       // {
-      //   $near: {
-      //     $geometry: { type: "Point", coordinates: [userLocationCoordinates.lat, userLocationCoordinates.lng] },
-      //     $minDistance: 1000,
-      //     $maxDistance: 500000
+      //   $geoNear: {
+      //     near: {
+      //       type: 'Point',
+      //       coordinates: [longitude, latitude]
+      //     },
+      //     query: {
+      //       status: true
+      //     },
+      //     maxDistance: distance * unitValue,
+      //     distanceField: 'distance',
+      //     distanceMultiplier: 1 / unitValue
       //   }
-      // }
+      // },
+      // {
+      //   $project: {
+      //     _id: 1,
+      //     distance: 1
+      //   }
+      // },
+      // { $sort: { distance: 1 } },
     ]);
 
     filteredAds.sort((a, b) => b.isFeatured - a.isFeatured)

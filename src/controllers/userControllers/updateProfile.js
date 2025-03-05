@@ -16,9 +16,8 @@ const updateProfile = async (req, res) => {
         if (name) user.name = name
         user.phoneNumber = (phoneNumber) ?? phoneNumber;
 
-        console.log('user :>> ', user);
         const existingAddress = await Address.findById(user.address);
-        console.log('existingAddress :>> ', existingAddress);
+
         const updatedAddress = {
             line1: address.line1 || existingAddress?.line1,
             line2: address.line2 || existingAddress?.line2,
