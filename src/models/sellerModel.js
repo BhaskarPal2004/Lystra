@@ -55,7 +55,7 @@ const sellerSchema = new mongoose.Schema({
             type:Number,
             default:null
         },
-        Topreviews:[{
+        topReviews:[{
             type: String,
             default: null
         }]
