@@ -64,80 +64,90 @@ export const getAllAds = async (req, res) => {
 
     //database query
 
-    const filteredAds = await Ad.aggregate([
-      {
-        $geoNear: {
-          near: { type: 'Point', coordinates: [longitude, latitude] },  
-          distanceField: 'distance',
-          maxDistance: 5000,  
-          spherical: true,
-          query: {
-            "addressDetailsArray.location": { $exists: true } 
-          }
-        },
-      },
-      {
-        $lookup: {
-          from: "addresses",
-          localField: "address",
-          foreignField: "_id",
-          as: "addressDetailsArray"
-        }
-      },
+    // const filteredAds = await Ad.aggregate([
       
-      {
-        $unwind: '$addressDetailsArray',
-      },
-      
-      {
-        $addFields: {
-          addressDetails: "$addressDetailsArray"
-        }
-      },
-      { $match: matchConditions },
-      {
-        $addFields: {
-          detailsArray: {
-            $objectToArray: "$details"
-          }
-        }
-      },
-      {
-        $match: {
-          $or: [
-            { name: new RegExp(searchKeyword.trim(), 'i') },
-            { listingType: new RegExp(searchKeyword.trim(), 'i') },
-            { category: new RegExp(searchKeyword.trim(), 'i') },
-            { subCategory: new RegExp(searchKeyword.trim(), 'i') },
-            { description: new RegExp(searchKeyword.trim(), 'i') },
-            { "detailsArray.v": new RegExp(searchKeyword.trim(), 'i') }
-          ]
-        }
-      },
-
-      {
-        $sort: {
-          [sortBy]: sortOrder === "asc" ? -1 : 1
-        }
-      }
-    ]);
-
-
-
-    // const filteredAds = await Address.aggregate([
+    //   {
+    //     $lookup: {
+    //       from: "addresses",
+    //       localField: "address",
+    //       foreignField: "_id",
+    //       as: "addressDetailsArray"
+    //     }
+    //   },
     //   {
     //     $geoNear: {
-    //       near: { type: 'Point', coordinates: [longitude, latitude] },
+    //       near: {
+    //         type: 'Point', coordinates: [22.9749730,
+    //           88.4345920]
+    //       },
+    //       key:"location",
     //       distanceField: 'distance',
     //       maxDistance: 5000,
     //       spherical: true,
+    //       query: {
+    //         "addressDetailsArray.location": { $exists: true }
+    //       }
+    //     },
+    //   },
+    //   {
+    //     $unwind: '$addressDetailsArray',
+    //   },
+
+    //   {
+    //     $addFields: {
+    //       addressDetails: "$addressDetailsArray"
     //     }
-    //   }])
+    //   },
+    //   { $match: matchConditions },
+    //   {
+    //     $addFields: {
+    //       detailsArray: {
+    //         $objectToArray: "$details"
+    //       }
+    //     }
+    //   },
+    //   {
+    //     $match: {
+    //       $or: [
+    //         { name: new RegExp(searchKeyword.trim(), 'i') },
+    //         { listingType: new RegExp(searchKeyword.trim(), 'i') },
+    //         { category: new RegExp(searchKeyword.trim(), 'i') },
+    //         { subCategory: new RegExp(searchKeyword.trim(), 'i') },
+    //         { description: new RegExp(searchKeyword.trim(), 'i') },
+    //         { "detailsArray.v": new RegExp(searchKeyword.trim(), 'i') }
+    //       ]
+    //     }
+    //   },
 
-      // console.log("hi:,",filteredAds)
+    //   {
+    //     $sort: {
+    //       [sortBy]: sortOrder === "asc" ? -1 : 1
+    //     }
+    //   }
+    // ]);
 
 
-    filteredAds.sort((a, b) => b.isFeatured - a.isFeatured)
+
+    const filteredAds = await Address.aggregate([
+      {
+        $geoNear: {
+          near: { type: 'Point', coordinates: [22.5726459,88.3638953] },
+          key:"location",
+          distanceField: 'distance',
+          maxDistance: 5000000,
+          spherical: true,
+        }
+      }])
+
+    //  const filteredAds = await Address.find({location:{$near:{$geometry:{type:"Point",coordinates:[
+    //     22.9749730,
+    //     88.4345920
+    //   ]}}}})
+
+    // console.log("hi", filteredAds)
+
+
+    // filteredAds.sort((a, b) => b.isFeatured - a.isFeatured)
 
 
     if (filteredAds.length === 0) {
@@ -147,9 +157,9 @@ export const getAllAds = async (req, res) => {
       });
     }
 
-    filteredAds.forEach((element) => {
-      setAdsViews(element._id);
-    })
+    // filteredAds.forEach((element) => {
+    //   setAdsViews(element._id);
+    // })
 
     return res.status(SUCCESS_CODE).json({
       success: true,

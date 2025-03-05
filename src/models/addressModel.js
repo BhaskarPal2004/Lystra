@@ -44,7 +44,7 @@ const addressSchema = new mongoose.Schema({
 
 }, { timestamps: true })
 
-addressSchema.index({ location: '2dsphere' });
 
 const Address = mongoose.model("address", addressSchema);
+Address.createIndexes({ location: '2dsphere' });
 export default Address;
