@@ -7,6 +7,7 @@ import addInterests from '../controllers/buyerControllers/addInterests.js'
 import { getAdsByLocation } from '../controllers/buyerControllers/getAdsByLocation.js'
 import { browseAds } from '../controllers/buyerControllers/browseAds.js'
 import { getAllReview } from '../controllers/buyerControllers/getAllReview.js'
+import { getOrders } from '../controllers/buyerControllers/getOrders.js'
 
 const buyerRoute = express.Router()
 
@@ -20,5 +21,6 @@ buyerRoute.post('/interest', verifyAccessToken, isVerified, addInterests);
 buyerRoute.get('/ads/location', verifyAccessToken, isVerified, getAdsByLocation);
 buyerRoute.get('/getAdsByInterest', verifyAccessToken, isVerified, browseAds);
 buyerRoute.get('/getAllReview/:buyerId', verifyAccessToken, isVerified, getAllReview);
+buyerRoute.get('/getAllOrders', verifyAccessToken, isVerified, getOrders);
 
 export default buyerRoute
