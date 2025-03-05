@@ -8,6 +8,7 @@ import adRoute from './src/routes/adRoutes.js'
 import sellerRoute from './src/routes/sellerRoutes.js'
 import reviewRoute from './src/routes/reviewRoutes.js'
 import buyerRoute from './src/routes/buyerRoutes.js'
+import subscriptionRoute from './src/routes/subscriptionRoutes.js'
 
 env.config({})
 
@@ -23,6 +24,7 @@ app.use('/api/buyer', buyerRoute)
 app.use('/api/seller', sellerRoute)
 app.use('/api/ad', adRoute)
 app.use('/api/review', reviewRoute)
+app.use('/api/subscription',subscriptionRoute)
 
 dbConnect()
 
