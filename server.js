@@ -1,5 +1,6 @@
 import express from 'express'
 import env from 'dotenv'
+import cors from 'cors'
 import { dbConnect } from './src/config/dbConnect.js'
 import authRoute from './src/routes/authRoutes.js'
 import userRoute from './src/routes/userRoutes.js'
@@ -11,7 +12,13 @@ import buyerRoute from './src/routes/buyerRoutes.js'
 
 env.config({})
 
+const corsOptions = {
+  origin: ['http://localhost:5500'],
+  credentials: true,
+}
+
 const app = express()
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use('/uploads', express.static('uploads'))
 

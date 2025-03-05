@@ -14,6 +14,7 @@ import { blockedUser } from '../controllers/userControllers/blockedUser.js';
 import { unBlockedUser } from '../controllers/userControllers/unBlockedUser.js';
 import { updatePassword } from '../controllers/userControllers/updatePassword.js';
 import { updatePasswordValidation } from "../validator/validateUpdatePassword.js"
+import { getUserCoordinates } from '../controllers/userControllers/getUserCoordinates.js';
 
 const userRoute = express.Router();
 
@@ -24,8 +25,9 @@ userRoute.post('/report/:adId', verifyAccessToken, isVerified, createAdReport);
 userRoute.post('/reportUser', verifyAccessToken, isVerified, createUserReport);
 userRoute.delete('/logout', verifyAccessToken, isVerified, logout)
 userRoute.post('/uploadProfilePicture', verifyAccessToken, isVerified, uploadProfilePicture, uploadProfilePictureController);
-userRoute.post('/blockUser/:blockId',verifyAccessToken,isVerified,blockedUser);
-userRoute.post('/unblockUser/:unBlockId',verifyAccessToken,isVerified,unBlockedUser);
-userRoute.post('/updatePassword',verifyAccessToken,isVerified,validateData(updatePasswordValidation),updatePassword);
+userRoute.post('/blockUser/:blockId', verifyAccessToken, isVerified, blockedUser);
+userRoute.post('/unblockUser/:unBlockId', verifyAccessToken, isVerified, unBlockedUser);
+userRoute.post('/updatePassword', verifyAccessToken, isVerified, validateData(updatePasswordValidation), updatePassword);
+userRoute.get('/getCoordinates/:lat/:lng', getUserCoordinates)
 
 export default userRoute
