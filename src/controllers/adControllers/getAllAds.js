@@ -1,5 +1,6 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
+import { setAdsViews } from "../../helper/setAdsViews.js";
 
 export const getAllAds = async (req, res) => {
   try {
@@ -105,12 +106,17 @@ export const getAllAds = async (req, res) => {
 
     filteredAds.sort((a, b) => b.isFeatured - a.isFeatured)
 
+
     if (filteredAds.length === 0) {
       return res.status(NOT_FOUND_CODE).json({
         message: "Ad not found",
         success: false,
       });
     }
+
+    filteredAds.forEach( (element) =>{
+      setAdsViews(element._id);
+    })
 
     return res.status(SUCCESS_CODE).json({
       success: true,
