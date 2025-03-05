@@ -4,9 +4,6 @@ import Ad from "../../models/adModel.js";
 
 export const getAllAds = async (req, res) => {
   try {
-<<<<<<< HEAD
-    const { searchKeyword = "", searchCategory = "", sortBy = "createdAt", sortOrder = "asc", searchSubCategory = "", minPrice = 0, maxPrice = Infinity , condition = "", city=""} = req.query;
-=======
     const {
       searchKeyword = "",
       searchCategory = "",
@@ -18,7 +15,6 @@ export const getAllAds = async (req, res) => {
       condition = ""
     } = req.query;
 
->>>>>>> dev
     const conditionArray = ["new", "used", "refurbished"]
     const isValidCondition = conditionArray.includes(condition)
 
