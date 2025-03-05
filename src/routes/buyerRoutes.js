@@ -6,6 +6,7 @@ import removeSavedAd from '../controllers/buyerControllers/removeSavedAd.js'
 import addInterests from '../controllers/buyerControllers/addInterests.js'
 import { getAdsByLocation } from '../controllers/buyerControllers/getAdsByLocation.js'
 import { browseAds } from '../controllers/buyerControllers/browseAds.js'
+import { getAllReview } from '../controllers/buyerControllers/getAllReview.js'
 
 const buyerRoute = express.Router()
 
@@ -18,5 +19,6 @@ buyerRoute.delete('/removeSavedAd/:adId', verifyAccessToken, isVerified, removeS
 buyerRoute.post('/interest', verifyAccessToken, isVerified, addInterests);
 buyerRoute.get('/ads/location', verifyAccessToken, isVerified, getAdsByLocation);
 buyerRoute.get('/getAdsByInterest', verifyAccessToken, isVerified, browseAds);
+buyerRoute.get('/getAllReview/:buyerId', verifyAccessToken, isVerified, getAllReview);
 
 export default buyerRoute
