@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const addressSchema = new mongoose.Schema({
+    coordinates: {
+        type: [Number, Number],
+        index: '2d'
+    },
     line1: {
         type: String,
         required: true
@@ -23,7 +27,7 @@ const addressSchema = new mongoose.Schema({
     },
     landMark: {
         type: String,
-        required: false
+        default: ""
     },
     pinCode: {
         type: Number,

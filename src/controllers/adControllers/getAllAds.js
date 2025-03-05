@@ -3,38 +3,51 @@ import Address from "../../models/addressModel.js";
 import Ad from "../../models/adModel.js";
 
 export const getAllAds = async (req, res) => {
-
   try {
+<<<<<<< HEAD
     const { searchKeyword = "", searchCategory = "", sortBy = "createdAt", sortOrder = "asc", searchSubCategory = "", minPrice = 0, maxPrice = Infinity , condition = "", city=""} = req.query;
+=======
+    const {
+      searchKeyword = "",
+      searchCategory = "",
+      sortBy = "createdAt",
+      sortOrder = "asc",
+      searchSubCategory = "",
+      minPrice = 0,
+      maxPrice = Infinity,
+      condition = ""
+    } = req.query;
+
+>>>>>>> dev
     const conditionArray = ["new", "used", "refurbished"]
-    const isValidCondition = conditionArray.includes(condition) 
+    const isValidCondition = conditionArray.includes(condition)
+
     let priceFilter = { $gte: 0, $lte: Infinity }
-    if(isNaN(minPrice) || isNaN(maxPrice)){
+    if (isNaN(minPrice) || isNaN(maxPrice)) {
       priceFilter = { $gte: 0, $lte: Infinity }
     }
     else if (Number(minPrice) !== 0 || Number(maxPrice) !== Infinity) {
       priceFilter = { $gte: Number(minPrice), $lte: Number(maxPrice) }
     }
+
     const matchConditions = {
       category: new RegExp(searchCategory.trim(), 'i'),
       subCategory: new RegExp(searchSubCategory.trim(), 'i'),
       price: priceFilter,
-      expiryDate: {$gte: new Date()}
+      expiryDate: { $gte: new Date() }
     }
 
-    if(isValidCondition){
+    if (isValidCondition) {
       matchConditions.condition = condition
     }
     
     const filteredAds = await Ad.aggregate([
-      {
-        $match: 
-         matchConditions
-        
-      },
+      { $match: matchConditions },
       {
         $addFields: {
-          detailsArray: { $objectToArray: "$details" }
+          detailsArray: {
+            $objectToArray: "$details"
+          }
         }
       },
       {
@@ -46,38 +59,36 @@ export const getAllAds = async (req, res) => {
             { subCategory: new RegExp(searchKeyword.trim(), 'i') },
             { description: new RegExp(searchKeyword.trim(), 'i') },
             { "detailsArray.v": new RegExp(searchKeyword.trim(), 'i') }
-
           ]
         }
       },
       {
         $sort: {
-          [sortBy]: sortOrder === "asc" ? 1 : -1
+          [sortBy]: sortOrder === "asc" ? -1 : 1
         }
       }
     ]).populate("address");
 
-    const total = filteredAds.length
-    if (total === 0){
-      throw new Error("No ads exist")
+    filteredAds.sort((a, b) => b.isFeatured - a.isFeatured)
+
+    if (filteredAds.length === 0) {
+      return res.status(NOT_FOUND_CODE).json({
+        message: "Ad not found",
+        success: false,
+      });
     }
-    res.status(SUCCESS_CODE).send({
+
+    return res.status(SUCCESS_CODE).json({
       success: true,
-      total: total,
+      total: filteredAds.length,
       ads: filteredAds
     });
   }
 
   catch (error) {
-    if (error.message === "No ads exist"){
-      return res.status(NOT_FOUND_CODE).send({
-        message: error.message,
-        success: false,
-      });
-    }
-    res.status(INTERNAL_SERVER_ERROR_CODE).send({
-      message: error.message,
+    return res.status(INTERNAL_SERVER_ERROR_CODE).json({
       success: false,
+      message: error.message
     });
   }
 }

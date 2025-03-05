@@ -47,5 +47,9 @@ const verifyRefreshToken = (req, res, next) => {
     const token = extractToken(req);
     verifyToken(req, res, next, token, 'refreshToken');
 }
+const verifyForgotPasswordToken = (req, res, next) => {
+    const { forgotPasswordToken } = req.params;
+    verifyToken(req, res, next, forgotPasswordToken, 'forgotPasswordToken');
+}
 
-export { verifyRegistrationToken, verifyAccessToken, verifyRefreshToken };
+export { verifyRegistrationToken, verifyAccessToken, verifyRefreshToken, verifyForgotPasswordToken };

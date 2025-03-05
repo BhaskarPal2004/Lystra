@@ -7,7 +7,7 @@ import userRoute from './src/routes/userRoutes.js'
 import adRoute from './src/routes/adRoutes.js'
 import sellerRoute from './src/routes/sellerRoutes.js'
 import reviewRoute from './src/routes/reviewRoutes.js'
-import buyerRoute from './src/Routes/buyerRoutes.js'
+import buyerRoute from './src/routes/buyerRoutes.js'
 
 env.config({})
 
