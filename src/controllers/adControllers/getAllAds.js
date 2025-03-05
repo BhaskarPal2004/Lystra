@@ -61,7 +61,14 @@ export const getAllAds = async (req, res) => {
         $sort: {
           [sortBy]: sortOrder === "asc" ? -1 : 1
         }
-      }
+      },
+      // {
+      //   $near: {
+      //     $geometry: { type: "Point", coordinates: [userLocationCoordinates.lat, userLocationCoordinates.lng] },
+      //     $minDistance: 1000,
+      //     $maxDistance: 500000
+      //   }
+      // }
     ]);
 
     filteredAds.sort((a, b) => b.isFeatured - a.isFeatured)

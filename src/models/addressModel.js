@@ -1,9 +1,14 @@
 import mongoose from "mongoose";
 
 const addressSchema = new mongoose.Schema({
-    coordinates: {
-        type: [Number, Number],
-        index: '2d'
+    location: {
+        type: {
+            type: String,
+            enum: ['Point']
+        },
+        coordinates: {
+            type: [Number]
+        }
     },
     line1: {
         type: String,
