@@ -4,10 +4,13 @@ const addressSchema = new mongoose.Schema({
     location: {
         type: {
             type: String,
-            enum: ['Point']
+            enum: ['Point'],
+            required: true 
         },
         coordinates: {
-            type: [Number]
+            type: [Number],
+            required: true ,
+            index:"2dsphere"
         }
     },
     line1: {
@@ -40,6 +43,8 @@ const addressSchema = new mongoose.Schema({
     }
 
 }, { timestamps: true })
+
+addressSchema.index({ location: '2dsphere' });
 
 const Address = mongoose.model("address", addressSchema);
 export default Address;

@@ -1,6 +1,7 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
 import { setAdsViews } from "../../helper/setAdsViews.js";
+import Address from "../../models/addressModel.js"
 
 export const getAllAds = async (req, res) => {
   try {
@@ -16,10 +17,10 @@ export const getAllAds = async (req, res) => {
       city = ""
     } = req.query;
 
-    // const latitude = 28.626137;
-    // const longitude = 79.821602;
-    // const distance = 1;
-    // const unitValue = 1000;
+    const latitude = 28.626137;
+    const longitude = 79.821602;
+    const distance = 1;
+    const unitValue = 1000;
 
 
     //validation
@@ -65,18 +66,32 @@ export const getAllAds = async (req, res) => {
 
     const filteredAds = await Ad.aggregate([
       {
+        $geoNear: {
+          near: { type: 'Point', coordinates: [longitude, latitude] },  
+          distanceField: 'distance',
+          maxDistance: 5000,  
+          spherical: true,
+          query: {
+            "addressDetailsArray.location": { $exists: true } 
+          }
+        },
+      },
+      {
         $lookup: {
           from: "addresses",
           localField: "address",
           foreignField: "_id",
-          as: "addressDetails"
+          as: "addressDetailsArray"
         }
       },
+      
+      {
+        $unwind: '$addressDetailsArray',
+      },
+      
       {
         $addFields: {
-          addressDetails: {
-            $first: "$addressDetails"
-          }
+          addressDetails: "$addressDetailsArray"
         }
       },
       { $match: matchConditions },
@@ -105,28 +120,21 @@ export const getAllAds = async (req, res) => {
           [sortBy]: sortOrder === "asc" ? -1 : 1
         }
       }
-      // {
-      //   $geoNear: {
-      //     near: {
-      //       type: 'Point',
-      //       coordinates: [longitude, latitude]
-      //     },
-      //     query: {
-      //       status: true
-      //     },
-      //     maxDistance: distance * unitValue,
-      //     distanceField: 'distance',
-      //     distanceMultiplier: 1 / unitValue
-      //   }
-      // },
-      // {
-      //   $project: {
-      //     _id: 1,
-      //     distance: 1
-      //   }
-      // },
-      // { $sort: { distance: 1 } },
     ]);
+
+
+
+    // const filteredAds = await Address.aggregate([
+    //   {
+    //     $geoNear: {
+    //       near: { type: 'Point', coordinates: [longitude, latitude] },
+    //       distanceField: 'distance',
+    //       maxDistance: 5000,
+    //       spherical: true,
+    //     }
+    //   }])
+
+      // console.log("hi:,",filteredAds)
 
 
     filteredAds.sort((a, b) => b.isFeatured - a.isFeatured)
@@ -153,7 +161,7 @@ export const getAllAds = async (req, res) => {
   catch (error) {
     return res.status(INTERNAL_SERVER_ERROR_CODE).json({
       success: false,
-      message: error.message
+      message: error
     });
   }
 }
