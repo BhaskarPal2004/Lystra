@@ -16,6 +16,8 @@ export const createNewAd = async (req, res) => {
         address.location = { type: "Point", coordinates: [coordinates.lat, coordinates.lng] }
         const adAddress = await createAddress(address)
 
+        console.log(adAddress)
+
         const newAd = await Ad.create({ sellerId: userId, name, listingType, category, subCategory, description, details, images, price, condition, address: adAddress, expiryDate })
 
         const seller = await Seller.findById(userId)

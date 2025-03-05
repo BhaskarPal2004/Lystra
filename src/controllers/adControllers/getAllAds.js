@@ -1,5 +1,6 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
+import { setAdsViews } from "../../helper/setAdsViews.js";
 
 export const getAllAds = async (req, res) => {
   try {
@@ -11,7 +12,8 @@ export const getAllAds = async (req, res) => {
       searchSubCategory = "",
       minPrice = 0,
       maxPrice = Infinity,
-      condition = ""
+      condition = "",
+      city = ""
     } = req.query;
 
     // const latitude = 28.626137;
@@ -19,8 +21,17 @@ export const getAllAds = async (req, res) => {
     // const distance = 1;
     // const unitValue = 1000;
 
+
+    //validation
+    const categoryArray = ['electronics', 'vehicles', 'real estate', 'home and furniture', 'jobs and services', 'fashion and beauty']
+    const isValidCategory = categoryArray.includes(searchCategory.trim().toLowerCase())
+
     const conditionArray = ["new", "used", "refurbished"]
-    const isValidCondition = conditionArray.includes(condition)
+    const isValidCondition = conditionArray.includes(condition.trim().toLowerCase())
+
+
+
+    //match conditions
 
     let priceFilter = { $gte: 0, $lte: Infinity }
     if (isNaN(minPrice) || isNaN(maxPrice)) {
@@ -31,17 +42,43 @@ export const getAllAds = async (req, res) => {
     }
 
     const matchConditions = {
-      category: new RegExp(searchCategory.trim(), 'i'),
       subCategory: new RegExp(searchSubCategory.trim(), 'i'),
       price: priceFilter,
+      $expr: {
+        $regexMatch: {
+          input: "$addressDetails.city",
+          regex: new RegExp(city.trim(), 'i')
+        }
+      },
       expiryDate: { $gte: new Date() }
     }
 
     if (isValidCondition) {
-      matchConditions.condition = condition
+      matchConditions.condition = condition.trim().toLowerCase()
+    }
+    if (isValidCategory) {
+      matchConditions.category = searchCategory.trim().toLowerCase()
     }
 
+
+    //database query
+
     const filteredAds = await Ad.aggregate([
+      {
+        $lookup: {
+          from: "addresses",
+          localField: "address",
+          foreignField: "_id",
+          as: "addressDetails"
+        }
+      },
+      {
+        $addFields: {
+          addressDetails: {
+            $first: "$addressDetails"
+          }
+        }
+      },
       { $match: matchConditions },
       {
         $addFields: {
@@ -62,6 +99,7 @@ export const getAllAds = async (req, res) => {
           ]
         }
       },
+
       {
         $sort: {
           [sortBy]: sortOrder === "asc" ? -1 : 1
@@ -90,7 +128,9 @@ export const getAllAds = async (req, res) => {
       // { $sort: { distance: 1 } },
     ]);
 
+
     filteredAds.sort((a, b) => b.isFeatured - a.isFeatured)
+
 
     if (filteredAds.length === 0) {
       return res.status(NOT_FOUND_CODE).json({
@@ -98,6 +138,10 @@ export const getAllAds = async (req, res) => {
         success: false,
       });
     }
+
+    filteredAds.forEach((element) => {
+      setAdsViews(element._id);
+    })
 
     return res.status(SUCCESS_CODE).json({
       success: true,
@@ -113,4 +157,6 @@ export const getAllAds = async (req, res) => {
     });
   }
 }
+
+
 
