@@ -88,7 +88,10 @@ const adSchema = new mongoose.Schema({
             default: false
         }
     }],
-
+    orders: [{ 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "order"
+    }]
 }, { timestamps: true });
 
 const Ad = mongoose.model("ad", adSchema);
