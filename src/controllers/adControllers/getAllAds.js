@@ -71,8 +71,10 @@ export const getAllAds = async (req, res) => {
         }
       },
       {
-        $addFields: {
-          addressDetails: "$addressDetailsArray"
+        $addFields:{
+          addressDetails:{
+            $first:"$addressDetails"
+          }
         }
       },
       { $match: matchConditions },
@@ -104,17 +106,6 @@ export const getAllAds = async (req, res) => {
     ]);
 
 
-
-    // const filteredAds = await Address.aggregate([
-    //   {
-    //     $geoNear: {
-    //       near: { type: 'Point', coordinates: [22.5726459,88.3638953] },
-    //       key:"location",
-    //       distanceField: 'distance',
-    //       maxDistance: 5000000,
-    //       spherical: true,
-    //     }
-    //   }])
 
     //  const filteredAds = Ad.aggregate([ 
     //     { $lookup: 
