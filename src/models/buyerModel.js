@@ -41,6 +41,10 @@ const buyerSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'ad'
     }],
+    orders: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'order'
+    }],
     payments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "payment"

@@ -41,7 +41,7 @@ const orderSchema = new mongoose.Schema({
         enum: ['cod', 'online'],
         required: true
     }
-})
+}, { timestamps: true })
 
 const Order = mongoose.model("order", orderSchema);
 export default Order;
