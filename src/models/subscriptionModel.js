@@ -24,6 +24,10 @@ const subscriptionSchema = new mongoose.Schema(
         return startDate;
       },
     },
+    renewDate: {
+      type: Date,
+      default: null
+    },
     subscriptionAds: [
       {
         type: mongoose.Schema.Types.ObjectId,
