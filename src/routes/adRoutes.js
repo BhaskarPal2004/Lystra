@@ -15,6 +15,7 @@ import { uploadAdFilesController } from '../controllers/adControllers/uploadAdFi
 import { uploadAdFiles } from '../middleware/multers/adFilesMulter.js';
 import { compareAds } from '../controllers/adControllers/comareAds.js';
 import { setFeature } from '../controllers/adControllers/setFeature.js';
+import { removeFeature } from '../controllers/adControllers/removeFeature.js';
 
 
 const adRoute = express.Router()
@@ -30,6 +31,7 @@ adRoute.delete('/deleteAllAds', verifyAccessToken, isVerified, isSeller, deleteA
 adRoute.post('/uploadFiles/:adId', verifyAccessToken, isVerified, isSeller, uploadAdFiles, uploadAdFilesController)
 adRoute.get('/compareAds/:adIds', verifyAccessToken, isVerified, compareAds);
 adRoute.post('/featured/:adIds',verifyAccessToken,isVerified,isSeller,setFeature);
+adRoute.delete('/removeFeature/:adId',verifyAccessToken,isVerified,isSeller,removeFeature);
 
 
 export default adRoute
