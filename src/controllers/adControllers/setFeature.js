@@ -31,9 +31,9 @@ export const setFeature = async (req, res) => {
     }
 
     const subscription = await Subscription.findOne({ sellerId: sellerId });
+    const currentDate = new Date(Date.now());
 
-
-    if (subscription.subscriptionEndDate < Date.now()) {
+    if (subscription.subscriptionEndDate < currentDate) {
       return res.status(BAD_REQUEST_CODE).json({
         success: false,
         message:
@@ -44,7 +44,7 @@ export const setFeature = async (req, res) => {
     if (adIds.length === 0) {
       return res.status(NOT_FOUND_CODE).json({
         success: false,
-        message: "Ads not found please selete Ads for feature",
+        message: "Ads not found please selecte Ads for feature",
       });
     }
 
