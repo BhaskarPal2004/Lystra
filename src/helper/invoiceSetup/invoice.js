@@ -1,7 +1,7 @@
 import { createInvoice } from './createInvoice.js'
 
 export const invoiceCreateFunction = () => {
-    const invoiceId = 123
+    const invoiceId = 8765499
     const invoice = {
         shipping: {
             name: 'John Doe',

@@ -14,42 +14,51 @@ export const createInvoice = (invoice, path) => {
     });
 
     generateHeader(doc);
+
+    doc.fontSize(
+        10,
+    ).text(
+        `hi my name is:${invoice.shipping.name}`,
+        { align: 'center', width: 500 },
+    );
+
+    
     generateFooter(doc);
 
     doc.end();
     doc.pipe(fs.createWriteStream(path));
 }
 
-export function generateCustomerInformation(doc, invoice) {
-    const customerInformationTop = 200;
+// export function generateCustomerInformation(doc, invoice) {
+//     const customerInformationTop = 200;
 
-    doc.fillColor('#444444').fontSize(20).text('Invoice', 50, 160);
+//     doc.fillColor('#444444').fontSize(20).text('Invoice', 50, 160);
 
-    generateHeader(doc, 185);
+//     generateHeader(doc, 185);
 
-    doc.fontSize(10)
-        .text('Invoice Number:', 50, customerInformationTop)
-        .font('Helvetica-Bold')
-        .text(invoice.invoice_nr, 150, customerInformationTop)
-        .font('Helvetica')
-        .text('Invoice Date:', 50, customerInformationTop + 15)
-        .text(formatDate(new Date()), 150, customerInformationTop + 15)
-        .text('Balance Due:', 50, customerInformationTop + 30)
-        .text(
-            formatCurrency(invoice.subtotal - invoice.paid),
-            150,
-            customerInformationTop + 30,
-        )
-        .font('Helvetica-Bold')
-        .text(invoice.shipping.name, 300, customerInformationTop)
-        .font('Helvetica')
-        .text(invoice.shipping.address, 300, customerInformationTop + 15)
-        .text(
-            `${invoice.shipping.city}, ${invoice.shipping.state}, ${invoice.shipping.country}`,
-            300,
-            customerInformationTop + 30,
-        )
-        .moveDown();
+//     doc.fontSize(10)
+//         .text('Invoice Number:', 50, customerInformationTop)
+//         .font('Helvetica-Bold')
+//         .text(invoice.invoice_nr, 150, customerInformationTop)
+//         .font('Helvetica')
+//         .text('Invoice Date:', 50, customerInformationTop + 15)
+//         .text(formatDate(new Date()), 150, customerInformationTop + 15)
+//         .text('Balance Due:', 50, customerInformationTop + 30)
+//         .text(
+//             formatCurrency(invoice.subtotal - invoice.paid),
+//             150,
+//             customerInformationTop + 30,
+//         )
+//         .font('Helvetica-Bold')
+//         .text(invoice.shipping.name, 300, customerInformationTop)
+//         .font('Helvetica')
+//         .text(invoice.shipping.address, 300, customerInformationTop + 15)
+//         .text(
+//             `${invoice.shipping.city}, ${invoice.shipping.state}, ${invoice.shipping.country}`,
+//             300,
+//             customerInformationTop + 30,
+//         )
+//         .moveDown();
 
-    generateHeader(doc, 252);
-}
+//     generateHeader(doc, 252);
+// }

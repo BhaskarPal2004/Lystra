@@ -12,7 +12,7 @@ export function generateFooter(doc) {
     doc.fontSize(
         10,
     ).text(
-        'Payment is due within 15 days. Thank you for your business.',
+        `Payment is due within 15 days. Thank you for your business.${doc}`,
         50,
         780,
         { align: 'center', width: 500 },

@@ -11,6 +11,7 @@ import reviewRoute from './src/routes/reviewRoutes.js'
 import buyerRoute from './src/routes/buyerRoutes.js'
 import subscriptionRoute from './src/routes/subscriptionRoutes.js'
 import orderRoute from './src/routes/orderRoutes.js'
+import { invoiceCreateFunction } from './src/helper/invoiceSetup/invoice.js'
 
 env.config({})
 
@@ -53,4 +54,4 @@ server.on('error', (err) => {
   }
 });
 
-// invoiceCreateFunction()
+invoiceCreateFunction()
