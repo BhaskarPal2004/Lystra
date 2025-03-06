@@ -14,10 +14,10 @@ const updateProfile = async (req, res) => {
         const user = await User.findById(userId);
 
         if (name) user.name = name
-        user.phoneNumber = (phoneNumber) ?? phoneNumber;
+        if (phoneNumber) user.phoneNumber = phoneNumber;
 
         if (address) {
-            const existingAddress = await Address.findById(user.address.toHexString());
+            const existingAddress = await Address.findById(user.address?.toHexString());
 
             const updatedAddress = {
                 line1: address.line1 || existingAddress.line1,
@@ -32,7 +32,7 @@ const updateProfile = async (req, res) => {
             const coordinates = await getLocationCoords(updatedAddress.city, updatedAddress.state)
             updatedAddress.coordinates = [coordinates.lat, coordinates.lng]
 
-            await Address.deleteOne(existingAddress._id)
+            await Address.deleteOne(existingAddress?._id)
             user.address = await createAddress(updatedAddress);
         }
         await user.save();
