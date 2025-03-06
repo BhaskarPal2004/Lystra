@@ -1,8 +1,11 @@
-import { CREATED_CODE, INTERNAL_SERVER_ERROR_CODE } from "../../config/constant.js"
+import { CREATED_CODE, INTERNAL_SERVER_ERROR_CODE, SUCCESS_CODE } from "../../config/constant.js"
 import Ad from "../../models/adModel.js"
 import Buyer from "../../models/buyerModel.js"
 import Order from "../../models/orderModel.js"
 import Seller from "../../models/sellerModel.js"
+import { saveOrdersInAd } from "./saveOrdersInAd.js"
+
+
 
 
 export const createOrder = async (req, res) => {
@@ -17,7 +20,16 @@ export const createOrder = async (req, res) => {
         const shippingAddress = buyer.address
         const { paymentType } = req.body
 
+        if(!shippingAddress){
+            return res.status(SUCCESS_CODE).json({
+                success:false,
+                message:"Please update your address first"
+            })
+        }
+
         const order = await Order.create({ adId, buyerId, billingAddress, shippingAddress, paymentType })
+
+        saveOrdersInAd(adId,order._id)
 
         seller.orders.push(order)
         buyer.orders.push(order)
