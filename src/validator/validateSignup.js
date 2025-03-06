@@ -11,5 +11,5 @@ export const signUpValidation = z.object({
         .refine((password) => /[-._!"`'#%&,:;<>=@{}~$()*+/\\?[\]^|]+/.test(password), { message: "Password should contain special character" }),
 
     confirmPassword: z.string(), 
-    phoneNumber: z.string().min(10, "number must have 10 digit").refine((validator.isMobilePhone), { message: "invalid number" }), 
+    phoneNumber: z.string().min(10, "number must have 10 digit").refine((validator.isMobilePhone), { message: "invalid number" })
 }).strict();
