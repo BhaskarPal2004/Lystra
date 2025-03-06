@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { boolean } from "zod";
 
 const sellerSchema = new mongoose.Schema({
     name: {
@@ -73,7 +74,11 @@ const sellerSchema = new mongoose.Schema({
             type: String,
             default: null
         }
-    }]
+    }],
+    isSubscribed: {
+        type: Boolean,
+        default: false,
+    }
 }, { timestamps: true });
 
 const Seller = mongoose.model("seller", sellerSchema);
