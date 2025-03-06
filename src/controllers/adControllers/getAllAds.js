@@ -1,7 +1,7 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
 import { setAdsViews } from "../../helper/setAdsViews.js";
-import Address from "../../models/addressModel.js"
+import { findLocalAddressess } from "../../helper/findLocalAddresses.js";
 
 export const getAllAds = async (req, res) => {
   try {
@@ -16,7 +16,17 @@ export const getAllAds = async (req, res) => {
       condition = "",
       city = ""
     } = req.query;
-    
+
+
+    const longitude = 22.5726459
+    const latitude = 88.3638953
+    const maxDistance = 5000000
+
+    let localAddresses = []
+    let localAds = []
+
+
+
 
 
     //validation
@@ -26,7 +36,7 @@ export const getAllAds = async (req, res) => {
     const conditionArray = ["new", "used", "refurbished"]
     const isValidCondition = conditionArray.includes(condition.trim().toLowerCase())
 
-
+    
 
     //match conditions
 
@@ -53,21 +63,28 @@ export const getAllAds = async (req, res) => {
     if (isValidCondition) {
       matchConditions.condition = condition.trim().toLowerCase()
     }
-    if (isValidCategory) {
+    if(isValidCategory){
       matchConditions.category = searchCategory.trim().toLowerCase()
     }
+    
 
+    // function to get localAds
+
+    
+    if(longitude && latitude && maxDistance){
+     localAddresses = await findLocalAddressess(longitude,latitude,maxDistance)
+    }
+  
 
     //database query
 
     const filteredAds = await Ad.aggregate([
-      
       {
         $lookup: {
           from: "addresses",
           localField: "address",
           foreignField: "_id",
-          as: "addressDetailsArray"
+          as: "addressDetails"
         }
       },
       {
@@ -97,7 +114,7 @@ export const getAllAds = async (req, res) => {
           ]
         }
       },
-
+      
       {
         $sort: {
           [sortBy]: sortOrder === "asc" ? -1 : 1
@@ -106,46 +123,44 @@ export const getAllAds = async (req, res) => {
     ]);
 
 
-
-    //  const filteredAds = Ad.aggregate([ 
-    //     { $lookup: 
-    //       { from: "temp_nearby_addresses", localField: "addressId", foreignField: "_id", as: "address" } 
-    //     }
-    //     ]);
-
-    //  const filteredAds = await Address.find({location:{$near:{$geometry:{type:"Point",coordinates:[
-    //     22.9749730,
-    //     88.4345920
-    //   ]}}}})
-
-    // console.log("hi", filteredAds)
-
-
-    // filteredAds.sort((a, b) => b.isFeatured - a.isFeatured)
+    filteredAds.sort((a, b) => b.isFeatured - a.isFeatured)
+    
+   
+    
+    if(longitude && latitude && maxDistance){
+    filteredAds.map((element)=>{
+      if(localAddresses.includes(element.address.toString())){
+        localAds.push(element)
+      }
+      })
+    }
+    else{
+      localAds = filteredAds
+    }
 
 
-    if (filteredAds.length === 0) {
+    if (localAds.length === 0) {
       return res.status(NOT_FOUND_CODE).json({
         message: "Ad not found",
         success: false,
       });
     }
 
-    // filteredAds.forEach((element) => {
-    //   setAdsViews(element._id);
-    // })
+    localAds.forEach( (element) =>{
+      setAdsViews(element._id);
+    })
 
     return res.status(SUCCESS_CODE).json({
       success: true,
-      total: filteredAds.length,
-      ads: filteredAds
+      total: localAds.length,
+      ads: localAds
     });
   }
 
   catch (error) {
     return res.status(INTERNAL_SERVER_ERROR_CODE).json({
       success: false,
-      message: error
+      message: error.message
     });
   }
 }
