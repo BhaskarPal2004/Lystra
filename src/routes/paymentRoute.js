@@ -4,7 +4,7 @@ import { paymentVerification } from '../controllers/paymentControllers/paymentVe
 
 const paymentRoute = express.Router()
 
-paymentRoute.post('/paymentCheckout', paymentCheckout)
+paymentRoute.post('/paymentCheckout/:adId', paymentCheckout)
 paymentRoute.post('/paymentVerification', paymentVerification)
 
 export default paymentRoute

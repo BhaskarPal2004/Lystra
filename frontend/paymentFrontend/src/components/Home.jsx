@@ -29,7 +29,7 @@ const Home = () => {
     const { data: {key}} = await axios.get("http://localhost:3000/api/payment/getKey")
 
     const { data: {data} } = await axios.post(
-      "http://localhost:3000/api/payment/paymentCheckout",
+      "http://localhost:3000/api/payment/paymentCheckout/67c9886444d1117951903f18",
       {
         amount,
       }
@@ -52,7 +52,13 @@ const Home = () => {
       }
   };
 
-  const paymentObject = new window.Razorpay(options); 
+  const paymentObject = new window.Razorpay(options);
+
+  paymentObject.on('payment.failed', function (response) {
+    alert(`payment failed reason : ${response.error.description}`)
+    console.log(response);
+    
+  })
   paymentObject.open();
   }
 
