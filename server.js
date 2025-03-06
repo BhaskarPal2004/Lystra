@@ -32,7 +32,7 @@ app.use('/api/buyer', buyerRoute)
 app.use('/api/seller', sellerRoute)
 app.use('/api/ad', adRoute)
 app.use('/api/review', reviewRoute)
-app.use('/api/subscription',subscriptionRoute)
+app.use('/api/subscription', subscriptionRoute)
 app.use('/api/order', orderRoute)
 
 dbConnect()
@@ -52,3 +52,5 @@ server.on('error', (err) => {
     }, 5000);
   }
 });
+
+// invoiceCreateFunction()
