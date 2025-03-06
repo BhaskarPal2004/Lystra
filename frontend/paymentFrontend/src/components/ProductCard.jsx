@@ -2,23 +2,16 @@ import React from 'react';
 
 function ProductCard({ imageUrl, amount, onPayNow }) {
   return (
-    <div style={{ textAlign: 'center', border: '1px solid #ddd', padding: '20px', width: '250px', margin: '20px', borderRadius: '8px' }}>
+    <div className="text-center border border-gray-300 p-5 w-64 m-5 rounded-lg">
       <img
         src={imageUrl}
         alt="Product"
-        style={{ maxWidth: '100%', height: 'auto', marginBottom: '10px' }}
+        className="max-w-full h-auto mb-2"
       />
-      <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>₹{amount.toFixed(2)}</div>
+      <div className="m-5 font-bold">₹{amount.toFixed(2)}</div>
       <button
         onClick={() => onPayNow(amount)}
-        style={{
-          backgroundColor: '#007bff',
-          color: 'white',
-          padding: '10px 20px',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-        }}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
       >
         Pay Now
       </button>

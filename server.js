@@ -12,7 +12,6 @@ import buyerRoute from './src/routes/buyerRoutes.js'
 import subscriptionRoute from './src/routes/subscriptionRoutes.js'
 import orderRoute from './src/routes/orderRoutes.js'
 
-import cors from 'cors'
 import Razorpay from 'razorpay'
 import paymentRoute from './src/routes/paymentRoute.js'
 import { SUCCESS_CODE } from './src/config/constant.js'
@@ -20,7 +19,7 @@ import { SUCCESS_CODE } from './src/config/constant.js'
 env.config({})
 
 const corsOptions = {
-  origin: ['http://localhost:5500'],
+  origin: ['http://localhost:5173'],
   credentials: true,
 }
 

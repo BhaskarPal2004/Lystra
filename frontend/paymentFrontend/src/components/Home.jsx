@@ -58,9 +58,9 @@ const Home = () => {
 
   return (
     <>
-    <div>
+    <div className="flex flex-wrap justify-center">
     <ProductCard
-        imageUrl="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRKLLbUfp_zfR9FYMYjFw5OsgRNwNNl3csAUbLaQBQCyCeYDFFFuLw5tqyiXhhu5LsyzmtFy5P63hXGvniMiWMKXVN-u4IZaHHPHk3I5BQEl3MLQ8elJvTn"
+        imageUrl="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSifYdAmXaAtzbz3E_waAQ09QYePS4cLEUxkISIw4WAOXzjyaw_CUuaxSbegnbV9ts0ShooXM7meR4XtcOrTpzEB2XuPbqaff3AVLCcAjeK"
         amount={2000}
         onPayNow={handlePayNow}
       />
