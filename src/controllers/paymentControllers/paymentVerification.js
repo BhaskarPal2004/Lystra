@@ -16,7 +16,7 @@ export const paymentVerification = async (req, res) => {
 
     // console.log('sig received', razorpay_signature);
     // console.log('sig generated', expectedSignature);
-    // console.log(req.body);
+    console.log(req.body);
 
     const isAuthentic = expectedSignature === razorpay_signature;
 
@@ -40,7 +40,7 @@ export const paymentVerification = async (req, res) => {
       console.log('db order => ', order);
       
       
-      // res.redirect(`http://localhost:5173/paymentsuccess?reference=${razorpay_payment_id},${ razorpay_order_id}`)
+      res.redirect(`http://localhost:5173/paymentsuccess?reference=${razorpay_payment_id},${ razorpay_order_id}`)
     }
     else {
       res.status(BAD_REQUEST_CODE).json({
