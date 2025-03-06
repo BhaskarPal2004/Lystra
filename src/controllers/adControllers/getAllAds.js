@@ -16,11 +16,7 @@ export const getAllAds = async (req, res) => {
       condition = "",
       city = ""
     } = req.query;
-
-    const latitude = 28.626137;
-    const longitude = 79.821602;
-    const distance = 1;
-    const unitValue = 1000;
+    
 
 
     //validation
@@ -64,80 +60,67 @@ export const getAllAds = async (req, res) => {
 
     //database query
 
-    // const filteredAds = await Ad.aggregate([
+    const filteredAds = await Ad.aggregate([
       
-    //   {
-    //     $lookup: {
-    //       from: "addresses",
-    //       localField: "address",
-    //       foreignField: "_id",
-    //       as: "addressDetailsArray"
-    //     }
-    //   },
+      {
+        $lookup: {
+          from: "addresses",
+          localField: "address",
+          foreignField: "_id",
+          as: "addressDetailsArray"
+        }
+      },
+      {
+        $addFields: {
+          addressDetails: "$addressDetailsArray"
+        }
+      },
+      { $match: matchConditions },
+      {
+        $addFields: {
+          detailsArray: {
+            $objectToArray: "$details"
+          }
+        }
+      },
+      {
+        $match: {
+          $or: [
+            { name: new RegExp(searchKeyword.trim(), 'i') },
+            { listingType: new RegExp(searchKeyword.trim(), 'i') },
+            { category: new RegExp(searchKeyword.trim(), 'i') },
+            { subCategory: new RegExp(searchKeyword.trim(), 'i') },
+            { description: new RegExp(searchKeyword.trim(), 'i') },
+            { "detailsArray.v": new RegExp(searchKeyword.trim(), 'i') }
+          ]
+        }
+      },
+
+      {
+        $sort: {
+          [sortBy]: sortOrder === "asc" ? -1 : 1
+        }
+      }
+    ]);
+
+
+
+    // const filteredAds = await Address.aggregate([
     //   {
     //     $geoNear: {
-    //       near: {
-    //         type: 'Point', coordinates: [22.9749730,
-    //           88.4345920]
-    //       },
+    //       near: { type: 'Point', coordinates: [22.5726459,88.3638953] },
     //       key:"location",
     //       distanceField: 'distance',
-    //       maxDistance: 5000,
+    //       maxDistance: 5000000,
     //       spherical: true,
-    //       query: {
-    //         "addressDetailsArray.location": { $exists: true }
-    //       }
-    //     },
-    //   },
-    //   {
-    //     $unwind: '$addressDetailsArray',
-    //   },
-
-    //   {
-    //     $addFields: {
-    //       addressDetails: "$addressDetailsArray"
     //     }
-    //   },
-    //   { $match: matchConditions },
-    //   {
-    //     $addFields: {
-    //       detailsArray: {
-    //         $objectToArray: "$details"
-    //       }
+    //   }])
+
+    //  const filteredAds = Ad.aggregate([ 
+    //     { $lookup: 
+    //       { from: "temp_nearby_addresses", localField: "addressId", foreignField: "_id", as: "address" } 
     //     }
-    //   },
-    //   {
-    //     $match: {
-    //       $or: [
-    //         { name: new RegExp(searchKeyword.trim(), 'i') },
-    //         { listingType: new RegExp(searchKeyword.trim(), 'i') },
-    //         { category: new RegExp(searchKeyword.trim(), 'i') },
-    //         { subCategory: new RegExp(searchKeyword.trim(), 'i') },
-    //         { description: new RegExp(searchKeyword.trim(), 'i') },
-    //         { "detailsArray.v": new RegExp(searchKeyword.trim(), 'i') }
-    //       ]
-    //     }
-    //   },
-
-    //   {
-    //     $sort: {
-    //       [sortBy]: sortOrder === "asc" ? -1 : 1
-    //     }
-    //   }
-    // ]);
-
-
-
-    const filteredAds = await Address.aggregate([
-      {
-        $geoNear: {
-          near: { type: 'Point', coordinates: [22.5726459,88.3638953] },
-          key:"location",
-          distanceField: 'distance',
-          maxDistance: 5000000,
-          spherical: true,
-        }
-      }])
+    //     ]);
 
     //  const filteredAds = await Address.find({location:{$near:{$geometry:{type:"Point",coordinates:[
     //     22.9749730,
