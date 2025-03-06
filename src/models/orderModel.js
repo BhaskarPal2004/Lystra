@@ -28,7 +28,18 @@ const orderSchema = new mongoose.Schema({
     },
     paymentId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'payment'
+        ref: 'payment',
+        default: null
+    },
+    paymentStatus: {
+        type: String,
+        enum: ['pending', 'paid', 'cancelled', 'refunded'],
+        default: 'pending'
+    },
+    paymentType: {
+        type: String,
+        enum: ['cod', 'online'],
+        required: true
     }
 })
 
