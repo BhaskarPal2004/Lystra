@@ -14,7 +14,7 @@ const updateProfile = async (req, res) => {
         const user = await User.findById(userId);
 
         if (name) user.name = name
-        user.phoneNumber = (phoneNumber) ?? phoneNumber;
+        if (phoneNumber) user.phoneNumber = phoneNumber;
 
         const existingAddress = await Address.findById(user.address);
 
