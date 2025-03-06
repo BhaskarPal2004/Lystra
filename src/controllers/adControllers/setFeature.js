@@ -32,8 +32,7 @@ export const setFeature = async (req, res) => {
 
     const subscription = await Subscription.findOne({ sellerId: sellerId });
 
-    console.log(subscription.subscriptionAds);
-    
+
     if (subscription.subscriptionEndDate < Date.now()) {
       return res.status(BAD_REQUEST_CODE).json({
         success: false,
@@ -49,42 +48,35 @@ export const setFeature = async (req, res) => {
       });
     }
 
-    const ads = await Ad.find({ _id: { $in: adIds } })
-    const subArray = []
-    ads.forEach(async(ad)=>{
-        if(ad.isFeatured){
-            ad.isFeatured = true
-            await ad.save()
-            console.log('add', ad);
-            
-            subArray.push(ad._id)
-        }
-    })
-console.log('asdfg',subArray);
+    const ads = await Ad.find({ _id: { $in: adIds }, sellerId: sellerId });
+    const subArray = [];
 
-    subscription.subscriptionAds = subArray
-    await subscription.save()
-    // await ads.save()
-    // adsArray.forEach(async (element) => {
-    //   console.log("elee", element);
-    //   const findAds = await Ad.find({ sellerId: sellerId, _id: element });
-    //   console.log("find add", findAds.length);
+    if (!ads.length){
+      return res.status(NOT_FOUND_CODE).json({
+        success: false,
+        message: "Ads not found",
+      });
+    } 
 
-    //   if (findAds.length > 0) {
-    //     subscription.subscriptionAds.push(findAds[0]._id);
-    //     findAds.isFeatured = true;
-    //   } else {
-    //     return res.status(NOT_FOUND_CODE).json({
-    //       success: false,
-    //       message: "Ads not found ",
-    //     });
-    //   }
-    // });
+    ads.forEach(async (ad) => {
+      if (!ad.isFeatured) {
+        ad.isFeatured = true;
+        subArray.push(ad._id);
+        await ad.save();
+      }
+    });
+
+    subscription.subscriptionAds = [
+      ...subscription.subscriptionAds,
+      ...subArray,
+    ];
+    await subscription.save();
 
     return res.status(SUCCESS_CODE).json({
       success: true,
       message: "feature added successfully",
     });
+
   } catch (error) {
     return res.status(INTERNAL_SERVER_ERROR_CODE).json({
       success: false,
