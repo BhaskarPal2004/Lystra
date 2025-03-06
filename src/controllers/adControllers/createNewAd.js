@@ -13,7 +13,7 @@ export const createNewAd = async (req, res) => {
         expiryDate.setDate(expiryDate.getDate() + expireInDays);
 
         const coordinates = await getLocationCoords(`${address.city},${address.state}`)
-        address.coordinates = [coordinates.lat, coordinates.lng]
+        address.location = { type: "Point", coordinates: [coordinates.lat, coordinates.lng] }
         const adAddress = await createAddress(address)
 
         console.log(adAddress)

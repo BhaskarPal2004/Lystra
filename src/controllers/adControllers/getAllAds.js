@@ -1,6 +1,7 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
 import { setAdsViews } from "../../helper/setAdsViews.js";
+import { findLocalAddressess } from "../../helper/findLocalAddresses.js";
 
 export const getAllAds = async (req, res) => {
   try {
@@ -15,6 +16,16 @@ export const getAllAds = async (req, res) => {
       condition = "",
       city = ""
     } = req.query;
+
+
+    const longitude = 22.5726459
+    const latitude = 88.3638953
+    const maxDistance = 5000000
+
+    let localAddresses = []
+    let localAds = []
+
+
 
 
 
@@ -56,6 +67,14 @@ export const getAllAds = async (req, res) => {
       matchConditions.category = searchCategory.trim().toLowerCase()
     }
     
+
+    // function to get localAds
+
+    
+    if(longitude && latitude && maxDistance){
+     localAddresses = await findLocalAddressess(longitude,latitude,maxDistance)
+    }
+  
 
     //database query
 
@@ -105,23 +124,36 @@ export const getAllAds = async (req, res) => {
 
 
     filteredAds.sort((a, b) => b.isFeatured - a.isFeatured)
+    
+   
+    
+    if(longitude && latitude && maxDistance){
+    filteredAds.map((element)=>{
+      if(localAddresses.includes(element.address.toString())){
+        localAds.push(element)
+      }
+      })
+    }
+    else{
+      localAds = filteredAds
+    }
 
 
-    if (filteredAds.length === 0) {
+    if (localAds.length === 0) {
       return res.status(NOT_FOUND_CODE).json({
         message: "Ad not found",
         success: false,
       });
     }
 
-    filteredAds.forEach( (element) =>{
+    localAds.forEach( (element) =>{
       setAdsViews(element._id);
     })
 
     return res.status(SUCCESS_CODE).json({
       success: true,
-      total: filteredAds.length,
-      ads: filteredAds
+      total: localAds.length,
+      ads: localAds
     });
   }
 
