@@ -1,5 +1,6 @@
 import express from 'express'
 import env from 'dotenv'
+import cors from 'cors'
 import { dbConnect } from './src/config/dbConnect.js'
 import authRoute from './src/routes/authRoutes.js'
 import userRoute from './src/routes/userRoutes.js'
@@ -8,11 +9,18 @@ import adRoute from './src/routes/adRoutes.js'
 import sellerRoute from './src/routes/sellerRoutes.js'
 import reviewRoute from './src/routes/reviewRoutes.js'
 import buyerRoute from './src/routes/buyerRoutes.js'
+import subscriptionRoute from './src/routes/subscriptionRoutes.js'
 import orderRoute from './src/routes/orderRoutes.js'
 
 env.config({})
 
+const corsOptions = {
+  origin: ['http://localhost:5500'],
+  credentials: true,
+}
+
 const app = express()
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use('/uploads', express.static('uploads'))
 
@@ -24,6 +32,7 @@ app.use('/api/buyer', buyerRoute)
 app.use('/api/seller', sellerRoute)
 app.use('/api/ad', adRoute)
 app.use('/api/review', reviewRoute)
+app.use('/api/subscription',subscriptionRoute)
 app.use('/api/order', orderRoute)
 
 dbConnect()

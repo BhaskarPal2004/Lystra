@@ -16,25 +16,25 @@ const updateProfile = async (req, res) => {
         if (name) user.name = name
         if (phoneNumber) user.phoneNumber = phoneNumber;
 
-        if (address) {
-            const existingAddress = await Address.findById(user.address?.toHexString());
+        const existingAddress = await Address.findById(user.address);
 
-            const updatedAddress = {
-                line1: address.line1 || existingAddress.line1,
-                line2: address.line2 || existingAddress.line2,
-                state: address.state || existingAddress.state,
-                city: address.city || existingAddress.city,
-                country: address.country || existingAddress.country,
-                landMark: address.landMark || existingAddress.landMark,
-                pinCode: address.pinCode || existingAddress.pinCode
-            }
-
-            const coordinates = await getLocationCoords(updatedAddress.city, updatedAddress.state)
-            updatedAddress.coordinates = [coordinates.lat, coordinates.lng]
-
-            await Address.deleteOne(existingAddress?._id)
-            user.address = await createAddress(updatedAddress);
+        const updatedAddress = {
+            line1: address.line1 || existingAddress?.line1,
+            line2: address.line2 || existingAddress?.line2,
+            state: address.state || existingAddress?.state,
+            city: address.city || existingAddress?.city,
+            country: address.country || existingAddress?.country,
+            landMark: address.landMark || existingAddress?.landMark,
+            pinCode: address.pinCode || existingAddress?.pinCode
         }
+
+        const coordinates = await getLocationCoords(updatedAddress.city, updatedAddress.state)
+
+        updatedAddress.location = { type: "Point", coordinates: [coordinates.lat, coordinates.lng] }
+
+        await Address.deleteOne(existingAddress?._id)
+        user.address = await createAddress(updatedAddress);
+
         await user.save();
 
         return res.status(SUCCESS_CODE).send({

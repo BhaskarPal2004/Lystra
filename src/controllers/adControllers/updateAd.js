@@ -24,7 +24,7 @@ export const updateAd = async (req, res) => {
 
             const coordinates = await getLocationCoords(updatedAddress.city, updatedAddress.state)
 
-            updatedAddress.coordinates = [coordinates.lat, coordinates.lng]
+            updatedAddress.location = { type: "Point", coordinates: [coordinates.lat, coordinates.lng] }
 
             const newAddressId = await createAddress(updatedAddress)
             await Address.findByIdAndDelete(ad.address._id.toHexString())

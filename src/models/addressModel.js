@@ -1,9 +1,17 @@
 import mongoose from "mongoose";
 
 const addressSchema = new mongoose.Schema({
-    coordinates: {
-        type: [Number, Number],
-        index: '2d'
+    location: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true 
+        },
+        coordinates: {
+            type: [Number],
+            required: true ,
+            index:"2dsphere"
+        }
     },
     line1: {
         type: String,
@@ -36,5 +44,9 @@ const addressSchema = new mongoose.Schema({
 
 }, { timestamps: true })
 
+
 const Address = mongoose.model("address", addressSchema);
+
+Address.createIndexes({ location: '2dsphere' });
+
 export default Address;
