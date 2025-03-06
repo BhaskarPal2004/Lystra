@@ -70,6 +70,16 @@ const adSchema = new mongoose.Schema({
         enum: ["new", "used", "refurbished"]
 
     },
+    analytics:{
+        CTR:{
+            type:Number,
+            default:0
+        },
+        conversionRate:{
+            type:Number,
+            default:0
+        }
+    },
     reports: [{
         reporterId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -88,7 +98,10 @@ const adSchema = new mongoose.Schema({
             default: false
         }
     }],
-
+    orders: [{ 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "order"
+    }]
 }, { timestamps: true });
 
 const Ad = mongoose.model("ad", adSchema);

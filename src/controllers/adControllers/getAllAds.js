@@ -2,6 +2,7 @@ import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../
 import Ad from "../../models/adModel.js";
 import { setAdsViews } from "../../helper/setAdsViews.js";
 import { findLocalAddressess } from "../../helper/findLocalAddresses.js";
+import { setAnalytics } from "../../helper/setAnalytics.js";
 
 export const getAllAds = async (req, res) => {
   try {
@@ -150,6 +151,10 @@ export const getAllAds = async (req, res) => {
       setAdsViews(element._id);
     })
 
+    
+    localAds.map((element)=>{
+      setAnalytics(element._id)
+    })
     return res.status(SUCCESS_CODE).json({
       success: true,
       total: localAds.length,
