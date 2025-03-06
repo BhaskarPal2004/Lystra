@@ -8,9 +8,9 @@ function ProductCard({ imageUrl, amount, onPayNow }) {
         alt="Product"
         style={{ maxWidth: '100%', height: 'auto', marginBottom: '10px' }}
       />
-      <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>${amount.toFixed(2)}</div>
+      <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>₹{amount.toFixed(2)}</div>
       <button
-        onClick={onPayNow}
+        onClick={() => onPayNow(amount)}
         style={{
           backgroundColor: '#007bff',
           color: 'white',

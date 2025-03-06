@@ -12,11 +12,13 @@ import buyerRoute from './src/routes/buyerRoutes.js'
 import cors from 'cors'
 import Razorpay from 'razorpay'
 import paymentRoute from './src/routes/paymentRoute.js'
+import { SUCCESS_CODE } from './src/config/constant.js'
 
 env.config({})
 
 const app = express()
 app.use(express.json())
+app.use(express.urlencoded({extended: true}))
 app.use('/uploads', express.static('uploads'))
 app.use(cors())
 
@@ -52,3 +54,7 @@ export const instance = new Razorpay({
   key_id: process.env.RAZORPAY_API_KEY,
   key_secret: process.env.RAZORPAY_API_SECRET,
 });
+
+app.get('/api/payment/getKey', (req,res) => {
+  res.status(SUCCESS_CODE).json({ key: process.env.RAZORPAY_API_KEY })
+})
