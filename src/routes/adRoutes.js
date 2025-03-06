@@ -14,6 +14,7 @@ import isVerified from '../middleware/isVerified.js';
 import { uploadAdFilesController } from '../controllers/adControllers/uploadAdFilesController.js';
 import { uploadAdFiles } from '../middleware/multers/adFilesMulter.js';
 import { setFeature } from '../controllers/adControllers/setFeature.js';
+import { removeFeature } from '../controllers/adControllers/removeFeature.js';
 import { compareAds } from '../controllers/adControllers/compareAds.js';
 import { getAllOrdersOnAd } from '../controllers/adControllers/getAllOrdersOnAd.js';
 
@@ -31,6 +32,7 @@ adRoute.delete('/deleteAllAds', verifyAccessToken, isVerified, isSeller, deleteA
 adRoute.post('/uploadFiles/:adId', verifyAccessToken, isVerified, isSeller, uploadAdFiles, uploadAdFilesController)
 adRoute.get('/compareAds/:adIds', verifyAccessToken, isVerified,compareAds );
 adRoute.post('/featured/:adIds',verifyAccessToken,isVerified,isSeller,setFeature);
+adRoute.delete('/removeFeature/:adId',verifyAccessToken,isVerified,isSeller,removeFeature);
 adRoute.get('/getAllOrdersOnAd/:adId',verifyAccessToken,isVerified,isSeller,getAllOrdersOnAd);
 
 
