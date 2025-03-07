@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { boolean } from "zod";
 
 const sellerSchema = new mongoose.Schema({
     name: {
@@ -11,12 +10,12 @@ const sellerSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    password: {//already hashed
+    password: {
         type: String,
         required: true,
         select: false
     },
-    isVerified: {//email verification
+    isVerified: {
         type: Boolean,
         required: true,
         default: false
@@ -52,11 +51,11 @@ const sellerSchema = new mongoose.Schema({
         ref: 'review'
     }],
     averageReview: {
-        averageRating:{
-            type:Number,
-            default:null
+        averageRating: {
+            type: Number,
+            default: null
         },
-        topReviews:[{
+        topReviews: [{
             type: String,
             default: null
         }]

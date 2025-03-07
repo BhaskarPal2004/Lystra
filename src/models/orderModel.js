@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
-    razorpayOrderId:{
-        type:String,
-        required:true
+    razorpayOrderId: {
+        type: String,
+        required: true
     },
     adId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -37,7 +37,7 @@ const orderSchema = new mongoose.Schema({
     },
     paymentStatus: {
         type: String,
-        enum: ['pending', 'paid', 'cancelled', 'refunded'],
+        enum: ['pending', 'paid', 'failed', 'refunded'],
         default: 'pending'
     },
     paymentType: {

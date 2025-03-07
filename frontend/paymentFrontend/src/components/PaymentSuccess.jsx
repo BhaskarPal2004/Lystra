@@ -3,8 +3,6 @@ import { useSearchParams } from "react-router-dom";
 
 const PaymentSuccess = () => {
   const searchQuery = useSearchParams()[0];
-  console.log(searchQuery.get("reference"));
-
   const reference = searchQuery.get("reference");
 
   let paymentId = "N/A";
@@ -66,5 +64,6 @@ const PaymentSuccess = () => {
     </div>
   );
 };
+
 
 export default PaymentSuccess;
