@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
+    razorpayOrderId:{
+        type:String,
+        required:true
+    },
     adId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "ad",

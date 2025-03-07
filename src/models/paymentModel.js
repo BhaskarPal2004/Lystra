@@ -5,13 +5,25 @@ const paymentSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'ad'
     },
+    razorpayPaymentId: {
+        type: String,
+        default: null
+    },
+    razorpayOrderId: {
+        type: String,
+        required: true
+    },
+    razorpayPaymentSignature: {
+        type: String,
+        default: null
+    },
     amount: {
         type: Number,
         required: true
     },
     paymentType: {
         type: String,
-        enum: ['cod', 'upi', 'card'],
+        enum: ['cod', 'online'],
         default: 'cod'
     },
     status: {
