@@ -15,10 +15,36 @@ export const createInvoice = (invoice, path) => {
 
     generateHeader(doc);
 
+    // buyerName :buyer.name,
+// buyerPhoneNo:buyer.phoneNumber,
+// billingAddress :adAddress,
+// sippingAddress:buyerAddress,
+// contact :{
+//     sellerName:seller.name,
+//     address:sellerAddress,
+//     contactInformation:seller.phoneNumber,
+// },
+// paymentId:payment._id,
+// paymentType:payment.paymentType,
+// amountPaid:payment.amount,
+// adName:ad.name,
+// adCategory:ad.category,
+// adSubcategory:ad.subCategory,
+
+
+
     doc.fontSize(
         10,
     ).text(
-        `hi my name is:${invoice.shipping.name}`,
+        // `hi my name is:${invoice.shipping.name},i am from Baradoggal`,
+        `Hi ${buyerName}`,
+        { align: 'center', width: 500 },
+    );
+
+    doc.fontSize(
+        10,
+    ).text(
+        ` bnkuin  8gy gihvhgbhkjkll;m j`,
         { align: 'center', width: 500 },
     );
 
