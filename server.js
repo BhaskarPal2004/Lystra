@@ -69,3 +69,4 @@ export const instance = new Razorpay({
 app.get('/api/payment/getKey', (req,res) => {
   res.status(SUCCESS_CODE).json({ key: process.env.RAZORPAY_API_KEY })
 })
+invoiceCreateFunction("67ca99811deebe2d03645a62")

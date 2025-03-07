@@ -20,9 +20,9 @@ export const paymentCheckout = async (req, res) => {
     const dbOrder = await Order.create({
       razorpayOrderId: order.id,
       adId: adId,
-      buyerId: "67c800de9ac8cbf7692b1c7e",
-      billingAddress: "67c800de9ac8cbf7692b1c88",
-      shippingAddress: "67c800de9ac8cbf7692b1c8c",
+      buyerId: "67c6fd2d690125c0407e57a2",
+      billingAddress: "67c7f7f60ec0535a6de9d2e4",
+      shippingAddress: "67ca9332a77ee8e5dc87658f",
       paymentType: "online"
     })
 

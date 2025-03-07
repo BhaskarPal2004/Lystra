@@ -21,25 +21,14 @@ export const invoiceCreateFunction = async(orderId) => {
     const buyerAddress = await Address.findById(buyer.address);
     const adAddress = await Address.findById(ad.address);
 
-    // const sellerInfo = [];
-    // sellerInfo.push({name:seller.name},{address:sellerAddress},{contactInformation:seller.phoneNumber});
-
-    // const buyerInfo = [];
-    // buyerInfo.push({name:buyer.name},{sippingAddress:buyerAddress},{contactInformation:buyer.phoneNumber});
-
-    // const adInfo = [];
-    // adInfo.push({name:ad.name},{price:ad.price},{billingAddress:adAddress},{category:ad.category},{subcategory:ad.subCategory});
-
-    // const paymentInfo = [];
-    // paymentInfo.push({paymentId:payment._id},{paymentType:payment.paymentType},{amountPaid:payment.amount});
-
 
     const invoice = {
-
         buyerName :buyer.name,
         buyerPhoneNo:buyer.phoneNumber,
         billingAddress :adAddress,
         sippingAddress:buyerAddress,
+        buyerEmail:buyer.email,
+        sellerEmail:seller.email,
         contact :{
             sellerName:seller.name,
             address:sellerAddress,
@@ -51,6 +40,7 @@ export const invoiceCreateFunction = async(orderId) => {
         adName:ad.name,
         adCategory:ad.category,
         adSubcategory:ad.subCategory,
+        invoiceNumber:invoiceId,
 
     };
 
