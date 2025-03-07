@@ -21,20 +21,15 @@ const Home = () => {
 
     const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js')
 
-    if (!res){
-      alert('Razropay failed to load!!')
-      return 
+    if (!res) {
+      alert('Razorpay failed to load!!')
+      return
     }
 
-    const { data: {key}} = await axios.get("http://localhost:3000/api/payment/getKey")
+    const { data: { key } } = await axios.get("http://localhost:3000/api/payment/getKey")
 
-    const { data: {data} } = await axios.post(
-      "http://localhost:3000/api/payment/paymentCheckout/67c9886444d1117951903f18",
-      {
-        amount,
-      }
-    );
-    
+    const { data: { data } } = await axios.post("http://localhost:3000/api/payment/paymentCheckout/67c7f1eba48064a56f3752dc", { amount });
+
     const options = {
       key: key,
       amount: data.amount,
@@ -43,41 +38,36 @@ const Home = () => {
       description: "Test Transaction",
       image: "https://example.com/your_logo",
       order_id: data.id,
-      callback_url:"http://localhost:3000/api/payment/paymentVerification",
-      notes: {
-          "address": "Razorpay Corporate Office"
-      },
-      theme: {
-          "color": "#3399cc"
-      }
-  };
+      callback_url: "http://localhost:3000/api/payment/paymentVerification",
+      notes: { "address": "Razorpay Corporate Office" },
+      theme: { "color": "#3399cc" }
+    };
 
-  const paymentObject = new window.Razorpay(options);
+    const paymentObject = new window.Razorpay(options);
 
-  paymentObject.on('payment.failed', function (response) {
-    alert(`payment failed reason : ${response.error.description}`)
-    console.log(response);
-    
-  })
-  paymentObject.open();
+    paymentObject.on('payment.failed', async (response) => {
+      const res = await axios.post(`http://localhost:3000/api/payment/update/failed/payment/${response.error.metadata.order_id}`)
+    })
+
+    paymentObject.open();
   }
 
   return (
     <>
-    <div className="flex flex-wrap justify-center">
-    <ProductCard
-        imageUrl="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSifYdAmXaAtzbz3E_waAQ09QYePS4cLEUxkISIw4WAOXzjyaw_CUuaxSbegnbV9ts0ShooXM7meR4XtcOrTpzEB2XuPbqaff3AVLCcAjeK"
-        amount={2000}
-        onPayNow={handlePayNow}
-      />
+      <div className="flex flex-wrap justify-center">
+        <ProductCard
+          imageUrl="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSifYdAmXaAtzbz3E_waAQ09QYePS4cLEUxkISIw4WAOXzjyaw_CUuaxSbegnbV9ts0ShooXM7meR4XtcOrTpzEB2XuPbqaff3AVLCcAjeK"
+          amount={2000}
+          onPayNow={handlePayNow}
+        />
 
-      <ProductCard
-        imageUrl="https://inspireonline.in/cdn/shop/files/m1airgrey1.jpg?v=1692617632"
-        amount={80000}
-        onPayNow={handlePayNow}
-      />
-    </div>
-    
+        <ProductCard
+          imageUrl="https://inspireonline.in/cdn/shop/files/m1airgrey1.jpg?v=1692617632"
+          amount={80000}
+          onPayNow={handlePayNow}
+        />
+      </div>
+
     </>
   );
 }
