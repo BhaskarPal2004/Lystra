@@ -70,6 +70,16 @@ const adSchema = new mongoose.Schema({
         enum: ["new", "used", "refurbished"]
 
     },
+    analytics:{
+        CTR:{
+            type:Number,
+            default:0
+        },
+        conversionRate:{
+            type:Number,
+            default:0
+        }
+    },
     reports: [{
         reporterId: {
             type: mongoose.Schema.Types.ObjectId,

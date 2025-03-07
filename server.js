@@ -13,17 +13,23 @@ import subscriptionRoute from './src/routes/subscriptionRoutes.js'
 import orderRoute from './src/routes/orderRoutes.js'
 import { invoiceCreateFunction } from './src/helper/invoiceSetup/invoice.js'
 
+import Razorpay from 'razorpay'
+import paymentRoute from './src/routes/paymentRoute.js'
+import { SUCCESS_CODE } from './src/config/constant.js'
+
 env.config({})
 
 const corsOptions = {
-  origin: ['http://localhost:5500'],
+  origin: ['http://localhost:5173'],
   credentials: true,
 }
 
 const app = express()
 app.use(cors(corsOptions))
 app.use(express.json())
+app.use(express.urlencoded({extended: true}))
 app.use('/uploads', express.static('uploads'))
+app.use(cors())
 
 const port = process.env.PORT || 5000
 
@@ -33,7 +39,8 @@ app.use('/api/buyer', buyerRoute)
 app.use('/api/seller', sellerRoute)
 app.use('/api/ad', adRoute)
 app.use('/api/review', reviewRoute)
-app.use('/api/subscription', subscriptionRoute)
+app.use('/api/payment', paymentRoute)
+app.use('/api/subscription',subscriptionRoute)
 app.use('/api/order', orderRoute)
 
 dbConnect()
@@ -54,4 +61,11 @@ server.on('error', (err) => {
   }
 });
 
-// invoiceCreateFunction("67ca9339a77ee8e5dc876599")
+export const instance = new Razorpay({
+  key_id: process.env.RAZORPAY_API_KEY,
+  key_secret: process.env.RAZORPAY_API_SECRET,
+});
+
+app.get('/api/payment/getKey', (req,res) => {
+  res.status(SUCCESS_CODE).json({ key: process.env.RAZORPAY_API_KEY })
+})
