@@ -28,6 +28,7 @@
     "nodemailer-express-handlebars": "^7.0.0",
     "nodemon": "^3.1.9",
     "opencage-api-client": "^1.0.7",
+    "otp-generator": "^4.0.1",
     "razorpay": "^2.9.6",
     "react-router-dom": "^7.2.0",
     "validator": "^13.12.0",
