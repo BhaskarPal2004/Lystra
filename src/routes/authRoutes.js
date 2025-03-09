@@ -17,11 +17,11 @@ import resetPassword from '../controllers/authControllers/resetPassword.js'
 const authRoute = express.Router()
 
 //all api's for authentications
-authRoute.post('/signup/:role',limiter, validateData(signUpValidation), signup)
+authRoute.post('/signup/:role', limiter, validateData(signUpValidation), signup)
 authRoute.get('/accessToken', verifyRefreshToken, isVerified, regenerateTokens);
-authRoute.post('/login',limiter, validateData(logInValidation), login);
+authRoute.post('/login', limiter, validateData(logInValidation), login);
 authRoute.post('/verifyUser/:registrationToken', verifyRegistrationToken, verifyUser);
 authRoute.post('/resendMail', resendMail);
-authRoute.post('/forgotPassword',forgotPassword);
+authRoute.post('/forgotPassword', forgotPassword);
 authRoute.put('/resetPassword/:forgotPasswordToken', verifyForgotPasswordToken, resetPassword);
 export default authRoute
