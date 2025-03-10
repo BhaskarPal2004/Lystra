@@ -8,8 +8,8 @@ export const resendMail = async (req, res) => {
     try {
         const { email } = req.body
 
-        const buyer = await Buyer.findOne({ email: email })
-        const seller = await Seller.findOne({ email: email })
+        const buyer = await Buyer.findOne({ email: email }, { name: 1 }).exec()
+        const seller = await Seller.findOne({ email: email }, { name: 1 }).exec()
 
         const user = buyer || seller || null
         const role = buyer ? 'buyer' : 'seller'
@@ -30,7 +30,13 @@ export const resendMail = async (req, res) => {
         else {
             const registrationToken = generateToken('registrationToken', email, '30m', role)
             try {
-                await sendEmail(email, registrationToken)
+                const contextData = {
+                    port: process.env.PORT,
+                    token: registrationToken,
+                    name: user.name
+                };
+                const subject = "Verify your email address"
+                await sendEmail(email, 'emailVerificationTemplate', contextData, subject);
             } catch (error) {
                 return res.status(INTERNAL_SERVER_ERROR_CODE).json({
                     success: false,
