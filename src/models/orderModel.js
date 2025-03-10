@@ -25,6 +25,10 @@ const orderSchema = new mongoose.Schema({
         ref: 'address',
         required: true
     },
+    amount: {
+        type: Number,
+        required: true
+    },
     status: {
         type: String,
         enum: ['created', 'confirmed', 'shipped', 'cancelled', 'delivered', 'failure'],

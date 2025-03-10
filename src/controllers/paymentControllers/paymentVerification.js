@@ -17,12 +17,10 @@ export const paymentVerification = async (req, res) => {
     if (isAuthentic) {
       const order = await Order.findOne({ razorpayOrderId: razorpay_order_id })
 
-      // const payment = await Payment.findOne({ razorpayOrderId: razorpay_order_id })
-
       const payment = await Payment.create({
         adId: order._id,
         razorpayOrderId: order.razorpayOrderId,
-        amount: 100,
+        amount: order.amount,
         paymentType: 'online',
         razorpayPaymentId: razorpay_payment_id,
         razorpayPaymentSignature: razorpay_signature,

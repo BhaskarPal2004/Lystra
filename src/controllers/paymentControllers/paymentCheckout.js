@@ -19,10 +19,11 @@ export const paymentCheckout = async (req, res) => {
 
     const order = await instance.orders.create(options)
 
+    console.log(order)
     const dbOrder = await Order.create({
       razorpayOrderId: order.id,
       adId: adId,
-      amount: options.amount,
+      amount: order.amount / 100,
       buyerId: '67c5390b8c164e38b5206786', //will set after setting header in frontend
       billingAddress: ad.address,
       shippingAddress: "67c7e6d242f08a1d91d8b477", //will set after getting buyer
