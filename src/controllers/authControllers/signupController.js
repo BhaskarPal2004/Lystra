@@ -52,8 +52,16 @@ export const signup = async (req, res) => {
     const registrationToken = generateToken('registrationToken', email, '30m', role)
 
     try {
-      await sendEmail(email, registrationToken)
-    } catch (error) {
+      const contextData = {
+        port: process.env.PORT,
+        token: registrationToken
+      };
+
+      await sendEmail(email, 'emailTemplate', contextData);
+
+    }
+
+    catch (error) {
       return res.status(INTERNAL_SERVER_ERROR_CODE).json({
         success: false,
         message: error.message
