@@ -52,12 +52,6 @@ export const getAllAds = async (req, res) => {
     const matchConditions = {
       subCategory: new RegExp(searchSubCategory.trim(), 'i'),
       price: priceFilter,
-      $expr: {
-        $regexMatch: {
-          input: "$addressDetails.city",
-          regex: new RegExp(city.trim(), 'i')
-        }
-      },
       expiryDate: { $gte: new Date() }
     }
 
@@ -80,21 +74,6 @@ export const getAllAds = async (req, res) => {
     //database query
 
     const filteredAds = await Ad.aggregate([
-      {
-        $lookup: {
-          from: "addresses",
-          localField: "address",
-          foreignField: "_id",
-          as: "addressDetails"
-        }
-      },
-      {
-        $addFields:{
-          addressDetails:{
-            $first:"$addressDetails"
-          }
-        }
-      },
       { $match: matchConditions },
       {
         $addFields: {
