@@ -46,10 +46,6 @@ const sellerSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'payments'
     }],
-    reviews: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'review'
-    }],
     averageReview: {
         averageRating: {
             type: Number,

@@ -12,7 +12,7 @@ import deleteResponse from '../controllers/reviewControllers/deleteResponse.js';
 const reviewRoute = express.Router();
 
 //all api's of buyer
-reviewRoute.post('/create/:sellerId', verifyAccessToken, isVerified, createReview);
+reviewRoute.post('/create/:adId', verifyAccessToken, isVerified, createReview);
 reviewRoute.delete('/delete/:reviewId', verifyAccessToken, isVerified, deleteReview);
 reviewRoute.put('/edit/:reviewId', verifyAccessToken, isVerified, updateReview);
 reviewRoute.post('/respond/:reviewId', verifyAccessToken, isSeller, isVerified, respondToReview);
