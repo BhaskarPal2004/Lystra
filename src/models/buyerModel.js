@@ -10,12 +10,12 @@ const buyerSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    password: {//already hashed
+    password: {
         type: String,
         required: true,
         select: false
     },
-    isVerified: {//email verification
+    isVerified: {
         type: Boolean,
         required: true,
         default: false
@@ -29,40 +29,28 @@ const buyerSchema = new mongoose.Schema({
         type: String,
         default: ""
     },
-    address: {
+    address: [{
         type: mongoose.Schema.ObjectId,
         ref: 'address',
         default: null
-    },
+    }],
     interests: [{
         type: String
     }],
-    savedAds: [{
+    favoriteAds: [{
         type: mongoose.Schema.ObjectId,
         ref: 'ad'
     }],
-    orders: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'order'
-    }],
-    payments: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "payment"
-    }],
     blockedList: [{
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'blockUser',
         required: true,
     }],
     reports: [{
-        reporterId: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-        },
-        message: {
-            type: String,
-            default: null
-        }
+        type: mongoose.Schema.ObjectId,
+        ref: 'reportUser'
     }]
+
 }, { timestamps: true });
 
 const Buyer = mongoose.model("buyer", buyerSchema);

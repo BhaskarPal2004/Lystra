@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 const otpSchema = new mongoose.Schema({
-    email: {
-        type: String,
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
     },
     otp: {
@@ -13,9 +13,7 @@ const otpSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-
 })
-
 
 const Otp = mongoose.model("otp", otpSchema);
 export default Otp;
