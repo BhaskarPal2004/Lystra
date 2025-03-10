@@ -12,7 +12,7 @@ const createReview = async n => {
         const ad= await Ad.findById(order.adId)
         const review = new Review({
             buyerId: order.buyerId,
-            sellerId: ad.sellerId ,
+            adId: ad._id ,
             rating: Math.ceil(Math.random() * 5),
             review: faker.lorem.lines(3),
         })

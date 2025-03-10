@@ -98,6 +98,10 @@ const adSchema = new mongoose.Schema({
             default: false
         }
     }],
+    reviews: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'review'
+    }],
     orders: [{ 
         type: mongoose.Schema.Types.ObjectId,
         ref: "order"
