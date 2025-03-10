@@ -46,7 +46,7 @@ const Home = () => {
     const paymentObject = new window.Razorpay(options);
 
     paymentObject.on('payment.failed', async (response) => {
-      const res = await axios.post(`http://localhost:3000/api/payment/update/failed/payment/${response.error.metadata.order_id}`)
+      await axios.post(`http://localhost:3000/api/payment/update/failed/payment/${response.error.metadata.order_id}`)
     })
 
     paymentObject.open();
