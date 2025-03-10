@@ -51,14 +51,23 @@ export const login = async (req, res) => {
                 message: error.message
             })
         }
-        console.log(otp)
 
-        // sendMail function will be called here
+        // sendMail function 
         const otpContextData = {
-            otp: otp
+            otp: otp,
+            name: user.name
         };
+        const subject = `Verify your Lystra account - Your One-Time Password (OTP) is ${otp}`
 
-        sendEmail(email, "emailOtpTemplate", otpContextData)
+        try {
+            await sendEmail(email, "emailOtpTemplate", otpContextData, subject)
+        }
+        catch (error) {
+            return res.status(INTERNAL_SERVER_ERROR_CODE).json({
+                success: false,
+                message: error.message
+            })
+        }
 
         const role = buyer ? 'buyer' : 'seller'
         const otpPayload = { userId: user._id, email }
