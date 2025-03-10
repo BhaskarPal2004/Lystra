@@ -1,6 +1,6 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE, UNAUTHORIZED_CODE } from "../../config/constant.js";
+import Ad from "../../models/adModel.js";
 import Review from "../../models/reviewModel.js";
-import Seller from "../../models/sellerModel.js";
 
 
 const deleteReview = async (req, res) => {
@@ -26,10 +26,10 @@ const deleteReview = async (req, res) => {
 
         await Review.deleteOne({ _id: reviewId })
 
-        const seller = await Seller.findById(review.sellerId)
-        seller.reviews.remove(reviewId)
+        const ad = await Ad.findById(review.adId)
+        ad.reviews.remove(reviewId)
 
-        await seller.save()
+        await ad.save()
 
         return res.status(SUCCESS_CODE).json({
             success: false,
@@ -43,4 +43,5 @@ const deleteReview = async (req, res) => {
         })
     }
 }
+
 export default deleteReview;

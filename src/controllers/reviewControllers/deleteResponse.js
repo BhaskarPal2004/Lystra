@@ -5,11 +5,11 @@ const deleteResponse = async (req, res) => {
     try {
         const { reviewId } = req.params;
         const review = await Review.findById(reviewId);
-        if( review && review.sellerId==req.userId){
-            review.reviewResponse=null;
+        if (review && review.sellerId == req.userId) {
+            review.reviewResponse = null;
             review.save();
-            res.status(SUCCESS_CODE).send({success:true, message:"response deleted"});
-        }else res.status(NOT_FOUND_CODE).send({
+            res.status(SUCCESS_CODE).send({ success: true, message: "response deleted" });
+        } else res.status(NOT_FOUND_CODE).send({
             success: false,
             message: "unauthorized access"
         });
