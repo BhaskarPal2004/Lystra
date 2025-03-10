@@ -8,43 +8,39 @@ import Seller from "../../models/sellerModel.js";
 export const paymentCheckout = async (req, res) => {
   try {
     const adId = req.params.adId;
+    const ad = await Ad.findById(adId)
+    const seller = await Seller.findById(ad.sellerId)
+
     const options = {
-      amount: Number(req.body.amount * 100), // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      amount: Number(req.body.amount * 100),
+      // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
       currency: "INR",
     };
 
     const order = await instance.orders.create(options)
-    console.log('order', order);
-    console.log(order.id);
 
     const dbOrder = await Order.create({
       razorpayOrderId: order.id,
       adId: adId,
-      buyerId: "67c6fd2d690125c0407e57a2",
-      billingAddress: "67c7f7f60ec0535a6de9d2e4",
-      shippingAddress: "67ca9332a77ee8e5dc87658f",
+      buyerId: '67c5390b8c164e38b5206786', //will set after setting header in frontend
+      billingAddress: ad.address,
+      shippingAddress: "67c7e6d242f08a1d91d8b477", //will set after getting buyer
       paymentType: "online"
     })
 
-    console.log('dbOrder =>', dbOrder);
     await Payment.create({
       adId: adId,
-      razorpayOrderId:order.id,
-      amount:order.amount/100,
-      paymentType:'online'
+      razorpayOrderId: order.id,
+      amount: order.amount / 100,
+      paymentType: 'online'
     })
 
-    const ad = await Ad.findById(adId)
-    const seller = await Seller.findById(ad.sellerId)
-    console.log('my seller => ', seller);
-    
-
     seller.orders.push(dbOrder)
-    // buyer.orders.push(dbOrder)
     await seller.save()
+    // buyer.orders.push(dbOrder)  //will be updated when we use the req header
     // await buyer.save()
 
-    res.status(SUCCESS_CODE).json({
+    return res.status(SUCCESS_CODE).json({
       success: true,
       data: order
     })

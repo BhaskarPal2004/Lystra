@@ -16,6 +16,7 @@ import orderRoute from './src/routes/orderRoutes.js'
 import Razorpay from 'razorpay'
 import paymentRoute from './src/routes/paymentRoute.js'
 import { SUCCESS_CODE } from './src/config/constant.js'
+import otpRouter from './src/routes/otpRoutes.js'
 
 env.config({})
 
@@ -27,7 +28,7 @@ const corsOptions = {
 const app = express()
 app.use(cors(corsOptions))
 app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({ extended: true }))
 app.use('/uploads', express.static('uploads'))
 app.use(cors())
 
@@ -40,8 +41,9 @@ app.use('/api/seller', sellerRoute)
 app.use('/api/ad', adRoute)
 app.use('/api/review', reviewRoute)
 app.use('/api/payment', paymentRoute)
-app.use('/api/subscription',subscriptionRoute)
+app.use('/api/subscription', subscriptionRoute)
 app.use('/api/order', orderRoute)
+app.use('/api/otp', otpRouter)
 
 dbConnect()
 
@@ -66,6 +68,6 @@ export const instance = new Razorpay({
   key_secret: process.env.RAZORPAY_API_SECRET,
 });
 
-app.get('/api/payment/getKey', (req,res) => {
+app.get('/api/payment/getKey', (req, res) => {
   res.status(SUCCESS_CODE).json({ key: process.env.RAZORPAY_API_KEY })
 })

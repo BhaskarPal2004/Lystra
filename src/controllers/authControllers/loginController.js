@@ -1,10 +1,12 @@
 import bcrypt from "bcryptjs"
 
 import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js"
-import generateToken from "../../helper/generateToken.js"
 import Buyer from "../../models/buyerModel.js"
-import sessionsModel from "../../models/sessionModel.js"
 import Seller from "../../models/sellerModel.js"
+import { generateOtp } from "../../helper/generateOtp.js"
+import generateToken from "../../helper/generateToken.js"
+import Otp from "../../models/otpModel.js"
+
 
 export const login = async (req, res) => {
     try {
@@ -37,21 +39,34 @@ export const login = async (req, res) => {
                 message: "Please verify your email first"
             })
         }
+        await Otp.deleteMany({ email: email })
+
+        try {
+            await generateOtp(email)
+        } catch (error) {
+            return res.status(INTERNAL_SERVER_ERROR_CODE).json({
+                success: false,
+                message: error.message
+            })
+        }
+
+        //sendMail function will be called here
 
         const role = buyer ? 'buyer' : 'seller'
+        const otpPayload = { userId: user._id, email }
 
-        const accessToken = generateToken('accessToken', user._id, '9h', role)
-        const refreshToken = generateToken('refreshToken', user._id, '1d', role)
+        const otpToken = generateToken('otpToken', otpPayload, '20min', role)
 
-        await sessionsModel.create({ userId: user._id })
-
+        //for now in backend this api will give a response
         return res.status(SUCCESS_CODE).json({
             success: true,
-            message: "Logged in successfully",
-            greet: `Welcome ${user.name}`,
-            accessToken,
-            refreshToken
+            message: "An otp is sent to your email",
+            otpToken
         })
+
+        //frontend otp page will be linked here for a redirection after successful credential matches
+        //we will send the otp token to the frontend url so that in verification api we can check the existence of otp
+        // res.redirect('http://localhost:5173/veirfy/otp/otpToken') 
 
     } catch (error) {
         return res.status(INTERNAL_SERVER_ERROR_CODE).json({
