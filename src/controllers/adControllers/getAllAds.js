@@ -15,7 +15,7 @@ export const getAllAds = async (req, res) => {
       minPrice = 0,
       maxPrice = Infinity,
       condition = "",
-      city = ""
+      // city = ""
     } = req.query;
 
 
