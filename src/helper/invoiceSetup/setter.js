@@ -1,20 +1,18 @@
-export function generateHeader(doc) {
-    doc.fillColor('#444444')
-        .fontSize(20)
-        .text('LYSTRA', 110, 57)
-        .fontSize(10)
-        .text('123 Main Street', 200, 65, { align: 'right' })
-        .text('New York, NY, 10025', 200, 80, { align: 'right' })
-        .moveDown();
-}
-
-export function generateFooter(doc) {
-    doc.fontSize(
-        10,
-    ).text(
-        `Payment is due within 15 days. Thank you for your business.${doc}`,
-        50,
-        775,
-        { align: 'center', width: 500 },
-    );
+export function generateFooter(doc, invoice) {
+  doc
+    .fontSize(10)
+    .text("Make all Checks payable to Lystra & co. ", 50, 700, {
+      align: "center",
+      width: 500,
+    });
+  doc
+    .fontSize(10)
+    .text(
+      `If you have any questions concerning this invoice,contact: ${invoice.contact.sellerName} at ${invoice.contact.contactInformation}.`,
+      { align: "center", width: 500 }
+    )
+    .moveDown(1);
+  doc
+    .fontSize(15)
+    .text("Thank You for your Business", { align: "center", width: 500 });
 }

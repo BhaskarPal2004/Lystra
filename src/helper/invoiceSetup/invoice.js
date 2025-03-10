@@ -13,7 +13,6 @@ export const invoiceCreateFunction = async(orderId) => {
     const order = await Order.findById(orderId);
     const buyer = await Buyer.findById(order.buyerId);
     const payment = await Payment.findById(order.paymentId);
-    console.log(payment);
     const ad = await Ad.findById(order.adId);
     const seller = await Seller.findById(ad.sellerId);
 
@@ -36,6 +35,7 @@ export const invoiceCreateFunction = async(orderId) => {
         },
         paymentId:payment._id,
         paymentType:payment.paymentType,
+        paymentStatus:payment.status,
         amountPaid:payment.amount,
         adName:ad.name,
         adCategory:ad.category,
