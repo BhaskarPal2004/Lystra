@@ -6,9 +6,11 @@ import Seller from "../../models/sellerModel.js"
 import { generateOtp } from "../../helper/generateOtp.js"
 import generateToken from "../../helper/generateToken.js"
 import Otp from "../../models/otpModel.js"
+import sendEmail from "../../email/sendEmail.js"
 
 
 export const login = async (req, res) => {
+    let otp = null;
     try {
         const { email, password } = req.body
 
@@ -42,7 +44,7 @@ export const login = async (req, res) => {
         await Otp.deleteMany({ email: email })
 
         try {
-            await generateOtp(email)
+            otp = await generateOtp(email)
         } catch (error) {
             return res.status(INTERNAL_SERVER_ERROR_CODE).json({
                 success: false,
@@ -50,7 +52,22 @@ export const login = async (req, res) => {
             })
         }
 
-        //sendMail function will be called here
+        // sendMail function 
+        const otpContextData = {
+            otp: otp,
+            name: user.name
+        };
+        const subject = `Verify your Lystra account - Your One-Time Password (OTP) is ${otp}`
+
+        try {
+            await sendEmail(email, "emailOtpTemplate", otpContextData, subject)
+        }
+        catch (error) {
+            return res.status(INTERNAL_SERVER_ERROR_CODE).json({
+                success: false,
+                message: error.message
+            })
+        }
 
         const role = buyer ? 'buyer' : 'seller'
         const otpPayload = { userId: user._id, email }

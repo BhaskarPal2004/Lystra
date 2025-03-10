@@ -1,56 +1,34 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE, UNAUTHORIZED_CODE } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
-import Order from "../../models/orderModel.js";
+
 
 export const getAllOrdersOnAd = async (req, res) => {
     try {
         const sellerId = req.userId
         const adId = req.params.adId
-        let doesAdExist = null
-        let isItYourAd = null
-        let allOrders = []
 
+        const ad = await Ad.findOne({ _id: adId }).populate("orders")
 
-        let ad = await Ad.findOne({ _id: adId })
         if (!ad) {
-            doesAdExist = false
-        }
-        else {
-            doesAdExist = true
-        }
-
-        ad = await Ad.findOne({ _id: adId, sellerId }).populate("orders")
-
-
-      
-        if (!ad) {
-            isItYourAd = false
-        }
-        else {
-            isItYourAd = true
-        }
-
-        if (!doesAdExist) {
             return res.status(NOT_FOUND_CODE).json({
                 success: false,
                 message: "Ad not found",
             });
         }
-        else if (!isItYourAd) {
+
+        if (ad.sellerId.toHexString() !== sellerId) {
             return res.status(UNAUTHORIZED_CODE).json({
                 success: false,
-                message: "You are not authorised to view this ad",
-            });
-        }
-        else {
-            return res.status(SUCCESS_CODE).json({
-                success: true,
-                message: "your orders",
-                data: ad
-
+                message: "Unauthorized access",
             });
         }
 
+        return res.status(SUCCESS_CODE).json({
+            success: true,
+            message: "Orders on this ad fetched successfully",
+            totalOrders: ad.orders.length,
+            data: ad.orders
+        })
     }
     catch (error) {
         return res.status(INTERNAL_SERVER_ERROR_CODE).json({
