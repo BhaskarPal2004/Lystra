@@ -96,7 +96,11 @@ const adSchema = new mongoose.Schema({
         type: String,
         enum: ['cod', 'online'],
         required: true
-    }
+    },
+    reviews: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'review'
+    }]
 
 }, { timestamps: true });
 
