@@ -21,11 +21,11 @@ export const resendOtp = async (req, res) => {
                     })
                 }
 
-                const { email } = decoded.id
-                await Otp.deleteMany({ email: email })
+                const { userId } = decoded.id
+                await Otp.deleteMany({ userId: userId })
 
                 try {
-                    await generateOtp(email)
+                    await generateOtp(userId)
                 } catch (error) {
                     return res.status(INTERNAL_SERVER_ERROR_CODE).json({
                         success: false,

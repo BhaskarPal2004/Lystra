@@ -25,11 +25,11 @@ export const verifyOtp = async (req, res) => {
                         message: "Invalid Token Type"
                     })
                 }
-
-                const { userId, email } = decoded.id
+                
+                const { userId } = decoded.id
                 const role = decoded.role
 
-                const currentOtp = await Otp.findOne({ email: email, otp: otpInput })
+                const currentOtp = await Otp.findOne({ userId: userId, otp: otpInput })
 
                 if (!currentOtp) {
                     return res.status(BAD_REQUEST_CODE).json({
