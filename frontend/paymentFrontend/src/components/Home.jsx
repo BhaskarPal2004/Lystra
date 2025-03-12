@@ -28,7 +28,7 @@ const Home = () => {
 
     const { data: { key } } = await axios.get("http://localhost:3000/api/payment/getKey")
 
-    const { data: { data } } = await axios.post("http://localhost:3000/api/payment/paymentCheckout/67c7f1eba48064a56f3752dc", { amount });
+    const { data: { data } } = await axios.post("http://localhost:3000/api/payment/paymentCheckout/67d1d96bfb1b1ea9a4ab6a85", { amount });
 
     const options = {
       key: key,
@@ -40,7 +40,7 @@ const Home = () => {
       order_id: data.id,
       callback_url: "http://localhost:3000/api/payment/paymentVerification",
       notes: { "address": "Razorpay Corporate Office" },
-      theme: { "color": "#3399cc" }
+      theme: { "color": "orange" }
     };
 
     const paymentObject = new window.Razorpay(options);
