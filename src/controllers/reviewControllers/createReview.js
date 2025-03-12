@@ -1,4 +1,5 @@
 import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
+import { calculateReview } from "../../helper/calculateReview.js";
 import Ad from "../../models/adModel.js";
 import Review from "../../models/reviewModel.js";
 
@@ -10,7 +11,6 @@ const createReview = async (req, res) => {
         let isReviewer = false
 
         const ad = await Ad.findById(adId).populate('reviews')
-        console.log(ad.reviews);
 
         if (!ad) {
             return res.status(NOT_FOUND_CODE).json({
@@ -19,19 +19,24 @@ const createReview = async (req, res) => {
             })
         }
 
-        // ad.reviews.forEach((review) => {
-        //     if (review.buyerId.toHexString() === userId)
-        //         isReviewer = true
-        // })
+        if (ad.sellerId.toHexString() === userId) {
+            return res.status(BAD_REQUEST_CODE).json({
+                success: false,
+                message: "You can't give review to your own ad"
+            })
+        }
 
-        console.log(isReviewer);
+        ad.reviews.forEach((review) => {
+            if (review.buyerId.toHexString() === userId)
+                isReviewer = true
+        })
 
-        // if (isReviewer) {
-        //     return res.status(BAD_REQUEST_CODE).json({
-        //         success: false,
-        //         message: "Only one review per ad is accepted"
-        //     })
-        // }
+        if (isReviewer) {
+            return res.status(BAD_REQUEST_CODE).json({
+                success: false,
+                message: "Only one review per ad is accepted"
+            })
+        }
 
         if (rating < 0 || rating > 5) {
             return res.status(BAD_REQUEST_CODE).json({
@@ -50,7 +55,7 @@ const createReview = async (req, res) => {
         ad.reviews.push(newReview)
         await ad.save()
 
-        // await calculateReview(ad.sellerId, rating);
+        await calculateReview(ad, rating)
 
         return res.status(SUCCESS_CODE).json({
             success: true,

@@ -1,10 +1,10 @@
 import Seller from "../models/sellerModel.js"
 
-export const calculateReview = async (sellerId, newRating) => {
+export const calculateReview = async (ad, newRating) => {
   try {
-    const seller = await Seller.findById(sellerId).populate('reviews');
-    const reviewerArray = seller.reviews;
-
+    const seller = await Seller.findById(ad.sellerId)
+    const reviewerArray = ad.reviews;
+    
     if(reviewerArray.length === 0) {
       seller.averageReview.averageRating = 0;
       seller.averageReview.topReviews = [];
@@ -16,6 +16,7 @@ export const calculateReview = async (sellerId, newRating) => {
     let topReviews = [];
 
     reviewerArray.forEach( (element) => {
+      console.log(element.rating);
       totalRating += element.rating;
       if (element.rating >= 4){
         topReviews.push(element.review);
@@ -24,9 +25,10 @@ export const calculateReview = async (sellerId, newRating) => {
 
     totalRating += newRating;
     const averageRating = totalRating / (reviewerArray.length + 1);
-
-    seller.averageReview.averageRating = averageRating.toFixed(1);
-    seller.averageReview.topReviews = topReviews;
+    console.log(averageRating);
+    
+    // seller.averageReview.averageRating = averageRating.toFixed(1);
+    // seller.averageReview.topReviews = topReviews;
 
     await seller.save();
   }
