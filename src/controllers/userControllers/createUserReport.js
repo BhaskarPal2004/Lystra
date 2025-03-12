@@ -1,12 +1,12 @@
 import Buyer from "../../models/buyerModel.js";
 import Seller from "../../models/sellerModel.js";
 import { SUCCESS_CODE, NOT_FOUND_CODE, INTERNAL_SERVER_ERROR_CODE, BAD_REQUEST_CODE } from "../../config/constant.js";
+import ReportUser from "../../models/reportUserModel.js";
 
 export const createUserReport = async (req, res) => {
     try {
         const reporterId = req.userId;
         const { userId, message } = req.body;
-        let isReported = false;
 
         const buyer = await Buyer.findById(userId);
         const seller = await Seller.findById(userId);
@@ -26,11 +26,7 @@ export const createUserReport = async (req, res) => {
         }
 
         const reports = buyer ? buyer.reports : seller.reports;
-        reports.forEach((report) => {
-            if (report.reporterId.toHexString() === reporterId) {
-                isReported = true;
-            }
-        });
+        const isReported = reports.some(report => report.reporterId.toHexString() === reporterId);
 
         if (isReported) {
             return res.status(BAD_REQUEST_CODE).json({
@@ -39,12 +35,19 @@ export const createUserReport = async (req, res) => {
             });
         }
 
-        const report = { reporterId, message };
+        const newReport = new ReportUser ({
+            reporterId,
+            reportedId: userId,
+            message
+        })
+
+        await newReport.save();
+
         if (buyer) {
-            buyer.reports.push(report);
+            buyer.reports.push(newReport._id);
             await buyer.save();
         } else {
-            seller.reports.push(report);
+            seller.reports.push(newReport._id);
             await seller.save();
         }
 

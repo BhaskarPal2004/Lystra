@@ -41,10 +41,11 @@ export const login = async (req, res) => {
                 message: "Please verify your email first"
             })
         }
-        await Otp.deleteMany({ email: email })
+        
+        await Otp.deleteMany({ userId: user._id })
 
         try {
-            otp = await generateOtp(email)
+            otp = await generateOtp(user._id)
         } catch (error) {
             return res.status(INTERNAL_SERVER_ERROR_CODE).json({
                 success: false,
@@ -73,7 +74,7 @@ export const login = async (req, res) => {
         const role = buyer ? 'buyer' : 'seller'
         const otpPayload = { userId: user._id, email }
 
-        const otpToken = generateToken('otpToken', otpPayload, '20min', role)
+        const otpToken = generateToken('otpToken', otpPayload, '20m', role)
 
         //for now in backend this api will give a response
         return res.status(SUCCESS_CODE).json({

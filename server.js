@@ -17,6 +17,7 @@ import Razorpay from 'razorpay'
 import paymentRoute from './src/routes/paymentRoute.js'
 import { SUCCESS_CODE } from './src/config/constant.js'
 import otpRouter from './src/routes/otpRoutes.js'
+// import { invoiceCreateFunction } from './src/helper/invoiceSetup/invoice.js'
 
 env.config({})
 
@@ -30,6 +31,7 @@ app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/uploads', express.static('uploads'))
+app.use('/invoices', express.static('invoices'))
 app.use(cors())
 
 const port = process.env.PORT || 5000
@@ -71,3 +73,5 @@ export const instance = new Razorpay({
 app.get('/api/payment/getKey', (req, res) => {
   res.status(SUCCESS_CODE).json({ key: process.env.RAZORPAY_API_KEY })
 })
+
+// invoiceCreateFunction("67ca99811deebe2d03645a62");

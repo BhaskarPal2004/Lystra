@@ -21,13 +21,14 @@ const adSchema = new mongoose.Schema({
         required: true
     },
     category: {
-        type: String,
-        enum: ['electronics', 'vehicles', 'real estate', 'home and furniture', 'jobs and services', 'fashion and beauty'],
+        type: mongoose.Types.ObjectId,
+        ref: 'category',
         required: true
     },
     subCategory: {
-        type: String,
-        default: ""
+        type: mongoose.Types.ObjectId,
+        ref: 'subCategory',
+        required: true
     },
     description: {
         type: String,
@@ -38,47 +39,40 @@ const adSchema = new mongoose.Schema({
         required: true
     },
     files: [{
-        type: String,
-        default: null
+        fileUrl: {
+            type: String,
+            required: true
+        },
+        fileType: {
+            type: String,
+            required: true
+        }
     }],
     price: {
         type: Number,
         required: true
+    },
+    count: {
+        type: Number,
+        default: 0
     },
     address: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "address",
         required: true
     },
-    expiryDate:{
+    expiryDate: {
         type: Date,
         required: true
     },
-    performance: {
-        views: {
-            type: Number,
-            default: 0
-        },
-        clicks: {
-            type: Number,
-            default: 0
-        },
+    analytics: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'analytics'
     },
     condition: {
         type: String,
         required: true,
         enum: ["new", "used", "refurbished"]
-
-    },
-    analytics:{
-        CTR:{
-            type:Number,
-            default:0
-        },
-        conversionRate:{
-            type:Number,
-            default:0
-        }
     },
     reports: [{
         reporterId: {
@@ -98,14 +92,16 @@ const adSchema = new mongoose.Schema({
             default: false
         }
     }],
+    paymentMode: {
+        type: String,
+        enum: ['cod', 'online'],
+        required: true
+    },
     reviews: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'review'
-    }],
-    orders: [{ 
         type: mongoose.Schema.Types.ObjectId,
-        ref: "order"
+        ref: 'review'
     }]
+
 }, { timestamps: true });
 
 const Ad = mongoose.model("ad", adSchema);
