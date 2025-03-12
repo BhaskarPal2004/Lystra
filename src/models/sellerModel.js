@@ -34,22 +34,6 @@ const sellerSchema = new mongoose.Schema({
         ref: 'address',
         default: null
     },
-    ads: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'ad'
-    }],
-    orders: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'order'
-    }],
-    payments: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'payments'
-    }],
-    reviews: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'review'
-    }],
     averageReview: {
         averageRating: {
             type: Number,
@@ -62,22 +46,18 @@ const sellerSchema = new mongoose.Schema({
     },
     blockedList: [{
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'blockUser',
         required: true,
     }],
     reports: [{
-        reporterId: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-        },
-        message: {
-            type: String,
-            default: null
-        }
+        type: mongoose.Schema.ObjectId,
+        ref: 'reportUser'
     }],
     isSubscribed: {
         type: Boolean,
         default: false,
     }
+
 }, { timestamps: true });
 
 const Seller = mongoose.model("seller", sellerSchema);

@@ -2,7 +2,7 @@ import otpGenerator from 'otp-generator'
 import Otp from '../models/otpModel.js';
 
 
-export const generateOtp = async (email) => {
+export const generateOtp = async (userId) => {
     try {
         let otp = otpGenerator.generate(6, { upperCaseAlphabets: false, lowerCaseAlphabets: false, specialChars: false });
 
@@ -13,7 +13,7 @@ export const generateOtp = async (email) => {
             sameOtp = await Otp.findOne({ otp })
         }
 
-        await Otp.create({ email, otp })
+        await Otp.create({ userId, otp })
 
         return otp
 

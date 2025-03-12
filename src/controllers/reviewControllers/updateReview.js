@@ -15,7 +15,7 @@ const updateReview = async (req, res) => {
                 message: "Review not found"
             })
 
-        if (oldReview.buyerId === userId)
+        if (oldReview.buyerId.toHexString() !== userId)
             return res.status(UNAUTHORIZED_CODE).json({
                 success: false,
                 message: "un authorized access, can't edit review"

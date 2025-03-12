@@ -1,25 +1,25 @@
 import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
+import { calculateReview } from "../../helper/calculateReview.js";
+import Ad from "../../models/adModel.js";
 import Review from "../../models/reviewModel.js";
-import Seller from "../../models/sellerModel.js";
-
 
 const createReview = async (req, res) => {
     try {
         const userId = req.userId;
-        const sellerId = req.params.sellerId;
+        const adId = req.params.adId;
         const { rating, review } = req.body;
         let isReviewer = false
 
-        const seller = await Seller.findById(sellerId).populate('reviews');
+        const ad = await Ad.findById(adId).populate('reviews');
 
-        if (!seller) {
+        if (!ad) {
             return res.status(NOT_FOUND_CODE).json({
                 success: false,
-                message: "Seller not found"
+                message: "ad not found"
             })
         }
 
-        seller.reviews.forEach((review) => {
+        ad.reviews.forEach((review) => {
             if (review.buyerId.toHexString() === userId)
                 isReviewer = true
         })
@@ -27,7 +27,7 @@ const createReview = async (req, res) => {
         if (isReviewer) {
             return res.status(BAD_REQUEST_CODE).json({
                 success: false,
-                message: "Only one review per seller is accepted"
+                message: "Only one review per ad is accepted"
             })
         }
 
@@ -41,16 +41,18 @@ const createReview = async (req, res) => {
         //creating review
         const newReview = new Review({
             buyerId: userId,
-            sellerId: sellerId,
+            adId: adId,
             rating,
             review
         })
 
         await newReview.save();
 
-        //storing review in seller
-        seller.reviews.push(newReview);
-        await seller.save();
+        //storing review in ad
+        ad.reviews.push(newReview);
+        await ad.save();
+
+        await calculateReview(ad.sellerId, rating);
 
         return res.status(SUCCESS_CODE).json({
             success: true,
