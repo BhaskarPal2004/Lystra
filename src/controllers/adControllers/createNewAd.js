@@ -1,6 +1,5 @@
 import Ad from "../../models/adModel.js"
 import { SUCCESS_CODE, NOT_FOUND_CODE } from "../../config/constant.js"
-import Seller from "../../models/sellerModel.js";
 import createAddress from "../../helper/createAddress.js";
 import { getLocationCoords } from "../../helper/getLocationCoords.js";
 
@@ -19,11 +18,6 @@ export const createNewAd = async (req, res) => {
         console.log(adAddress)
 
         const newAd = await Ad.create({ sellerId: userId, name, listingType, category, subCategory, description, details, images, price, condition, address: adAddress, expiryDate })
-
-        const seller = await Seller.findById(userId)
-        seller.ads.push(newAd)
-
-        await seller.save()
 
         return res.status(SUCCESS_CODE).json({
             success: true,
