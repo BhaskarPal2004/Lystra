@@ -3,6 +3,7 @@ import createAddress from "../../helper/createAddress.js"
 import { getLocationCoords } from "../../helper/getLocationCoords.js"
 import Address from "../../models/addressModel.js"
 import Ad from "../../models/adModel.js"
+import Category from "../../models/categoryModel.js"
 
 export const updateAd = async (req, res) => {
     try {
@@ -31,11 +32,23 @@ export const updateAd = async (req, res) => {
             updatedFields.address = newAddressId
         }
 
-        if (req.body.expireInDays) {
+        if (updatedFields.expireInDays) {
             const expiryDate = new Date();
-            expiryDate.setDate(expiryDate.getDate() + req.body.expireInDays);
+            expiryDate.setDate(expiryDate.getDate() + updatedFields.expireInDays);
             delete updatedFields.expireInDays;
             updatedFields.expiryDate = expiryDate;
+        }
+        if(updatedFields.category){
+           const existingCategory = await Category.findOne({name:updatedFields.category})
+           if(existingCategory){
+            delete updatedFields.category 
+            updatedFields.category = existingCategory._id
+           }
+           else {
+           const newCategory = await Category.create({name:updatedFields.category})
+           delete updatedFields.category 
+           updatedFields.category = newCategory._id
+           }
         }
 
         const ad = await Ad.findOneAndUpdate({ _id: adId }, { $set: updatedFields })

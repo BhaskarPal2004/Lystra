@@ -17,7 +17,8 @@ import Razorpay from 'razorpay'
 import paymentRoute from './src/routes/paymentRoute.js'
 import { SUCCESS_CODE } from './src/config/constant.js'
 import otpRouter from './src/routes/otpRoutes.js'
-// import { invoiceCreateFunction } from './src/helper/invoiceSetup/invoice.js'
+import './src/helper/cronJob.js'
+
 
 env.config({})
 

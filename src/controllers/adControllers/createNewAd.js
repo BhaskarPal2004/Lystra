@@ -1,6 +1,5 @@
 import Ad from "../../models/adModel.js"
 import { SUCCESS_CODE, NOT_FOUND_CODE } from "../../config/constant.js"
-import Seller from "../../models/sellerModel.js";
 import createAddress from "../../helper/createAddress.js";
 import { getLocationCoords } from "../../helper/getLocationCoords.js";
 import { createNewCategory } from "../../helper/createNewCategory.js";
