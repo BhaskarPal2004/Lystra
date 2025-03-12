@@ -5,6 +5,7 @@ import {
   NOT_FOUND_CODE,
   INTERNAL_SERVER_ERROR_CODE,
 } from "../../config/constant.js";
+import BlockUser from "../../models/blockUserModel.js";
 
 export const unBlockedUser = async (req, res) => {
   try {
@@ -20,17 +21,26 @@ export const unBlockedUser = async (req, res) => {
         message: "User not found",
       });
     }
-    const findindex = user.blockedList.indexOf(unBlockId);
 
-    if (findindex === -1) {
+    const blockEntry = await BlockUser.findOne({blockerId: userId, blockedId: unBlockId})
+
+    if(!blockEntry) {
       return res.status(NOT_FOUND_CODE).json({
         success: false,
         message: "This user in not present in your blocklist",
       });
     }
 
-    user.blockedList.splice(findindex, 1);
-    await user.save();
+    await BlockUser.deleteOne({_id: blockEntry._id});
+
+    if(user.blockedList) {
+      const findindex = user.blockedList.indexOf(blockEntry._id);
+      if(findindex !== -1){
+        user.blockedList.splice(findindex, 1);
+        await user.save();
+      }
+    }
+
     return res.status(SUCCESS_CODE).json({
       success: true,
       message: "Unblocked successfull",
