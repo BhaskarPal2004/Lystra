@@ -2,7 +2,7 @@ import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../
 import Ad from "../../models/adModel.js";
 import { setAdsViews } from "../../helper/setAdsViews.js";
 import { findLocalAddressess } from "../../helper/findLocalAddresses.js";
-import { setAnalytics } from "../../helper/setAnalytics.js";
+// import { setAnalytics } from "../../helper/setAnalytics.js";
 import { getLocationCoords } from "../../helper/getLocationCoords.js";
 
 export const getAllAds = async (req, res) => {
@@ -26,7 +26,7 @@ export const getAllAds = async (req, res) => {
     if (city===""){
     latitude =  22.5726459
     longitude = 88.3638953 
-    maxDistance = 5000
+    maxDistance = 10000
     }
 
     else{
@@ -34,7 +34,7 @@ export const getAllAds = async (req, res) => {
       console.log(cityCoordinates)
       latitude = cityCoordinates.lat 
       longitude = cityCoordinates.lng 
-      maxDistance = 5000
+      maxDistance = 10000
       console.log(latitude,longitude,maxDistance)
     }
 
@@ -144,9 +144,9 @@ export const getAllAds = async (req, res) => {
     })
 
     
-    localAds.map((element)=>{
-      setAnalytics(element._id)
-    })
+    // localAds.map((element)=>{
+    //   setAnalytics(element._id)
+    // })
     return res.status(SUCCESS_CODE).json({
       success: true,
       total: localAds.length,
