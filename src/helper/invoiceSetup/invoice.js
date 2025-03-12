@@ -44,7 +44,9 @@ export const invoiceCreateFunction = async(orderId) => {
 
     };
 
-    createInvoice(invoice, `./invoices/${invoiceId}.pdf`)
+    const fileName = `${invoiceId}.pdf`
+    createInvoice(invoice, `./invoices/${fileName}`)
+    return fileName;
 }
 
 
