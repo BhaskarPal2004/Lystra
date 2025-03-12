@@ -4,7 +4,7 @@ export const findLocalAddressess = async(longitude,latitude,maxDistance) => {
 let filteredAdresses = await Address.aggregate([
       {
         $geoNear: {
-          near: { type: 'Point', coordinates: [longitude,latitude] },
+          near: { type: 'Point', coordinates: [latitude,longitude] },
           key:"location",
           distanceField: 'distance',
           maxDistance: maxDistance,
