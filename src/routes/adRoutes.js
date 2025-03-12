@@ -4,7 +4,7 @@ import { getAllAds } from '../controllers/adControllers/getAllAds.js';
 import { verifyAccessToken } from "../middleware/isAuthenticated.js"
 import { createNewAd } from '../controllers/adControllers/createNewAd.js'
 import { validateData } from "../middleware/validateData.js"
-import { adSchema, renewAdSchema } from '../validator/validateAd.js'
+import { adSchema, renewAdSchema, updateAdSchema } from '../validator/validateAd.js'
 import { isSeller } from '../middleware/isSeller.js'
 import { deleteAd } from '../controllers/adControllers/deleteAd.js';
 import { updateAd } from '../controllers/adControllers/updateAd.js';
@@ -25,7 +25,7 @@ const adRoute = express.Router()
 adRoute.get('/getAllAds', getAllAds);
 adRoute.get('/getAdById/:adId', getAdById);
 adRoute.post('/create', verifyAccessToken, isSeller,validateData(adSchema),createNewAd)
-adRoute.put('/update/:adId', verifyAccessToken, isSeller,updateAd)
+adRoute.put('/update/:adId', verifyAccessToken, isSeller,validateData(updateAdSchema),updateAd)
 adRoute.put('/renew/:adId', verifyAccessToken, isSeller, validateData(renewAdSchema), updateAd)
 adRoute.delete('/deleteAd/:adId', verifyAccessToken, isVerified, isSeller, deleteAd);
 adRoute.delete('/deleteAllAds', verifyAccessToken, isVerified, isSeller, deleteAllAds)
@@ -40,4 +40,3 @@ adRoute.get('/getAllOrdersOnAd/:adId',verifyAccessToken,isVerified,isSeller,getA
 
 export default adRoute
 
-// validateData(updateAdSchema)
