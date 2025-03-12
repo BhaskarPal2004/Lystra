@@ -16,26 +16,20 @@ const adSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
-    listingType: {
-      type: String,
-      enum: ["service", "product", "secondHandProduct", "others"],
-      required: true,
-    },
     category: {
       type: mongoose.Types.ObjectId,
       ref: "category",
     },
     subCategory: {
-      type: mongoose.Types.ObjectId,
-      ref: "subCategory",
+        type: mongoose.Types.ObjectId,
+        ref: 'subCategory'
     },
     description: {
       type: String,
       required: true,
     },
     details: {
-      type: Object,
-      required: true,
+        type: Object
     },
     files: [
       {
@@ -92,8 +86,8 @@ const adSchema = new mongoose.Schema(
       },
     ],
     paymentMode: {
-      type: String,
-      enum: ["cod", "online"],
+        type: String,
+        enum: ['cod', 'online']
     },
     reviews: [
       {
