@@ -3,6 +3,7 @@ import Ad from "../../models/adModel.js";
 import { setAdsViews } from "../../helper/setAdsViews.js";
 import { findLocalAddressess } from "../../helper/findLocalAddresses.js";
 import { setAnalytics } from "../../helper/setAnalytics.js";
+import { getLocationCoords } from "../../helper/getLocationCoords.js";
 
 export const getAllAds = async (req, res) => {
   try {
@@ -15,19 +16,30 @@ export const getAllAds = async (req, res) => {
       minPrice = 0,
       maxPrice = Infinity,
       condition = "",
-      // city = ""
+      city = ""
     } = req.query;
 
 
-    const longitude = 22.5726459
-    const latitude = 88.3638953
-    const maxDistance = 5000000
+    let longitude = null
+    let latitude = null
+    let maxDistance = null
+    if (city===""){
+    latitude =  22.5726459
+    longitude = 88.3638953 
+    maxDistance = 5000
+    }
+
+    else{
+      const cityCoordinates = await getLocationCoords(city)
+      console.log(cityCoordinates)
+      latitude = cityCoordinates.lat 
+      longitude = cityCoordinates.lng 
+      maxDistance = 5000
+      console.log(latitude,longitude,maxDistance)
+    }
 
     let localAddresses = []
     let localAds = []
-
-
-
 
 
     //validation
@@ -67,6 +79,7 @@ export const getAllAds = async (req, res) => {
 
     
     if(longitude && latitude && maxDistance){
+      console.log(latitude,longitude,maxDistance)
      localAddresses = await findLocalAddressess(longitude,latitude,maxDistance)
     }
   
