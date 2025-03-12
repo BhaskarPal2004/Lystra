@@ -1,5 +1,6 @@
 import Buyer from "../../models/buyerModel.js";
 import Seller from "../../models/sellerModel.js";
+import BlockUser from "../../models/blockUserModel.js";
 import {
   SUCCESS_CODE,
   NOT_FOUND_CODE,
@@ -12,7 +13,9 @@ export const blockedUser = async (req, res) => {
     const userId = req.userId;
     const blockId = req.params.blockId;
 
-    const user = await Buyer.findById(userId) || await Seller.findById(userId)
+    const seller = await Buyer.findById(userId);
+    const buyer = await Seller.findById(userId);
+
     const blockUser = await Buyer.findById(blockId) || await Seller.findById(blockId)
     
     if (!blockUser) {
@@ -29,19 +32,32 @@ export const blockedUser = async (req, res) => {
           });
     }
 
-    const findIdinArray = user.blockedList.includes(blockId)
-    if (findIdinArray) {
+    const alreadyaBlocked = await BlockUser.findOne({blockerId: userId, blockedId: blockId});
+    if (alreadyaBlocked) {
       return res.status(BAD_REQUEST_CODE).json({
         success: false,
         message: "You already blocked this user",
       });
     }
 
-    user.blockedList.push(blockId);
-    await user.save();
+    const newBlock = new BlockUser ({
+      blockerId: userId,
+      blockedId: blockId
+    })
+
+    await newBlock.save();
+
+    if(buyer) {
+      buyer.blockedList.push(newBlock._id);
+      await buyer.save();
+    } else {
+      seller.blockedList.push(newBlock._id);
+      await seller.save();
+    }
+
     return res.status(SUCCESS_CODE).json({
       success: true,
-      message: "Blocked successfull",
+      message: "Blocked successfully",
     });
 
   } catch (err) {

@@ -2,7 +2,8 @@ import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../
 import Ad from "../../models/adModel.js";
 import { setAdsViews } from "../../helper/setAdsViews.js";
 import { findLocalAddressess } from "../../helper/findLocalAddresses.js";
-import { setAnalytics } from "../../helper/setAnalytics.js";
+// import { setAnalytics } from "../../helper/setAnalytics.js";
+import { getLocationCoords } from "../../helper/getLocationCoords.js";
 
 export const getAllAds = async (req, res) => {
   try {
@@ -19,15 +20,24 @@ export const getAllAds = async (req, res) => {
     } = req.query;
 
 
-    const longitude = 22.5726459
-    const latitude = 88.3638953
-    const maxDistance = 5000000
+    let longitude = null
+    let latitude = null
+    let maxDistance = null
+    if (city===""){
+    latitude =  22.5726459
+    longitude = 88.3638953 
+    maxDistance = 10000
+    }
+
+    else{
+      const cityCoordinates = await getLocationCoords(city)
+      latitude = cityCoordinates.lat 
+      longitude = cityCoordinates.lng 
+      maxDistance = 10000
+    }
 
     let localAddresses = []
     let localAds = []
-
-
-
 
 
     //validation
@@ -52,12 +62,6 @@ export const getAllAds = async (req, res) => {
     const matchConditions = {
       subCategory: new RegExp(searchSubCategory.trim(), 'i'),
       price: priceFilter,
-      $expr: {
-        $regexMatch: {
-          input: "$addressDetails.city",
-          regex: new RegExp(city.trim(), 'i')
-        }
-      },
       expiryDate: { $gte: new Date() }
     }
 
@@ -80,21 +84,6 @@ export const getAllAds = async (req, res) => {
     //database query
 
     const filteredAds = await Ad.aggregate([
-      {
-        $lookup: {
-          from: "addresses",
-          localField: "address",
-          foreignField: "_id",
-          as: "addressDetails"
-        }
-      },
-      {
-        $addFields:{
-          addressDetails:{
-            $first:"$addressDetails"
-          }
-        }
-      },
       { $match: matchConditions },
       {
         $addFields: {
@@ -152,9 +141,9 @@ export const getAllAds = async (req, res) => {
     })
 
     
-    localAds.map((element)=>{
-      setAnalytics(element._id)
-    })
+    // localAds.map((element)=>{
+    //   setAnalytics(element._id)
+    // })
     return res.status(SUCCESS_CODE).json({
       success: true,
       total: localAds.length,
