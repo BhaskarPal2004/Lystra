@@ -11,7 +11,7 @@ export const averageReview = async (req, res) => {
     const seller = await Seller.findById(userId).populate('reviews');
     const reviewerArray = seller.reviews;
     let averageRating = 0;
-    seller.averageReview.Topreviews=[];
+    seller.averageReview.topReviews=[];
     if (reviewerArray.length === 0) {
       return res.status(NOT_FOUND_CODE).json({
         success: false,
@@ -22,7 +22,7 @@ export const averageReview = async (req, res) => {
     reviewerArray.forEach(async (element) => {
         averageRating += element.rating;
         if(element.rating >= 4){
-            seller.averageReview.Topreviews.push(element.review)
+            seller.averageReview.topReviews.push(element.review)
         }
     });
 

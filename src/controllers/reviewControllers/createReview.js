@@ -1,4 +1,5 @@
 import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
+import { calculateReview } from "../../helper/calculateReview.js";
 import Ad from "../../models/adModel.js";
 import Review from "../../models/reviewModel.js";
 
@@ -50,6 +51,8 @@ const createReview = async (req, res) => {
         //storing review in ad
         ad.reviews.push(newReview);
         await ad.save();
+
+        await calculateReview(ad.sellerId, rating);
 
         return res.status(SUCCESS_CODE).json({
             success: true,
