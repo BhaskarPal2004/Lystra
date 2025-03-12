@@ -23,12 +23,12 @@ const adSchema = new mongoose.Schema({
     category: {
         type: mongoose.Types.ObjectId,
         ref: 'category',
-        required: true
+        // required: true
     },
     subCategory: {
         type: mongoose.Types.ObjectId,
         ref: 'subCategory',
-        required: true
+        // required: true
     },
     description: {
         type: String,
@@ -63,7 +63,7 @@ const adSchema = new mongoose.Schema({
     },
     expiryDate: {
         type: Date,
-        required: true
+        // required: true
     },
     analytics: {
         type: mongoose.Schema.Types.ObjectId,
@@ -95,7 +95,7 @@ const adSchema = new mongoose.Schema({
     paymentMode: {
         type: String,
         enum: ['cod', 'online'],
-        required: true
+        // required: true
     },
     reviews: [{
         type: mongoose.Schema.Types.ObjectId,

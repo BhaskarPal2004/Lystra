@@ -1,16 +1,16 @@
-import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
-import { calculateReview } from "../../helper/calculateReview.js";
+import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
-import Review from "../../models/reviewModel.js";
 
 const createReview = async (req, res) => {
     try {
         const userId = req.userId;
         const adId = req.params.adId;
-        const { rating, review } = req.body;
+        // const { rating, review } = req.body;
         let isReviewer = false
 
-        const ad = await Ad.findById(adId).populate('reviews');
+        const ad = await Ad.findById(adId).populate('reviews')
+        console.log(ad);
+
 
         if (!ad) {
             return res.status(NOT_FOUND_CODE).json({
@@ -24,35 +24,38 @@ const createReview = async (req, res) => {
                 isReviewer = true
         })
 
-        if (isReviewer) {
-            return res.status(BAD_REQUEST_CODE).json({
-                success: false,
-                message: "Only one review per ad is accepted"
-            })
-        }
+        console.log(isReviewer);
+        
 
-        if (rating < 0 || rating > 5) {
-            return res.status(BAD_REQUEST_CODE).json({
-                success: false,
-                message: "Ratting must be between 0 to 5"
-            })
-        }
+        // if (isReviewer) {
+        //     return res.status(BAD_REQUEST_CODE).json({
+        //         success: false,
+        //         message: "Only one review per ad is accepted"
+        //     })
+        // }
 
-        //creating review
-        const newReview = new Review({
-            buyerId: userId,
-            adId: adId,
-            rating,
-            review
-        })
+        // if (rating < 0 || rating > 5) {
+        //     return res.status(BAD_REQUEST_CODE).json({
+        //         success: false,
+        //         message: "Ratting must be between 0 to 5"
+        //     })
+        // }
 
-        await newReview.save();
+        // //creating review
+        // const newReview = new Review({
+        //     buyerId: userId,
+        //     adId: adId,
+        //     rating,
+        //     review
+        // })
 
-        //storing review in ad
-        ad.reviews.push(newReview);
-        await ad.save();
+        // await newReview.save();
 
-        await calculateReview(ad.sellerId, rating);
+        // //storing review in ad
+        // // ad.reviews.push(newReview);
+        // // await ad.save();
+
+        // await calculateReview(ad.sellerId, rating);
 
         return res.status(SUCCESS_CODE).json({
             success: true,
