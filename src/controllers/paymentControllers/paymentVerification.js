@@ -16,15 +16,34 @@ export const paymentVerification = async (req, res) => {
 
     if (isAuthentic) {
       const order = await Order.findOne({ razorpayOrderId: razorpay_order_id })
-      const payment = await Payment.findOne({ razorpayOrderId: razorpay_order_id })
 
-      payment.razorpayPaymentId = razorpay_payment_id;
-      payment.razorpayPaymentSignature = razorpay_signature;
-      payment.status = 'paid';
-      await payment.save();
+      const existingPayment = await Payment.findOne({
+        razorpayOrderId: order.razorpayOrderId
+      })
+
+      if (!existingPayment) {
+        console.log('exists :>> ', existingPayment);
+        const payment = await Payment.create({
+          adId: order._id,
+          razorpayOrderId: order.razorpayOrderId,
+          amount: order.amount,
+          paymentType: 'online',
+          razorpayPaymentId: razorpay_payment_id,
+          razorpayPaymentSignature: razorpay_signature,
+          status: 'paid'
+        })
+
+        order.paymentId = payment._id
+      }
+      else {
+        existingPayment.razorpayPaymentSignature = razorpay_signature
+        existingPayment.status = 'paid'
+        await existingPayment.save()
+
+        order.paymentId = existingPayment._id
+      }
 
       order.paymentStatus = 'paid'
-      order.paymentId = payment._id
       order.status = 'confirmed'
       await order.save()
 

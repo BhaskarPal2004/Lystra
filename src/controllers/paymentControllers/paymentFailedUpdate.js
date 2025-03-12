@@ -4,32 +4,39 @@ import Payment from "../../models/paymentModel.js"
 
 export const paymentFailedUpdate = async (req, res) => {
     try {
-        const razorpayOrderId = req.params.razorpayOrderId
-        const order = await Order.findOne({ razorpayOrderId })
-        const payment = await Payment.findOne({ razorpayOrderId })
+        const { razorpayOrderId, razorpayPaymentId } = req.params
 
+        console.log('params :>> ', razorpayOrderId, razorpayPaymentId);
+        const order = await Order.findOne({ razorpayOrderId })
+
+        console.log('order :>> ', order);
         if (!order)
             return res.status(NOT_FOUND_CODE).json({
                 success: false,
                 message: "Order not found"
             })
 
-        if (!payment)
-            return res.status(NOT_FOUND_CODE).json({
-                success: false,
-                message: "Payment not found"
-            })
-
         order.status = 'failure'
         order.paymentStatus = 'failed'
         await order.save()
 
-        payment.status = 'failed'
-        await payment.save()
+        const existingPayment = await Payment.findOne({ razorpayOrderId })
 
+        console.log('this is failure', existingPayment)
+
+        const payment = await Payment.create({
+            adId: order._id,
+            razorpayOrderId: order.razorpayOrderId,
+            amount: order.amount,
+            paymentType: 'online',
+            razorpayPaymentId: razorpayPaymentId,
+            razorpayPaymentSignature: null,
+            status: 'failed'
+        })
         return res.status(SUCCESS_CODE).json({
             success: false,
-            message: "Status updated for failed payment"
+            message: "Status updated for failed payment",
+            payment
         })
 
     } catch (error) {

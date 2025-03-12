@@ -7,7 +7,7 @@ const paymentRoute = express.Router()
 
 paymentRoute.post('/paymentCheckout/:adId', paymentCheckout)
 paymentRoute.post('/paymentVerification', paymentVerification)
-paymentRoute.post('/update/failed/payment/:razorpayOrderId', paymentFailedUpdate)
+paymentRoute.post('/update/failed/payment/:razorpayOrderId/:razorpayPaymentId', paymentFailedUpdate)
 
 
 export default paymentRoute
