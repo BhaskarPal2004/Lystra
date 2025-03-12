@@ -100,7 +100,19 @@ const adSchema = new mongoose.Schema({
     reviews: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'review'
-    }]
+    }],
+    expairAt: {
+        type: Date,
+        default: () => {
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() + 30);
+            return startDate;
+        }
+    },
+    isExpair: {
+        type: Boolean,
+        default: false
+    }
 
 }, { timestamps: true });
 

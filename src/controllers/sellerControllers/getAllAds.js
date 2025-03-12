@@ -15,6 +15,13 @@ export const getAllAds = async (req, res) => {
                 success: false,
                 message: "Ads not found"
             })
+        
+        const currentDate = new Date(Date.now());
+        ads.forEach(element => {
+            if(element.expiryDate<currentDate && element.isExpair === false){
+                element.isExpair = true
+            }
+        });
 
         return res.status(SUCCESS_CODE).json({
             success: true,
