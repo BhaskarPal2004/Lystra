@@ -1,4 +1,6 @@
 import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE, UNAUTHORIZED_CODE } from "../../config/constant.js";
+import { calculateReview } from "../../helper/calculateReview.js";
+import Ad from "../../models/adModel.js";
 import Review from "../../models/reviewModel.js";
 
 const updateReview = async (req, res) => {
@@ -18,13 +20,13 @@ const updateReview = async (req, res) => {
         if (oldReview.buyerId.toHexString() !== userId)
             return res.status(UNAUTHORIZED_CODE).json({
                 success: false,
-                message: "un authorized access, can't edit review"
+                message: "Unauthorized access, can't edit review"
             })
 
         if (rating < 0 || rating > 5) {
             return res.status(BAD_REQUEST_CODE).json({
                 success: false,
-                message: "Ratting must be between 0 to 5"
+                message: "Rating must be between 0 to 5"
             })
         }
 
@@ -33,9 +35,20 @@ const updateReview = async (req, res) => {
 
         await oldReview.save();
 
+        const ad = await Ad.findById(oldReview.adId).populate('reviews');
+
+        if(!ad) {
+            return res.status(NOT_FOUND_CODE).json({
+                success: false,
+                message: "Ad not found"
+            })
+        }
+
+        await calculateReview(ad);
+
         return res.status(SUCCESS_CODE).json({
             success: true,
-            message: 'review updated successfully'
+            message: 'Review updated successfully'
         })
 
     } catch (error) {
