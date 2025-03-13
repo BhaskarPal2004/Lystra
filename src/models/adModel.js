@@ -1,108 +1,118 @@
 import mongoose from "mongoose";
 
-const adSchema = new mongoose.Schema({
+const adSchema = new mongoose.Schema(
+  {
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     sellerId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'seller',
-        required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "seller",
+      required: true,
     },
     isFeatured: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    listingType: {
-        type: String,
-        enum: ['service', 'product', 'secondHandProduct', 'others'],
-        required: true
+      type: Boolean,
+      required: true,
+      default: false,
     },
     category: {
-        type: mongoose.Types.ObjectId,
-        ref: 'category',
-        // required: true
+      type: mongoose.Types.ObjectId,
+      ref: "category",
     },
     subCategory: {
         type: mongoose.Types.ObjectId,
-        ref: 'subCategory',
-        // required: true
+        ref: 'subCategory'
     },
     description: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     details: {
-        type: Object,
-        required: true
+        type: Object
     },
-    files: [{
+    files: [
+      {
         fileUrl: {
-            type: String,
-            required: true
+          type: String,
+          required: true,
         },
         fileType: {
-            type: String,
-            required: true
-        }
-    }],
+          type: String,
+          required: true,
+        },
+      },
+    ],
     price: {
-        type: Number,
-        required: true
+      type: Number,
+      required: true,
     },
     count: {
-        type: Number,
-        default: 0
+      type: Number,
+      default: 0,
     },
     address: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "address",
-        required: true
-    },
-    expiryDate: {
-        type: Date,
-        // required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "address",
+      required: true,
     },
     analytics: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'analytics'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "analytics",
     },
     condition: {
-        type: String,
-        required: true,
-        enum: ["new", "used", "refurbished"]
+      type: String,
+      required: true,
+      enum: ["new", "used", "refurbished"],
     },
-    reports: [{
+    reports: [
+      {
         reporterId: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
         },
         message: {
-            type: String,
-            default: null
+          type: String,
+          default: null,
         },
         isFake: {
-            type: Boolean,
-            default: false
+          type: Boolean,
+          default: false,
         },
         isFraudulent: {
-            type: Boolean,
-            default: false
-        }
-    }],
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
     paymentMode: {
         type: String,
-        enum: ['cod', 'online'],
-        // required: true
+        enum: ['cod', 'online']
     },
-    reviews: [{
+    reviews: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'review'
-    }]
+        ref: "review",
+      },
+    ],
+    expiredAt: {
+        type: Date,
+        default: () => {
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() + 30);
+            return startDate;
+        }
+    },
 
-}, { timestamps: true });
+    isExpire: {
+      type: Boolean,
+      default: false,
+    },
+
+  },
+  { timestamps: true }
+);
 
 const Ad = mongoose.model("ad", adSchema);
 export default Ad;
+

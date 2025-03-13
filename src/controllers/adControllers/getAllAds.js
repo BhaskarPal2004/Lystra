@@ -31,11 +31,9 @@ export const getAllAds = async (req, res) => {
 
     else{
       const cityCoordinates = await getLocationCoords(city)
-      console.log(cityCoordinates)
       latitude = cityCoordinates.lat 
       longitude = cityCoordinates.lng 
       maxDistance = 10000
-      console.log(latitude,longitude,maxDistance)
     }
 
     let localAddresses = []
@@ -79,7 +77,6 @@ export const getAllAds = async (req, res) => {
 
     
     if(longitude && latitude && maxDistance){
-      console.log(latitude,longitude,maxDistance)
      localAddresses = await findLocalAddressess(longitude,latitude,maxDistance)
     }
   
