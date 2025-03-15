@@ -10,9 +10,9 @@ import sendEmail from "../../email/sendEmail.js"
 
 
 export const login = async (req, res) => {
-    let otp = null;
     try {
         const { email, password } = req.body
+        let otp = null;
 
         const buyer = await Buyer.findOne({ email: email }, { name: 1, password: 1, isVerified: 1 }).exec()
         const seller = await Seller.findOne({ email: email }, { name: 1, password: 1, isVerified: 1 }).exec()
@@ -41,7 +41,7 @@ export const login = async (req, res) => {
                 message: "Please verify your email first"
             })
         }
-        
+
         await Otp.deleteMany({ userId: user._id })
 
         try {
@@ -53,18 +53,17 @@ export const login = async (req, res) => {
             })
         }
 
-
         // sendMail function 
         const otpContextData = {
             otp: otp,
             name: user.name
         };
-        const subject = `Verify your Lystra account - Your One-Time Password (OTP) is ${otp}`
+        const subject = `Login to your Lystra account - Your One-Time Password (OTP) is ${otp}`
 
         try {
             await sendEmail(email, "emailOtpTemplate", otpContextData, subject)
-        }
-        catch (error) {
+
+        } catch (error) {
             return res.status(INTERNAL_SERVER_ERROR_CODE).json({
                 success: false,
                 message: error.message
@@ -76,11 +75,12 @@ export const login = async (req, res) => {
 
         const otpToken = generateToken('otpToken', otpPayload, '20m', role)
 
-        //for now in backend this api will give a response
+        //for now in backend this api will give a json response
         return res.status(SUCCESS_CODE).json({
             success: true,
             message: "An otp is sent to your email",
-            otpToken
+            otpToken,
+            otp
         })
 
         //frontend otp page will be linked here for a redirection after successful credential matches

@@ -1,5 +1,5 @@
-import { instance } from "../../../server.js"
 import { INTERNAL_SERVER_ERROR_CODE, SUCCESS_CODE } from "../../config/constant.js";
+import { instance } from "../../config/razorpay.js";
 import Ad from "../../models/adModel.js";
 import Order from "../../models/orderModel.js";
 
