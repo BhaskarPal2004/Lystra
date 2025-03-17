@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const logInValidation = z.object({
     email: z.string()
         .email("Invalid Email format"),
-
+        
     password: z.string()
         .min(6, "Password should be at least 6 characters long")
         .refine((password) => /[A-Z]/.test(password), { message: "Password should contain upper case" })
