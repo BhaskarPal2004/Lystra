@@ -30,6 +30,6 @@ userRoute.post('/blockUser/:blockId', verifyAccessToken, isVerified, blockedUser
 userRoute.post('/unblockUser/:unBlockId', verifyAccessToken, isVerified, unBlockedUser);
 userRoute.post('/updatePassword', verifyAccessToken, isVerified, validateData(updatePasswordValidation), updatePassword);
 userRoute.get('/getCoordinates/:lat/:lng', getUserCoordinates)
-userRoute.post('/request/call/:calleeId', verifyAccessToken, isVerified, callRequest)
+userRoute.post('/request/call/:calleeId', verifyAccessToken, isVerified, callRequest);
 
 export default userRoute

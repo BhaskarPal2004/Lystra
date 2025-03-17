@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --exec \"npx eslint && nodemon server\"",
+    "start": "nodemon --exec \"npx eslint && npx kill-port 3000 && nodemon server\"",
     "seed": "node seed/seed.js"
   },
   "author": "",
@@ -16,6 +16,7 @@
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
+    "datetime": "^0.0.3",
     "dotenv": "^16.4.7",
     "eslint": "^9.21.0",
     "express": "^4.21.2",
