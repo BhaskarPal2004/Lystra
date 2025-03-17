@@ -25,7 +25,7 @@ export const verifyOtp = async (req, res) => {
                         message: "Invalid Token Type"
                     })
                 }
-                
+
                 const { userId } = decoded.id
                 const role = decoded.role
 
@@ -43,6 +43,7 @@ export const verifyOtp = async (req, res) => {
                 const accessToken = generateToken('accessToken', userId, '9h', role)
                 const refreshToken = generateToken('refreshToken', userId, '1d', role)
 
+                await sessionsModel.deleteMany({ userId: userId })
                 await sessionsModel.create({ userId: userId })
 
                 return res.status(SUCCESS_CODE).json({
