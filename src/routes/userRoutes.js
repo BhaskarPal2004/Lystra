@@ -16,7 +16,6 @@ import { updatePassword } from '../controllers/userControllers/updatePassword.js
 import { updatePasswordValidation } from "../validator/validateUpdatePassword.js"
 import { getUserCoordinates } from '../controllers/userControllers/getUserCoordinates.js';
 import { callRequest } from '../controllers/userControllers/callRequest.js';
-import { getTransactions } from '../controllers/userControllers/getTransaction.js';
 
 const userRoute = express.Router();
 
@@ -32,6 +31,5 @@ userRoute.post('/unblockUser/:unBlockId', verifyAccessToken, isVerified, unBlock
 userRoute.post('/updatePassword', verifyAccessToken, isVerified, validateData(updatePasswordValidation), updatePassword);
 userRoute.get('/getCoordinates/:lat/:lng', getUserCoordinates)
 userRoute.post('/request/call/:calleeId', verifyAccessToken, isVerified, callRequest);
-userRoute.get('/transaction',verifyAccessToken,isVerified,getTransactions)
 
 export default userRoute

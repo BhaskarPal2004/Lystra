@@ -24,7 +24,7 @@ export const paymentVerification = async (req, res) => {
       if (!existingPayment) {
         console.log('exists :>> ', existingPayment);
         const payment = await Payment.create({
-          adId: order._id,
+          adId: order.adId,
           razorpayOrderId: order.razorpayOrderId,
           amount: order.amount,
           paymentType: 'online',
