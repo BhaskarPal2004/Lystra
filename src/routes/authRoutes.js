@@ -12,6 +12,7 @@ import { logInValidation } from '../validator/validateLogin.js'
 import limiter from '../middleware/rateLimit.js'
 import forgotPassword from '../controllers/authControllers/forgotPassword.js'
 import resetPassword from '../controllers/authControllers/resetPassword.js'
+import { resetPasswordValidation } from '../validator/validateResetPassword.js'
 
 
 const authRoute = express.Router()
@@ -23,5 +24,7 @@ authRoute.post('/login', limiter, validateData(logInValidation), login);
 authRoute.post('/verifyUser/:registrationToken', verifyRegistrationToken, verifyUser);
 authRoute.post('/resendMail', resendMail);
 authRoute.post('/forgotPassword', forgotPassword);
-authRoute.put('/resetPassword/:forgotPasswordToken', verifyForgotPasswordToken, resetPassword);
+authRoute.put('/resetPassword/:forgotPasswordToken',validateData(resetPasswordValidation), verifyForgotPasswordToken, resetPassword);
+
+
 export default authRoute
