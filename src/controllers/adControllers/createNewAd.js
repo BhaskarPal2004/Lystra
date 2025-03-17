@@ -4,6 +4,8 @@ import createAddress from "../../helper/createAddress.js";
 import { getLocationCoords } from "../../helper/getLocationCoords.js";
 import { createNewCategory } from "../../helper/createNewCategory.js";
 import Seller from "../../models/sellerModel.js";
+import Analytics from "../../models/analyticsModel.js";
+
 
 
 export const createNewAd = async (req, res) => {
@@ -33,6 +35,11 @@ export const createNewAd = async (req, res) => {
         const categoryId = await createNewCategory(category)
 
         const newAd = await Ad.create({ sellerId: userId, name, category: categoryId, description, images, price, condition, address: adAddress, expiryDate })
+
+        //create analytics
+
+        await Analytics.create({adId:newAd._id})
+       
 
         return res.status(SUCCESS_CODE).json({
             success: true,

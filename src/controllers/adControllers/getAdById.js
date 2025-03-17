@@ -6,6 +6,7 @@ export const getAdById = async (req, res) => {
     try {
         const adId = req.params.adId;
         const ad = await Ad.findById(adId).populate('sellerId', 'name email');
+        console.log(ad)
 
         if (!ad)
             return res.status(NOT_FOUND_CODE).send({

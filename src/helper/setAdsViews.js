@@ -1,8 +1,12 @@
-// import Ad from "../models/adModel.js";
+import Analytics from "../models/analyticsModel.js";
+import { setAnalytics } from "./setAnalytics.js";
+
 
 export const setAdsViews = async (adId) => {
-  // const ad = await Ad.findById(adId);
-  // ad.performance.views = ad.performance.views + 1;
-  // await ad.save();
-  console.log(adId)
+  const ad = await Analytics.findOne({adId});
+  ad.performance.views = ad.performance.views + 1;
+  await ad.save();
+  setAnalytics(adId)
 };
+
+
