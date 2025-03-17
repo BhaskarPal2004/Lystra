@@ -37,14 +37,22 @@ const updateReview = async (req, res) => {
 
         const ad = await Ad.findById(oldReview.adId).populate('reviews');
 
-        if(!ad) {
+        if (!ad) {
             return res.status(NOT_FOUND_CODE).json({
                 success: false,
                 message: "Ad not found"
             })
         }
 
-        await calculateReview(ad);
+        try {
+            await calculateReview(ad);
+
+        } catch (error) {
+            return res.status(INTERNAL_SERVER_ERROR_CODE).json({
+                success: false,
+                message: error.message
+            })
+        }
 
         return res.status(SUCCESS_CODE).json({
             success: true,

@@ -3,13 +3,14 @@ import { calculateReview } from "../../helper/calculateReview.js";
 import Ad from "../../models/adModel.js";
 import Review from "../../models/reviewModel.js";
 
+
 const createReview = async (req, res) => {
     try {
         const userId = req.userId;
         const adId = req.params.adId;
         const { rating, review } = req.body;
 
-        // let isReviewer = false
+        let isReviewer = false
 
         const ad = await Ad.findById(adId).populate('reviews')
 
@@ -20,24 +21,24 @@ const createReview = async (req, res) => {
             })
         }
 
-        // if (ad.sellerId.toHexString() === userId) {
-        //     return res.status(BAD_REQUEST_CODE).json({
-        //         success: false,
-        //         message: "You can't give review to your own ad"
-        //     })
-        // }
+        if (ad.sellerId.toHexString() === userId) {
+            return res.status(BAD_REQUEST_CODE).json({
+                success: false,
+                message: "You can't give review to your own ad"
+            })
+        }
 
-        // ad.reviews.some((review) => {
-        //     if (review.buyerId.toHexString() === userId)
-        //         isReviewer = true
-        // })
+        ad.reviews.some((review) => {
+            if (review.buyerId.toHexString() === userId)
+                isReviewer = true
+        })
 
-        // if (isReviewer) {
-        //     return res.status(BAD_REQUEST_CODE).json({
-        //         success: false,
-        //         message: "Only one review per ad is accepted"
-        //     })
-        // }
+        if (isReviewer) {
+            return res.status(BAD_REQUEST_CODE).json({
+                success: false,
+                message: "Only one review per ad is accepted"
+            })
+        }
 
         if (rating < 0 || rating > 5) {
             return res.status(BAD_REQUEST_CODE).json({
@@ -56,11 +57,20 @@ const createReview = async (req, res) => {
         ad.reviews.push(newReview)
         await ad.save()
 
-        await calculateReview(ad);
+        try {
+            await calculateReview(ad);
+
+        } catch (error) {
+            return res.status(INTERNAL_SERVER_ERROR_CODE).json({
+                success: false,
+                message: error.message
+            })
+        }
 
         return res.status(SUCCESS_CODE).json({
             success: true,
             message: "Review added successfully",
+            newReview
         })
 
     } catch (error) {
