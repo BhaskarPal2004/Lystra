@@ -25,7 +25,7 @@ export const paymentFailedUpdate = async (req, res) => {
         console.log('this is failure', existingPayment)
 
         const payment = await Payment.create({
-            adId: order._id,
+            adId: order.adId,
             razorpayOrderId: order.razorpayOrderId,
             amount: order.amount,
             paymentType: 'online',
