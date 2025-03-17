@@ -1,4 +1,5 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE, UNAUTHORIZED_CODE } from "../../config/constant.js";
+import { calculateReview } from "../../helper/calculateReview.js";
 import Ad from "../../models/adModel.js";
 import Review from "../../models/reviewModel.js";
 
@@ -26,10 +27,20 @@ const deleteReview = async (req, res) => {
 
         await Review.deleteOne({ _id: reviewId })
 
-        const ad = await Ad.findById(review.adId)
+        const ad = await Ad.findById(review.adId).populate('reviews')
         ad.reviews.remove(reviewId)
 
         await ad.save()
+
+        try {
+            await calculateReview(ad)
+
+        } catch (error) {
+            return res.status(INTERNAL_SERVER_ERROR_CODE).json({
+                success: false,
+                message: error.message
+            })
+        }
 
         return res.status(SUCCESS_CODE).json({
             success: false,

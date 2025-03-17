@@ -3,23 +3,32 @@ import { calculateReview } from "../../helper/calculateReview.js";
 import Ad from "../../models/adModel.js";
 import Review from "../../models/reviewModel.js";
 
+
 const createReview = async (req, res) => {
     try {
         const userId = req.userId;
         const adId = req.params.adId;
         const { rating, review } = req.body;
+
         let isReviewer = false
 
-        const ad = await Ad.findById(adId).populate('reviews');
+        const ad = await Ad.findById(adId).populate('reviews')
 
         if (!ad) {
             return res.status(NOT_FOUND_CODE).json({
                 success: false,
-                message: "ad not found"
+                message: "Ad not found"
             })
         }
 
-        ad.reviews.forEach((review) => {
+        if (ad.sellerId.toHexString() === userId) {
+            return res.status(BAD_REQUEST_CODE).json({
+                success: false,
+                message: "You can't give review to your own ad"
+            })
+        }
+
+        ad.reviews.some((review) => {
             if (review.buyerId.toHexString() === userId)
                 isReviewer = true
         })
@@ -34,29 +43,34 @@ const createReview = async (req, res) => {
         if (rating < 0 || rating > 5) {
             return res.status(BAD_REQUEST_CODE).json({
                 success: false,
-                message: "Ratting must be between 0 to 5"
+                message: "Rating must be between 0 to 5"
             })
         }
 
-        //creating review
-        const newReview = new Review({
+        const newReview = await Review.create({
             buyerId: userId,
-            adId: adId,
+            adId,
             rating,
             review
         })
 
-        await newReview.save();
+        ad.reviews.push(newReview)
+        await ad.save()
 
-        //storing review in ad
-        ad.reviews.push(newReview);
-        await ad.save();
+        try {
+            await calculateReview(ad);
 
-        await calculateReview(ad.sellerId, rating);
+        } catch (error) {
+            return res.status(INTERNAL_SERVER_ERROR_CODE).json({
+                success: false,
+                message: error.message
+            })
+        }
 
         return res.status(SUCCESS_CODE).json({
             success: true,
-            message: "Review added successfully"
+            message: "Review added successfully",
+            newReview
         })
 
     } catch (error) {
