@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --exec \"npx eslint . && npx kill-port 3000 && nodemon server\"",
+    "start": "nodemon --exec \"npx eslint && nodemon server\"",
     "seed": "node seed/seed.js"
   },
   "author": "",
@@ -35,6 +35,8 @@
     "pdfkit": "^0.16.0",
     "razorpay": "^2.9.6",
     "react-router-dom": "^7.2.0",
+    "react-scroll-to-bottom": "^4.2.0",
+    "socket.io": "^4.8.1",
     "validator": "^13.12.0",
     "zod": "^3.24.2"
   }

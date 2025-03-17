@@ -1,78 +1,36 @@
 import express from 'express'
-import env from 'dotenv'
 import cors from 'cors'
-import { dbConnect } from './src/config/dbConnect.js'
-import authRoute from './src/routes/authRoutes.js'
-import userRoute from './src/routes/userRoutes.js'
-
-import adRoute from './src/routes/adRoutes.js'
-import sellerRoute from './src/routes/sellerRoutes.js'
-import reviewRoute from './src/routes/reviewRoutes.js'
-import buyerRoute from './src/routes/buyerRoutes.js'
-import subscriptionRoute from './src/routes/subscriptionRoutes.js'
-import orderRoute from './src/routes/orderRoutes.js'
-
-
-import Razorpay from 'razorpay'
-import paymentRoute from './src/routes/paymentRoute.js'
-import { SUCCESS_CODE } from './src/config/constant.js'
-import otpRouter from './src/routes/otpRoutes.js'
 import './src/helper/cronJob.js'
+import './src/config/envConfig.js';
+
+import { dbConnect } from './src/config/dbConnect.js'
+import { SUCCESS_CODE } from './src/config/constant.js'
+import { app, server } from './src/config/socket.js'
+import corsOptions from './src/config/corsConfig.js'
+import routes from './src/routes/index.js';
 
 
-env.config({})
+const port = process.env.PORT || 5000
 
-const corsOptions = {
-  origin: ['http://localhost:5173'],
-  credentials: true,
-}
-
-const app = express()
 app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/uploads', express.static('uploads'))
 app.use('/invoices', express.static('invoices'))
-app.use(cors())
 
-const port = process.env.PORT || 5000
-
-app.use('/api/auth', authRoute)
-app.use('/api/user', userRoute)
-app.use('/api/buyer', buyerRoute)
-app.use('/api/seller', sellerRoute)
-app.use('/api/ad', adRoute)
-app.use('/api/review', reviewRoute)
-app.use('/api/payment', paymentRoute)
-app.use('/api/subscription', subscriptionRoute)
-app.use('/api/order', orderRoute)
-app.use('/api/otp', otpRouter)
+routes(app);
 
 dbConnect()
 
-app.use(express.json())
+server.listen(port, () => console.log(`Example app listening on port ${port}`))
 
-const server = app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
-
-server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.log(`Port ${port} is already in use!`);
-    console.log("Retrying in 5 seconds...");
-    setTimeout(() => {
-      process.exit(1)
-    }, 5000);
+server.on('error', (error) => {
+  if (error.code === 'EADDRINUSE') {
+    console.log(`Port ${port} is already in use. Retrying in 5 seconds...`);
+    setTimeout(() => process.exit(1), 5000);
   }
-});
-
-export const instance = new Razorpay({
-  key_id: process.env.RAZORPAY_API_KEY,
-  key_secret: process.env.RAZORPAY_API_SECRET,
 });
 
 app.get('/api/payment/getKey', (req, res) => {
   res.status(SUCCESS_CODE).json({ key: process.env.RAZORPAY_API_KEY })
 })
-
-// invoiceCreateFunction("67ca99811deebe2d03645a62");

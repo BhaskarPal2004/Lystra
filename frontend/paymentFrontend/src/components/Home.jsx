@@ -1,6 +1,7 @@
 import React from "react";
 import ProductCard from "./ProductCard";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const loadScript = (src) => {
   return new Promise((resolve) => {
@@ -67,6 +68,11 @@ const Home = () => {
           amount={80000}
           onPayNow={handlePayNow}
         />
+      </div>
+      <div>
+        <button className="bg-black text-white p-2 font-bold text-2xl">
+          <Link to='/chat'>Chat Page</Link>
+        </button>
       </div>
 
     </>

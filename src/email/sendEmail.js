@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer'
 import hbs from "nodemailer-express-handlebars";
 import 'dotenv/config'
 
-const sendEmail = async (emailID, templateName, contextData,subject) => {
+const sendEmail = async (emailID, templateName, contextData, subject) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -30,7 +30,9 @@ const sendEmail = async (emailID, templateName, contextData,subject) => {
     };
 
     transporter.sendMail(mailConfigurations, function (error) {
-        if (error) throw Error(error.message);
+        if (error) {
+            console.log(error.message)
+        }
         console.log('Email Sent Successfully');
     });
 }
