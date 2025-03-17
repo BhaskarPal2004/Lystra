@@ -21,9 +21,9 @@ export const paymentCheckout = async (req, res) => {
       razorpayOrderId: order.id,
       adId: adId,
       amount: order.amount / 100,
-      buyerId: '67c5390b8c164e38b5206786', //will set after setting header in frontend
+      buyerId: '67c6fd2d690125c0407e57a2', //will set after setting header in frontend
       billingAddress: ad.address,
-      shippingAddress: "67c7e6d242f08a1d91d8b477", //will set after getting buyer
+      shippingAddress: "67ca9332a77ee8e5dc87658f", //will set after getting buyer
       paymentType: "online"
     })
 
@@ -34,6 +34,8 @@ export const paymentCheckout = async (req, res) => {
     })
 
   } catch (error) {
+    console.log(error);
+    
     return res.status(INTERNAL_SERVER_ERROR_CODE).json({
       success: false,
       message: error.message,
