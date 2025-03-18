@@ -29,7 +29,7 @@ const Home = () => {
 
     const { data: { key } } = await axios.get("http://localhost:3000/api/payment/getKey")
 
-    const { data: { data } } = await axios.post("http://localhost:3000/api/payment/paymentCheckout/67d187d22147f6c286d009b4", { amount });
+    const { data: { data } } = await axios.post("http://localhost:3000/api/payment/paymentCheckout/67d8fa1149d5122f604a4b59", { amount });
 
     const options = {
       key: key,

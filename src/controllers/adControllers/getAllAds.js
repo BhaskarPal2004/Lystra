@@ -2,8 +2,8 @@ import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../
 import Ad from "../../models/adModel.js";
 import { setAdsViews } from "../../helper/setAdsViews.js";
 import { findLocalAddressess } from "../../helper/findLocalAddresses.js";
-// import { setAnalytics } from "../../helper/setAnalytics.js";
 import { getLocationCoords } from "../../helper/getLocationCoords.js";
+import findAdsOfThisCategory from "../../helper/findAdsOfThisCategory.js";
 
 export const getAllAds = async (req, res) => {
   try {
@@ -12,7 +12,6 @@ export const getAllAds = async (req, res) => {
       searchCategory = "",
       sortBy = "createdAt",
       sortOrder = "asc",
-      searchSubCategory = "",
       minPrice = 0,
       maxPrice = Infinity,
       condition = "",
@@ -26,7 +25,7 @@ export const getAllAds = async (req, res) => {
     if (city===""){
     latitude =  22.5726459
     longitude = 88.3638953 
-    maxDistance = 10000
+    maxDistance = 10000000 //pore teen teh zero komiye debo
     }
 
     else{
@@ -38,11 +37,7 @@ export const getAllAds = async (req, res) => {
 
     let localAddresses = []
     let localAds = []
-
-
-    //validation
-    const categoryArray = ['electronics', 'vehicles', 'real estate', 'home and furniture', 'jobs and services', 'fashion and beauty']
-    const isValidCategory = categoryArray.includes(searchCategory.trim().toLowerCase())
+    let finalAds = []
 
     const conditionArray = ["new", "used", "refurbished"]
     const isValidCondition = conditionArray.includes(condition.trim().toLowerCase())
@@ -60,16 +55,12 @@ export const getAllAds = async (req, res) => {
     }
 
     const matchConditions = {
-      subCategory: new RegExp(searchSubCategory.trim(), 'i'),
       price: priceFilter,
-      expiryDate: { $gte: new Date() }
+      isExpire:false
     }
 
     if (isValidCondition) {
       matchConditions.condition = condition.trim().toLowerCase()
-    }
-    if(isValidCategory){
-      matchConditions.category = searchCategory.trim().toLowerCase()
     }
     
 
@@ -79,7 +70,10 @@ export const getAllAds = async (req, res) => {
     if(longitude && latitude && maxDistance){
      localAddresses = await findLocalAddressess(longitude,latitude,maxDistance)
     }
-  
+
+    //function to get ads that match the category 
+
+    const categorisedAds = await findAdsOfThisCategory(searchCategory)
 
     //database query
 
@@ -96,9 +90,6 @@ export const getAllAds = async (req, res) => {
         $match: {
           $or: [
             { name: new RegExp(searchKeyword.trim(), 'i') },
-            { listingType: new RegExp(searchKeyword.trim(), 'i') },
-            { category: new RegExp(searchKeyword.trim(), 'i') },
-            { subCategory: new RegExp(searchKeyword.trim(), 'i') },
             { description: new RegExp(searchKeyword.trim(), 'i') },
             { "detailsArray.v": new RegExp(searchKeyword.trim(), 'i') }
           ]
@@ -113,9 +104,8 @@ export const getAllAds = async (req, res) => {
     ]);
 
 
+
     filteredAds.sort((a, b) => b.isFeatured - a.isFeatured)
-    
-   
     
     if(longitude && latitude && maxDistance){
     filteredAds.map((element)=>{
@@ -124,30 +114,33 @@ export const getAllAds = async (req, res) => {
       }
       })
     }
-    else{
+    else {
       localAds = filteredAds
     }
 
 
-    if (localAds.length === 0) {
+    if(!categorisedAds.length!==0){
+      localAds.map((element)=>{
+        if(categorisedAds.includes(element._id.toString())){
+          finalAds.push(element)
+        }
+      })
+      }
+
+
+    if (finalAds.length === 0) {
       return res.status(NOT_FOUND_CODE).json({
         message: "Ad not found",
         success: false,
       });
     }
 
-    localAds.forEach( (element) =>{
-      setAdsViews(element._id);
-    })
-
+    setAdsViews(finalAds[0]._id)
     
-    // localAds.map((element)=>{
-    //   setAnalytics(element._id)
-    // })
     return res.status(SUCCESS_CODE).json({
       success: true,
-      total: localAds.length,
-      ads: localAds
+      total: finalAds.length,
+      ads: finalAds
     });
   }
 

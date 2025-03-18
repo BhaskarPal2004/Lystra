@@ -2,6 +2,7 @@ import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE } from "../../config/const
 import crypto from 'crypto';
 import Order from "../../models/orderModel.js";
 import Payment from "../../models/paymentModel.js";
+import { setAnalytics } from "../../helper/setAnalytics.js";
 
 
 export const paymentVerification = async (req, res) => {
@@ -46,6 +47,8 @@ export const paymentVerification = async (req, res) => {
       order.paymentStatus = 'paid'
       order.status = 'confirmed'
       await order.save()
+
+      setAnalytics(order.adId)
 
       res.redirect(`http://localhost:5173/payment/success?reference=${razorpay_payment_id},${razorpay_order_id}`)
     }
