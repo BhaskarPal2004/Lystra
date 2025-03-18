@@ -114,7 +114,7 @@ export const getAllAds = async (req, res) => {
       }
       })
     }
-    else{
+    else {
       localAds = filteredAds
     }
 
