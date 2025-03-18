@@ -11,18 +11,28 @@ const reviewSchema = new mongoose.Schema({
         ref: 'ad',
         required: true
     },
-    rating: {
+    sellerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'seller',
+        required: true
+    },
+    productRating: {
         type: Number,
         default: 0,
         range: [0, 5]
     },
-    review: {
-        type: String,
-        default: null
+    sellerRating: {
+        type: Number,
+        default: 0,
+        range: [0, 5]
     },
-    reviewResponse:{
+    feedbackTitle: {
         type: String,
-        default: null
+        default: null,
+    },
+    feedbackComment:{
+        type: String,
+        default: null,
     }
 
 }, { timestamps: true });

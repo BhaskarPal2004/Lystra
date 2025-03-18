@@ -7,12 +7,14 @@ import createReview from '../controllers/reviewControllers/createReview.js';
 import updateReview from '../controllers/reviewControllers/updateReview.js';
 import respondToReview from '../controllers/reviewControllers/respondToReview.js';
 import deleteResponse from '../controllers/reviewControllers/deleteResponse.js';
+import { reviewSchemaValidation } from '../validator/validateReview.js';
+import { validateData } from '../middleware/validateData.js';
 
 
 const reviewRoute = express.Router();
 
 //all api's of buyer
-reviewRoute.post('/create/:adId', verifyAccessToken, isVerified, createReview);
+reviewRoute.post('/create/:adId', verifyAccessToken, isVerified,validateData(reviewSchemaValidation),createReview);
 reviewRoute.delete('/delete/:reviewId', verifyAccessToken, isVerified, deleteReview);
 reviewRoute.put('/edit/:reviewId', verifyAccessToken, isVerified, updateReview);
 reviewRoute.post('/respond/:reviewId', verifyAccessToken, isVerified, isSeller, respondToReview);

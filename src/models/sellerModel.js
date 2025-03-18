@@ -1,64 +1,64 @@
 import mongoose from "mongoose";
 
-const sellerSchema = new mongoose.Schema({
+const sellerSchema = new mongoose.Schema(
+  {
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     email: {
-        type: String,
-        required: true,
-        unique: true
+      type: String,
+      required: true,
+      unique: true,
     },
     password: {
-        type: String,
-        required: true,
-        select: false
+      type: String,
+      required: true,
+      select: false,
     },
     isVerified: {
-        type: Boolean,
-        required: true,
-        default: false
+      type: Boolean,
+      required: true,
+      default: false,
     },
     phoneNumber: {
-        type: String,
-        unique: true,
-        default: null
+      type: String,
+      unique: true,
+      default: null,
     },
     profilePicture: {
-        type: String,
-        default: ""
+      type: String,
+      default: "",
     },
     address: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'address',
-        default: null
+      type: mongoose.Schema.ObjectId,
+      ref: "address",
+      default: null,
     },
-    averageReview: {
-        averageRating: {
-            type: Number,
-            default: null
-        },
-        topReviews: [{
-            type: String,
-            default: null
-        }]
+    averageRating: {
+      type: Number,
+      default: null,
     },
-    blockedList: [{
+    blockedList: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'blockUser',
+        ref: "blockUser",
         required: true,
-    }],
-    reports: [{
+      },
+    ],
+    reports: [
+      {
         type: mongoose.Schema.ObjectId,
-        ref: 'reportUser'
-    }],
+        ref: "reportUser",
+      },
+    ],
     isSubscribed: {
-        type: Boolean,
-        default: false,
-    }
-
-}, { timestamps: true });
+      type: Boolean,
+      default: false,
+    },
+  },
+  { timestamps: true }
+);
 
 const Seller = mongoose.model("seller", sellerSchema);
 export default Seller;

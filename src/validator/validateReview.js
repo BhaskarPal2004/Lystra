@@ -1,8 +1,37 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-export const reviewSchemaValidation = z.object({
-    rating: z.optional( z.number().int() 
-    .gte(0) 
-    .lte(5)),
-    review:z.optional(z.string().min(5,"review must have five character"))
-});
+export const reviewSchemaValidation = z
+  .object({
+    productRating: z.number().int().gte(0).lte(5),
+    sellerRating: z.number().int().gte(0).lte(5),
+    feedbackTitle: z
+      .string()
+      .trim()
+      .min(3, "Feedback Title must have at least 3 characters")
+      .optional(),
+    feedbackComment: z
+      .string()
+      .trim()
+      .min(10, "Feedback comment must have at least 10 characters")
+      .optional(),
+  })
+  .superRefine((data, ctx) => {
+    const hasTitle = !!data.feedbackTitle;
+    const hasComment = !!data.feedbackComment;
+
+    if (hasTitle && !hasComment) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Feedback comment is required when feedback title is provided",
+        path: ["feedbackComment"],
+      });
+    }
+
+    if (hasComment && !hasTitle) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Feedback title is required when feedback comment is provided",
+        path: ["feedbackTitle"],
+      });
+    }
+  });
