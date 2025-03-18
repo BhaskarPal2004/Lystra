@@ -1,4 +1,4 @@
-import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE, UNAUTHORIZED_CODE } from "../../config/constant.js";
+import {  INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE, UNAUTHORIZED_CODE } from "../../config/constant.js";
 import { calculateReview } from "../../helper/calculateReview.js";
 import Ad from "../../models/adModel.js";
 import Review from "../../models/reviewModel.js";
@@ -7,7 +7,7 @@ const updateReview = async (req, res) => {
     try {
         const reviewId = req.params.reviewId;
         const userId = req.userId;
-        const { rating, review } = req.body;
+        const { productRating,sellerRating,feedbackTitle,feedbackComment} = req.body;
 
         const oldReview = await Review.findById(reviewId);
 
@@ -23,15 +23,11 @@ const updateReview = async (req, res) => {
                 message: "Unauthorized access, can't edit review"
             })
 
-        if (rating < 0 || rating > 5) {
-            return res.status(BAD_REQUEST_CODE).json({
-                success: false,
-                message: "Rating must be between 0 to 5"
-            })
-        }
-
-        oldReview.rating = rating ? Number(rating) : oldReview.rating
-        oldReview.review = review ? review : oldReview.review
+        oldReview.productRating = productRating ? productRating : oldReview.productRating;
+        oldReview.sellerRating = sellerRating ? sellerRating : oldReview.sellerRating;
+        oldReview.feedbackTitle = feedbackTitle ? feedbackTitle:oldReview.feedbackTitle;
+        oldReview.feedbackComment = feedbackComment ? feedbackComment:oldReview.feedbackComment;
+        
 
         await oldReview.save();
 
