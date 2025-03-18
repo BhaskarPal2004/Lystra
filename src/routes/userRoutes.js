@@ -16,14 +16,15 @@ import { updatePassword } from '../controllers/userControllers/updatePassword.js
 import { updatePasswordValidation } from "../validator/validateUpdatePassword.js"
 import { getUserCoordinates } from '../controllers/userControllers/getUserCoordinates.js';
 import { callRequest } from '../controllers/userControllers/callRequest.js';
+import { adReportValidation } from '../validator/validateAdReport.js';
 
 const userRoute = express.Router();
 
 //all api's of user
 userRoute.get('/userData', verifyAccessToken, isVerified, findUserData);
 userRoute.put('/updateProfile', verifyAccessToken, isVerified, validateData(profileUpdateValidation), updateProfile);
-userRoute.post('/report/:adId', verifyAccessToken, isVerified, createAdReport);
-userRoute.post('/reportUser', verifyAccessToken, isVerified, createUserReport);
+userRoute.post('/report/:adId', verifyAccessToken, isVerified, validateData(adReportValidation),createAdReport);
+userRoute.post('/reportUser', verifyAccessToken, isVerified,createUserReport);
 userRoute.delete('/logout', verifyAccessToken, isVerified, logout)
 userRoute.post('/uploadProfilePicture', verifyAccessToken, isVerified, uploadProfilePicture, uploadProfilePictureController);
 userRoute.post('/blockUser/:blockId', verifyAccessToken, isVerified, blockedUser);

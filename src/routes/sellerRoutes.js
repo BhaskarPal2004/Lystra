@@ -3,14 +3,12 @@ import { verifyAccessToken } from '../middleware/isAuthenticated.js'
 import isVerified from '../middleware/isVerified.js'
 import { isSeller } from '../middleware/isSeller.js'
 import { getAllAds } from '../controllers/sellerControllers/getAllAds.js'
-import { averageReview } from '../controllers/sellerControllers/averageReview.js'
 import { getTransactions } from '../controllers/sellerControllers/getTransaction.js'
 
 const sellerRoute = express.Router()
 
 //all api's of seller
 sellerRoute.get('/getAllAds', verifyAccessToken, isVerified, isSeller, getAllAds);
-sellerRoute.post('/averageReview',verifyAccessToken,isVerified,isSeller,averageReview);
 sellerRoute.get('/transaction',verifyAccessToken,isVerified,isSeller,getTransactions)
 
 export default sellerRoute

@@ -15,8 +15,8 @@ const reviewRoute = express.Router();
 reviewRoute.post('/create/:adId', verifyAccessToken, isVerified, createReview);
 reviewRoute.delete('/delete/:reviewId', verifyAccessToken, isVerified, deleteReview);
 reviewRoute.put('/edit/:reviewId', verifyAccessToken, isVerified, updateReview);
-reviewRoute.post('/respond/:reviewId', verifyAccessToken, isSeller, isVerified, respondToReview);
-reviewRoute.delete('/deleteResponse/:reviewId', verifyAccessToken, isSeller, isVerified, deleteResponse);
+reviewRoute.post('/respond/:reviewId', verifyAccessToken, isVerified, isSeller, respondToReview);
+reviewRoute.delete('/deleteResponse/:reviewId', verifyAccessToken, isVerified, isSeller, deleteResponse);
 
 
 export default reviewRoute;
