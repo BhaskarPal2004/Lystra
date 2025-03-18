@@ -21,9 +21,9 @@ export const paymentCheckout = async (req, res) => {
       razorpayOrderId: order.id,
       adId: adId,
       amount: order.amount / 100,
-      buyerId: '67c6fd2d690125c0407e57a2', //will set after setting header in frontend
+      buyerId: '67c964a28188f6cd0525ff24', //will set after setting header in frontend
       billingAddress: ad.address,
-      shippingAddress: "67ca9332a77ee8e5dc87658f", //will set after getting buyer
+      shippingAddress: "67c96da94c6608143ef4b6e5", //will set after getting buyer
       paymentType: "online"
     })
 

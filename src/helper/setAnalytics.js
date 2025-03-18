@@ -1,18 +1,19 @@
 import Analytics from "../models/analyticsModel.js"
-// import { setConversionRate } from "./setConversionRate.js"
+import Order from "../models/orderModel.js"
+import { setConversionRate } from "./setConversionRate.js"
 import { setCTR } from "./setCTR.js"
 
 export const setAnalytics = async(adId) => {
     const analytics = await Analytics.findOne({adId:adId})
-    // const numberOfOrders = ad.orders.length
+    const successfulOrders = await Order.find({adId,paymentStatus:"paid"})
+    console.log("successfulOrders",successfulOrders,successfulOrders.length)
     const CTR = setCTR(analytics.performance.views,analytics.performance.clicks)
-    // const conversionRate = setConversionRate(numberOfOrders,ad.performance.clicks)
+    const conversionRate = setConversionRate(successfulOrders.length,analytics.performance.clicks)
     
     analytics.CTR = CTR
-    // analytics.conversionRate = conversionRate
+    analytics.conversionRate = conversionRate
     await analytics.save()
 
-console.log("hello from analytics",adId)
     
 }
 
