@@ -1,23 +1,24 @@
-// // import Ad from "../models/adModel.js"
-// // import { setConversionRate } from "./setConversionRate.js"
-// // import { setCTR } from "./setCTR.js"
+import Analytics from "../models/analyticsModel.js"
+import Order from "../models/orderModel.js"
+import { setConversionRate } from "./setConversionRate.js"
+import { setCTR } from "./setCTR.js"
 
-// export const setAnalytics = async(adId) => {
-//     // const ad = await Ad.findOne({_id:adId})
-//     // const numberOfOrders = ad.orders.length
-//     // const CTR = setCTR(ad.performance.views,ad.performance.clicks)
-//     // const conversionRate = setConversionRate(numberOfOrders,ad.performance.clicks)
+export const setAnalytics = async(adId) => {
+    const analytics = await Analytics.findOne({adId:adId})
+    const successfulOrders = await Order.find({adId,paymentStatus:"paid"})
+    console.log("successfulOrders",successfulOrders,successfulOrders.length)
+    const CTR = setCTR(analytics.performance.views,analytics.performance.clicks)
+    const conversionRate = setConversionRate(successfulOrders.length,analytics.performance.clicks)
     
-//     // ad.analytics.CTR = CTR
-//     // ad.analytics.conversionRate = conversionRate
-//     // await ad.save()
+    analytics.CTR = CTR
+    analytics.conversionRate = conversionRate
+    await analytics.save()
 
-// console.log("hello from analytics",adId)
     
-// }
+}
 
 
-// // Click-Through Rate (CTR):
-// // Formula: (Total Ad Clicks / Total Ad Impressions) x 100
-// // Conversion Rate:
-// // Formula: (Number of Conversions / Number of Ad Clicks) x 100
+// Click-Through Rate (CTR):
+// Formula: (Total Ad Clicks / Total Ad Impressions) x 100
+// Conversion Rate:
+// Formula: (Number of Conversions / Number of Ad Clicks) x 100
