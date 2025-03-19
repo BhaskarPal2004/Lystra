@@ -33,7 +33,10 @@ const reviewSchema = new mongoose.Schema({
     feedbackComment:{
         type: String,
         default: null,
-    }
+    },
+    likes:[{
+        type:mongoose.Schema.Types.ObjectId
+    }]
 
 }, { timestamps: true });
 
