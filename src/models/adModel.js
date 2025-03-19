@@ -84,6 +84,20 @@ const adSchema = new mongoose.Schema({
     type: String,
     enum: ['cod', 'online']
   },
+  boost:{
+    isBoosted:{
+      type:Boolean,
+      default:false
+    },
+    expiryDate:{
+      type:Date,
+      default: new Date()
+    },
+    price:{
+      type:Number,
+      default:0
+    }
+  },
   reviews: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "review",
