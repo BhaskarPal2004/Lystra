@@ -25,7 +25,7 @@ export const getAllAds = async (req, res) => {
     if (city===""){
     latitude =  22.5726459
     longitude = 88.3638953 
-    maxDistance = 10000000 //pore teen teh zero komiye debo
+    maxDistance = 10000000000 //(in m)
     }
 
     else{
@@ -79,19 +79,24 @@ export const getAllAds = async (req, res) => {
 
     const filteredAds = await Ad.aggregate([
       { $match: matchConditions },
+      { $lookup:{
+        from:'categories',
+        localField:'category',
+        foreignField:'_id',
+        as:"categoryName"
+      }},
       {
-        $addFields: {
-          detailsArray: {
-            $objectToArray: "$details"
+          $addFields: {
+            categoryName: { $arrayElemAt: ["$categoryName.name", 0] }
           }
-        }
       },
       {
         $match: {
           $or: [
             { name: new RegExp(searchKeyword.trim(), 'i') },
             { description: new RegExp(searchKeyword.trim(), 'i') },
-            { "detailsArray.v": new RegExp(searchKeyword.trim(), 'i') }
+            { categoryName: new RegExp(searchKeyword.trim(),'i')}
+            
           ]
         }
       },
