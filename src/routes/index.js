@@ -9,6 +9,7 @@ import orderRoute from './orderRoutes.js';
 import paymentRoute from './paymentRoute.js';
 import otpRouter from './otpRoutes.js';
 import chatRoute from './chatRoutes.js';
+import followRoute from './followRoute.js';
 
 
 const routes = (app) => {
@@ -23,6 +24,7 @@ const routes = (app) => {
     app.use('/api/order', orderRoute);
     app.use('/api/otp', otpRouter);
     app.use('/api/chat', chatRoute);
+    app.use('/api/follow',followRoute);
 };
 
 export default routes;
