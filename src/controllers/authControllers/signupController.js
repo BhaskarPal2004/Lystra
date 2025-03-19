@@ -53,12 +53,12 @@ export const signup = async (req, res) => {
 
     try {
       const contextData = {
-        port: process.env.PORT,
+        port: process.env.FRONTEND_PORT,
         token: registrationToken,
-        name:name
+        name: name
       };
       const subject = "Verify your email address"
-      await sendEmail(email, 'emailVerificationTemplate', contextData,subject);
+      await sendEmail(email, 'emailVerificationTemplate', contextData, subject);
 
     }
 
