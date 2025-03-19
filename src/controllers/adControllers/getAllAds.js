@@ -22,16 +22,16 @@ export const getAllAds = async (req, res) => {
     let longitude = null
     let latitude = null
     let maxDistance = null
-    if (city===""){
-    latitude =  22.5726459
-    longitude = 88.3638953 
-    maxDistance = 10000000000 //(in m)
+    if (city === "") {
+      latitude = 22.5726459
+      longitude = 88.3638953
+      maxDistance = 10000000000 //(in m)
     }
 
-    else{
+    else {
       const cityCoordinates = await getLocationCoords(city)
-      latitude = cityCoordinates.lat 
-      longitude = cityCoordinates.lng 
+      latitude = cityCoordinates.lat
+      longitude = cityCoordinates.lng
       maxDistance = 10000
     }
 
@@ -42,7 +42,7 @@ export const getAllAds = async (req, res) => {
     const conditionArray = ["new", "used", "refurbished"]
     const isValidCondition = conditionArray.includes(condition.trim().toLowerCase())
 
-    
+
 
     //match conditions
 
@@ -56,19 +56,19 @@ export const getAllAds = async (req, res) => {
 
     const matchConditions = {
       price: priceFilter,
-      isExpire:false
+      isExpire: false
     }
 
     if (isValidCondition) {
       matchConditions.condition = condition.trim().toLowerCase()
     }
-    
+
 
     // function to get localAds
 
-    
-    if(longitude && latitude && maxDistance){
-     localAddresses = await findLocalAddressess(longitude,latitude,maxDistance)
+
+    if (longitude && latitude && maxDistance) {
+      localAddresses = await findLocalAddressess(longitude, latitude, maxDistance)
     }
 
     //function to get ads that match the category 
@@ -79,28 +79,30 @@ export const getAllAds = async (req, res) => {
 
     const filteredAds = await Ad.aggregate([
       { $match: matchConditions },
-      { $lookup:{
-        from:'categories',
-        localField:'category',
-        foreignField:'_id',
-        as:"categoryName"
-      }},
       {
-          $addFields: {
-            categoryName: { $arrayElemAt: ["$categoryName.name", 0] }
-          }
+        $lookup: {
+          from: 'categories',
+          localField: 'category',
+          foreignField: '_id',
+          as: "categoryName"
+        }
+      },
+      {
+        $addFields: {
+          categoryName: { $arrayElemAt: ["$categoryName.name", 0] }
+        }
       },
       {
         $match: {
           $or: [
             { name: new RegExp(searchKeyword.trim(), 'i') },
             { description: new RegExp(searchKeyword.trim(), 'i') },
-            { categoryName: new RegExp(searchKeyword.trim(),'i')}
-            
+            { categoryName: new RegExp(searchKeyword.trim(), 'i') }
+
           ]
         }
       },
-      
+
       {
         $sort: {
           [sortBy]: sortOrder === "asc" ? -1 : 1
@@ -111,12 +113,12 @@ export const getAllAds = async (req, res) => {
 
 
     filteredAds.sort((a, b) => b.isFeatured - a.isFeatured)
-    
-    if(longitude && latitude && maxDistance){
-    filteredAds.map((element)=>{
-      if(localAddresses.includes(element.address.toString())){
-        localAds.push(element)
-      }
+
+    if (longitude && latitude && maxDistance) {
+      filteredAds.map((element) => {
+        if (localAddresses.includes(element.address.toString())) {
+          localAds.push(element)
+        }
       })
     }
     else {
@@ -124,13 +126,13 @@ export const getAllAds = async (req, res) => {
     }
 
 
-    if(!categorisedAds.length!==0){
-      localAds.map((element)=>{
-        if(categorisedAds.includes(element._id.toString())){
+    if (!categorisedAds.length !== 0) {
+      localAds.map((element) => {
+        if (categorisedAds.includes(element._id.toString())) {
           finalAds.push(element)
         }
       })
-      }
+    }
 
 
     if (finalAds.length === 0) {
@@ -141,7 +143,7 @@ export const getAllAds = async (req, res) => {
     }
 
     setAdsViews(finalAds[0]._id)
-    
+
     return res.status(SUCCESS_CODE).json({
       success: true,
       total: finalAds.length,
