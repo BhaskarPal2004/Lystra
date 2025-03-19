@@ -1,6 +1,5 @@
 import express from 'express'
 
-import { getAllAds } from '../controllers/adControllers/getAllAds.js';
 import { verifyAccessToken } from "../middleware/isAuthenticated.js"
 import { createNewAd } from '../controllers/adControllers/createNewAd.js'
 import { validateData } from "../middleware/validateData.js"
@@ -17,12 +16,13 @@ import { setFeature } from '../controllers/adControllers/setFeature.js';
 import { removeFeature } from '../controllers/adControllers/removeFeature.js';
 import { compareAds } from '../controllers/adControllers/compareAds.js';
 import { getAllOrdersOnAd } from '../controllers/adControllers/getAllOrdersOnAd.js';
+import { getNewAds } from '../controllers/adControllers/getNewAds.js'
 
 
 const adRoute = express.Router()
 
 //all api's of ad
-adRoute.get('/getAllAds', getAllAds);
+adRoute.get('/getNewAds', getNewAds);
 adRoute.get('/getAdById/:adId', getAdById);
 adRoute.post('/create', verifyAccessToken, isSeller,validateData(adSchema),createNewAd)
 adRoute.put('/update/:adId', verifyAccessToken, isSeller,validateData(updateAdSchema),updateAd)

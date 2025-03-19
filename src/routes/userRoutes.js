@@ -33,4 +33,6 @@ userRoute.post('/updatePassword', verifyAccessToken, isVerified, validateData(up
 userRoute.get('/getCoordinates/:lat/:lng', getUserCoordinates)
 userRoute.post('/request/call/:calleeId', verifyAccessToken, isVerified, callRequest);
 
+
+
 export default userRoute
