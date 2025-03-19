@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const replySchema = new mongoose.Schema({
-    reviewerId: {
+    reviewId: {
         type: mongoose.Types.ObjectId,
         required:true
     },

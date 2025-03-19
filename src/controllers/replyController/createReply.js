@@ -30,7 +30,7 @@ export const createReply = async (req, res) => {
     }
 
     const newReply = await Reply.create({
-       reviewerId: reviewId,
+       reviewId: reviewId,
        replierId: userId,
        content: content,
     });
@@ -39,7 +39,7 @@ export const createReply = async (req, res) => {
 
     return res.status(SUCCESS_CODE).send({
       success: true,
-      message: "Reply created Successfully",
+      message: "Reply created successfully",
     });
 
   } catch (error) {
