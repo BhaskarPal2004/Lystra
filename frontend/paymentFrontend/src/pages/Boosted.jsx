@@ -65,7 +65,7 @@ const Boosted = () => {
         const paymentObject = new window.Razorpay(options);
 
         paymentObject.on('payment.failed', async (response) => {
-            console.log(response)
+            console.log(response.error.description)
         })
 
         paymentObject.open();
