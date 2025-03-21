@@ -26,21 +26,17 @@ const adRoute = express.Router()
 //all api's of ad
 adRoute.get('/getNewAds', getNewAds);
 adRoute.get('/getFeaturedAds', getFeaturedAds);
-
 adRoute.get('/getAdById/:adId', getAdById);
-adRoute.post('/create', verifyAccessToken, isSeller,validateData(adSchema),createNewAd)
-adRoute.put('/update/:adId', verifyAccessToken, isSeller,validateData(updateAdSchema),updateAd)
+adRoute.post('/create', verifyAccessToken, isVerified, isSeller, validateData(adSchema), createNewAd)
+adRoute.put('/update/:adId', verifyAccessToken, isSeller, validateData(updateAdSchema), updateAd)
 adRoute.delete('/deleteAd/:adId', verifyAccessToken, isVerified, isSeller, deleteAd);
 adRoute.delete('/deleteAllAds', verifyAccessToken, isVerified, isSeller, deleteAllAds)
 adRoute.post('/uploadFiles/:adId', verifyAccessToken, isVerified, isSeller, uploadAdFiles, uploadAdFilesController)
-adRoute.get('/compareAds/:adIds', verifyAccessToken, isVerified,compareAds );
-adRoute.post('/featured/:adIds',verifyAccessToken,isVerified,isSeller,setFeature);
-adRoute.delete('/removeFeature/:adId',verifyAccessToken,isVerified,isSeller,removeFeature);
-adRoute.get('/getAllOrdersOnAd/:adId',verifyAccessToken,isVerified,isSeller,getAllOrdersOnAd);
-adRoute.put('/renewAd/:adId',verifyAccessToken,isVerified,isSeller,renewAd);
-
-
+adRoute.get('/compareAds/:adIds', verifyAccessToken, isVerified, compareAds);
+adRoute.post('/featured/:adIds', verifyAccessToken, isVerified, isSeller, setFeature);
+adRoute.delete('/removeFeature/:adId', verifyAccessToken, isVerified, isSeller, removeFeature);
+adRoute.get('/getAllOrdersOnAd/:adId', verifyAccessToken, isVerified, isSeller, getAllOrdersOnAd);
+adRoute.put('/renewAd/:adId', verifyAccessToken, isVerified, isSeller, renewAd);
 
 
 export default adRoute
-
