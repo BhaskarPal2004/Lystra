@@ -74,6 +74,12 @@ const Home = () => {
           <Link to='/chat'>Chat Page</Link>
         </button>
       </div>
+      <div>
+        <button className="bg-orange-700 text-white p-2 font-bold text-2xl">
+          <Link to='/boosted'>Boosted Page</Link>
+        </button>
+      </div>
+
 
     </>
   );
