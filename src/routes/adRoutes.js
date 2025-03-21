@@ -19,6 +19,7 @@ import { getAllOrdersOnAd } from '../controllers/adControllers/getAllOrdersOnAd.
 import { getNewAds } from '../controllers/adControllers/getNewAds.js'
 import { renewAd } from '../controllers/adControllers/renewAd.js';
 import { getFeaturedAds } from '../controllers/adControllers/getFeaturedAds.js'
+import { getCategories } from '../controllers/adControllers/getCategories.js'
 
 
 const adRoute = express.Router()
@@ -38,6 +39,7 @@ adRoute.post('/featured/:adIds',verifyAccessToken,isVerified,isSeller,setFeature
 adRoute.delete('/removeFeature/:adId',verifyAccessToken,isVerified,isSeller,removeFeature);
 adRoute.get('/getAllOrdersOnAd/:adId',verifyAccessToken,isVerified,isSeller,getAllOrdersOnAd);
 adRoute.put('/renewAd/:adId',verifyAccessToken,isVerified,isSeller,renewAd);
+adRoute.get('/getCategory',getCategories);
 
 
 
