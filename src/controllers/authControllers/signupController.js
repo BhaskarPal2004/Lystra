@@ -53,16 +53,15 @@ export const signup = async (req, res) => {
 
     try {
       const contextData = {
-        port: process.env.FRONTEND_PORT,
+        port: role === 'buyer' ? process.env.FRONTEND_BUYER_PORT : process.env.FRONTEND_SELLER_PORT,
         token: registrationToken,
-        name: name
+        name: name,
+        role: role
       };
       const subject = "Verify your email address"
       await sendEmail(email, 'emailVerificationTemplate', contextData, subject);
 
-    }
-
-    catch (error) {
+    } catch (error) {
       return res.status(INTERNAL_SERVER_ERROR_CODE).json({
         success: false,
         message: error.message

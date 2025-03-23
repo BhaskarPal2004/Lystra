@@ -4,6 +4,8 @@ import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE, SUCCESS_CODE, UNAUTHORIZE
 import Otp from "../../models/otpModel.js"
 import generateToken from "../../helper/generateToken.js"
 import sessionsModel from "../../models/sessionModel.js"
+import Buyer from "../../models/buyerModel.js"
+import Seller from "../../models/sellerModel.js"
 
 
 export const verifyOtp = async (req, res) => {
@@ -29,6 +31,9 @@ export const verifyOtp = async (req, res) => {
                 const { userId } = decoded.id
                 const role = decoded.role
 
+                const model = role === 'buyer' ? Buyer : Seller
+                const user = await model.findById(userId)
+
                 const currentOtp = await Otp.findOne({ userId: userId, otp: otpInput })
 
                 if (!currentOtp) {
@@ -49,6 +54,8 @@ export const verifyOtp = async (req, res) => {
                 return res.status(SUCCESS_CODE).json({
                     success: true,
                     message: "Logged in Successfully",
+                    data: user,
+                    role,
                     accessToken,
                     refreshToken
                 })
