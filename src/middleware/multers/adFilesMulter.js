@@ -29,7 +29,8 @@ export const uploadAdFiles = (req, res, next) => {
 
                 return res.status(BAD_REQUEST_CODE).json({
                     success: false,
-                    message: errorMessage || error.message
+                    message: error,
+                    msg: errorMessage
                 })
             }
             else next()

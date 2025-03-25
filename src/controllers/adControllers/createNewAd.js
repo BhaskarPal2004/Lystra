@@ -11,7 +11,10 @@ import Analytics from "../../models/analyticsModel.js";
 export const createNewAd = async (req, res) => {
     try {
         const userId = req.userId;
-        const { name, category, description, images, address = null, condition, price } = req.body;
+        const { name, category, description, address = null, condition, price } = req.body;
+        const reqFiles = req.files
+        console.log('reqFiles', reqFiles)
+        const files = []
 
         const expiryDate = new Date();
         const expireInDays = 30
@@ -34,12 +37,31 @@ export const createNewAd = async (req, res) => {
 
         const categoryId = await createNewCategory(category)
 
-        const newAd = await Ad.create({ sellerId: userId, name, category: categoryId, description, images, price, condition, address: adAddress, expiryDate })
+        // reqFiles?.forEach((file) => {
+        //     console.log(file)
+        //     const fileUrl = `http://localhost:3000/${file.path}`
+        //     files.push({ fileUrl, fileType: file.mimetype })
+        // })
+
+        reqFiles.forEach((file) => {
+            console.log(file)
+        })
+
+        const newAd = await Ad.create({
+            sellerId: userId,
+            name,
+            category: categoryId,
+            description,
+            files,
+            price,
+            condition,
+            address: adAddress,
+            expiryDate
+        })
 
         //create analytics
+        await Analytics.create({ adId: newAd._id })
 
-        await Analytics.create({adId:newAd._id})
-       
 
         return res.status(SUCCESS_CODE).json({
             success: true,

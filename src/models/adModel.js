@@ -51,7 +51,7 @@ const adSchema = new mongoose.Schema({
   address: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "address",
-    required: true,
+    // required: true,
   },
   analytics: {
     type: mongoose.Schema.Types.ObjectId,
