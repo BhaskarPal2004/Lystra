@@ -6,7 +6,7 @@ export const getNewAds = async (req, res) => {
         const allAds = await Ad.find({}, {
             price: 1, boost: 1, address: 1,
             createdAt: 1, name: 1
-        }).populate('address').sort({createdAt:-1}).exec()
+        }).populate('address').sort({ createdAt: -1 }).limit(8).exec()
 
         allAds.sort((a, b) => b.boost.isBoosted - a.boost.isBoosted)
 

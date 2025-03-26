@@ -7,18 +7,20 @@ import Seller from "../../models/sellerModel.js";
 import Analytics from "../../models/analyticsModel.js";
 
 
-
 export const createNewAd = async (req, res) => {
     try {
         const userId = req.userId;
-        const { name, category, description, images, address = null, condition, price } = req.body;
+        const { name, category, description, condition, price } = req.body;
+        const details = JSON.parse(req.body.details);
+        const address = JSON.parse(req.body.address);
+        const reqFiles = req.files
+        const files = []
 
         const expiryDate = new Date();
         const expireInDays = 30
         expiryDate.setDate(expiryDate.getDate() + expireInDays);
 
         //address given at time of ad creation 
-
         let adAddress = null
         if (address) {
             const coordinates = await getLocationCoords(`${address.city},${address.state}`)
@@ -26,7 +28,6 @@ export const createNewAd = async (req, res) => {
             adAddress = await createAddress(address)
         }
         //address not given at time of ad creation => seller address is set as ad address
-
         else {
             const sellerDetails = await Seller.findById(userId)
             adAddress = sellerDetails.address
@@ -34,12 +35,26 @@ export const createNewAd = async (req, res) => {
 
         const categoryId = await createNewCategory(category)
 
-        const newAd = await Ad.create({ sellerId: userId, name, category: categoryId, description, images, price, condition, address: adAddress, expiryDate })
+        reqFiles.forEach((file) => {
+            const fileUrl = `http://localhost:3000/${file.path}`
+            files.push({ fileUrl, fileType: file.mimetype })
+        })
+
+        const newAd = await Ad.create({
+            sellerId: userId,
+            name,
+            category: categoryId,
+            description,
+            details,
+            files,
+            price,
+            condition,
+            address: adAddress,
+            expiryDate
+        })
 
         //create analytics
-
-        await Analytics.create({adId:newAd._id})
-       
+        await Analytics.create({ adId: newAd._id })
 
         return res.status(SUCCESS_CODE).json({
             success: true,
