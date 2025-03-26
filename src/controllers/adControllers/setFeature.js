@@ -37,26 +37,26 @@ export const setFeature = async (req, res) => {
       return res.status(BAD_REQUEST_CODE).json({
         success: false,
         message:
-          "your plane expair please extain subscription plane to add feature",
+          "your plan is expired. please extension subscription plane to add feature",
       });
     }
 
     if (adIds.length === 0) {
       return res.status(NOT_FOUND_CODE).json({
         success: false,
-        message: "Ads not found please selecte Ads for feature",
+        message: "Ads not found please select Ads for feature",
       });
     }
 
     const ads = await Ad.find({ _id: { $in: adIds }, sellerId: sellerId });
     const subArray = [];
 
-    if (!ads.length){
+    if (!ads.length) {
       return res.status(NOT_FOUND_CODE).json({
         success: false,
         message: "Ads not found",
       });
-    } 
+    }
 
     ads.forEach(async (ad) => {
       if (!ad.isFeatured) {

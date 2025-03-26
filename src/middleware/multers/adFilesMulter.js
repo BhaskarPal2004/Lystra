@@ -22,15 +22,14 @@ const adFilesUpload = multer({
 
 export const uploadAdFiles = (req, res, next) => {
     try {
-        adFilesUpload.array('adFiles', 6)(req, res, (error) => {
+        adFilesUpload.array('adFiles', 4)(req, res, (error) => {
             if (error) {
-                let errorMessage = ''
-                errorMessage = error.code === 'LIMIT_UNEXPECTED_FILE' ? "Only 6 files can be uploaded at a time" : ''
+                let errorMessage = null
+                errorMessage = error.code === 'LIMIT_UNEXPECTED_FILE' ? "Only 4 files can be uploaded at a time" : ''
 
                 return res.status(BAD_REQUEST_CODE).json({
                     success: false,
-                    message: error,
-                    msg: errorMessage
+                    message: errorMessage || error.message,
                 })
             }
             else next()

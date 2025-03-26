@@ -7,13 +7,13 @@ import Seller from "../../models/sellerModel.js";
 import Analytics from "../../models/analyticsModel.js";
 
 
-
 export const createNewAd = async (req, res) => {
     try {
         const userId = req.userId;
-        const { name, category, description, address = null, condition, price } = req.body;
+        const { name, category, description, condition, price } = req.body;
+        const details = JSON.parse(req.body.details);
+        const address = JSON.parse(req.body.address);
         const reqFiles = req.files
-        console.log('reqFiles', reqFiles)
         const files = []
 
         const expiryDate = new Date();
@@ -21,7 +21,6 @@ export const createNewAd = async (req, res) => {
         expiryDate.setDate(expiryDate.getDate() + expireInDays);
 
         //address given at time of ad creation 
-
         let adAddress = null
         if (address) {
             const coordinates = await getLocationCoords(`${address.city},${address.state}`)
@@ -29,7 +28,6 @@ export const createNewAd = async (req, res) => {
             adAddress = await createAddress(address)
         }
         //address not given at time of ad creation => seller address is set as ad address
-
         else {
             const sellerDetails = await Seller.findById(userId)
             adAddress = sellerDetails.address
@@ -37,14 +35,9 @@ export const createNewAd = async (req, res) => {
 
         const categoryId = await createNewCategory(category)
 
-        // reqFiles?.forEach((file) => {
-        //     console.log(file)
-        //     const fileUrl = `http://localhost:3000/${file.path}`
-        //     files.push({ fileUrl, fileType: file.mimetype })
-        // })
-
         reqFiles.forEach((file) => {
-            console.log(file)
+            const fileUrl = `http://localhost:3000/${file.path}`
+            files.push({ fileUrl, fileType: file.mimetype })
         })
 
         const newAd = await Ad.create({
@@ -52,6 +45,7 @@ export const createNewAd = async (req, res) => {
             name,
             category: categoryId,
             description,
+            details,
             files,
             price,
             condition,
@@ -61,7 +55,6 @@ export const createNewAd = async (req, res) => {
 
         //create analytics
         await Analytics.create({ adId: newAd._id })
-
 
         return res.status(SUCCESS_CODE).json({
             success: true,
