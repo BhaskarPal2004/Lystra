@@ -17,7 +17,7 @@ export const boostedPaymentVerification = async (req, res) => {
 
         const isAuthentic = expectedSignature === razorpay_signature;
 
-        if (isAuthentic) {
+        if (!isAuthentic) {
             return res.status(BAD_REQUEST_CODE).json({
                 success: true,
                 message: "Payment is not authenticated"

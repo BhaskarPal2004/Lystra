@@ -15,8 +15,8 @@ const buyerRoute = express.Router()
 buyerRoute.post('/saveAd/:adId', verifyAccessToken, isVerified, saveAd);
 buyerRoute.delete('/removeSavedAd/:adId', verifyAccessToken, isVerified, removeSavedAd);
 buyerRoute.post('/interest', verifyAccessToken, isVerified, addInterests);
-buyerRoute.get('/ads/location', verifyAccessToken, isVerified, getAdsByLocation);
-buyerRoute.get('/getAdsByInterest', verifyAccessToken, isVerified, browseAds);
+buyerRoute.get('/ads/location', verifyAccessToken, isVerified, getAdsByLocation); 
+buyerRoute.get('/getAdsByInterest', verifyAccessToken, isVerified, browseAds); 
 buyerRoute.get('/getAllReview/:buyerId', verifyAccessToken, isVerified, getAllReview);
 buyerRoute.get('/transaction', verifyAccessToken, isVerified, getTransactions)
 

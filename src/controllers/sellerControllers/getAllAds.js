@@ -18,8 +18,8 @@ export const getAllAds = async (req, res) => {
         
         const currentDate = new Date(Date.now());
         ads.forEach(element => {
-            if(element.expiryDate<currentDate && element.isExpair === false){
-                element.isExpair = true
+            if(element.expiryDate<currentDate && element.IsExpired === false){
+                element.IsExpired = true
             }
         });
 

@@ -25,7 +25,7 @@ export const createReply = async (req, res) => {
     if (findReview.buyerId.toHexString() === userId) {
       return res.status(BAD_REQUEST_CODE).send({
         success: false,
-        message: "You do not reply yourself",
+        message: "You cannot give a reply to yourself",
       });
     }
 

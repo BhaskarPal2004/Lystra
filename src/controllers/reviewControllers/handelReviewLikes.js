@@ -22,10 +22,10 @@ export const handelReviewLikes = async (req, res) => {
     if (findReview.buyerId.toHexString() === userId) {
       return res.status(BAD_REQUEST_CODE).send({
         success: false,
-        message: "You do not like yourself",
+        message: "You cannot give a like to yourself",
       });
     }
-
+  
     if (findReview.likes.includes(userId)) {
       const index = findReview.likes.indexOf(userId);
       findReview.likes.splice(index, 1);

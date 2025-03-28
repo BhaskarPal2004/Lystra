@@ -18,12 +18,12 @@ export const InvoiceCreation = async (req, res) => {
     }
 
     const order = await Order.findById(orderId);
-    
-    if(!order){
-        return res.status(NOT_FOUND_CODE).json({
-            success: false,
-            message: "Order not found",
-          });
+
+    if (!order) {
+      return res.status(NOT_FOUND_CODE).json({
+        success: false,
+        message: "Order not found",
+      });
     }
     const fileName = await invoiceCreateFunction(orderId);
     const filePath = path.resolve(`./invoices/${fileName}`);
@@ -46,6 +46,7 @@ export const InvoiceCreation = async (req, res) => {
     await checkFileExists(filePath);
 
     return res.sendFile(filePath);
+
   } catch (error) {
     return res.status(INTERNAL_SERVER_ERROR_CODE).json({
       success: false,

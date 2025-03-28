@@ -17,14 +17,14 @@ const saveAd = async (req, res) => {
             })
         }
 
-        if (buyer.savedAds.includes(adId)) {
+        if (buyer.favoriteAds?.includes(adId)) {
             return res.status(BAD_REQUEST_CODE).json({
                 success: false,
                 message: "Ad is already saved in your wishlist"
             })
         }
 
-        buyer.savedAds.push(adId);
+        buyer.favoriteAds?.push(adId);
         await buyer.save();
 
         return res.status(SUCCESS_CODE).send({

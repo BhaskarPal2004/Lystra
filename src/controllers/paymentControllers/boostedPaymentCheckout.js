@@ -8,7 +8,7 @@ export const boostedPaymentCheckout = async (req, res) => {
         const adId = req.params.adId
         const { days, amount } = req.body
         const ad = await Ad.findById(adId)
-
+        // ad not found check 
 
         if (ad.sellerId.toHexString() !== sellerId) {
             return res.status(UNAUTHORIZED_CODE).json({

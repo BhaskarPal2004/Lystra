@@ -18,7 +18,6 @@ const respondToReview = async (req, res) => {
         const review = await Review.findById(reviewId).populate('adId');
 
         if (review.adId.sellerId.toHexString() !== sellerId) {
-            console.log('hello')
             return res.status(UNAUTHORIZED_CODE).json({
                 success: false,
                 message: "Unauthorized access"

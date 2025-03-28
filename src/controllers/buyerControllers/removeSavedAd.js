@@ -17,14 +17,14 @@ const removeSavedAd = async (req, res) => {
                 message: "ad not found"
             })
         }
-        if (!buyer.savedAds.includes(adId)) {
+        if (!buyer.favoriteAds?.includes(adId)) {
             return res.status(NOT_FOUND_CODE).json({
                 success: false,
                 message: "Ad is not saved in your wishlist"
             })
         }
 
-        buyer.savedAds.remove(adId);
+        buyer.favoriteAds?.remove(adId);
         await buyer.save();
 
         return res.status(SUCCESS_CODE).json({
