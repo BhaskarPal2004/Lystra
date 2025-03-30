@@ -1,6 +1,8 @@
-import { CREATED_CODE, INTERNAL_SERVER_ERROR_CODE } from "../../config/constant.js";
+import { CREATED_CODE, FORBIDDEN_CODE, INTERNAL_SERVER_ERROR_CODE } from "../../config/constant.js";
 import { getReceiverSocketId, io } from "../../config/socket.js";
+import BlockUser from "../../models/blockUserModel.js";
 import Message from "../../models/messagesModel.js";
+
 
 export const sendMessage = async (req, res) => {
     try {
@@ -9,6 +11,18 @@ export const sendMessage = async (req, res) => {
 
         const receiverId = req.params.receiverId;
         const senderId = req.userId;
+
+        const isBlocked = await BlockUser.findOne({
+            blockerId: receiverId,
+            blockedId: senderId,
+        });
+
+        if (isBlocked) {
+            return res.status(FORBIDDEN_CODE).json({
+                success: false,
+                message: "You cannot send messages to this user.",
+            });
+        }
 
         let imageUrl;
         if (image) imageUrl = `http://localhost:3000/uploads/chatImages/${image.filename}`

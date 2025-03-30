@@ -1,10 +1,23 @@
-import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
+import { FORBIDDEN_CODE, INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
+import BlockUser from "../../models/blockUserModel.js";
 import Message from "../../models/messagesModel.js";
 
 export const getMessages = async (req, res) => {
     try {
         const receiverId = req.params.receiverId;
         const senderId = req.userId
+
+        const isBlocked = await BlockUser.findOne({
+            blockerId: receiverId,
+            blockedId: senderId,
+        });
+
+        if (isBlocked) {
+            return res.status(FORBIDDEN_CODE).json({
+                success: false,
+                message: "You cannot send messages to this user.",
+            });
+        }
 
         const messages = await Message.find({
             $or: [

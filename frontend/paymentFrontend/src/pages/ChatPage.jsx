@@ -161,7 +161,7 @@ const ChatPage = () => {
                         value={currentMessage}
                         className="mx-auto py-2 px-3 w-[90%] rounded-xl outline-1 outline-black"
                         onChange={(e) => { setCurrentMessage(e.target.value) }}
-                        onKeyUp={(e) => e.key === "Enter" && handleSendMessage()}
+                        onKeyUp={(e) => e.key === "Enter" && handleSendMessage(e)}
                     />
                     <input
                         type='file'

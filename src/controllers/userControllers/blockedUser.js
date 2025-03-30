@@ -17,7 +17,7 @@ export const blockedUser = async (req, res) => {
     const buyer = await Seller.findById(userId);
 
     const blockUser = await Buyer.findById(blockId) || await Seller.findById(blockId)
-    
+
     if (!blockUser) {
       return res.status(NOT_FOUND_CODE).json({
         success: false,
@@ -25,29 +25,29 @@ export const blockedUser = async (req, res) => {
       });
     }
 
-    if(userId === blockId){
-        return res.status(BAD_REQUEST_CODE).json({
-            success: false,
-            message: "you can not block yourself",
-          });
+    if (userId === blockId) {
+      return res.status(BAD_REQUEST_CODE).json({
+        success: false,
+        message: "you can not block yourself",
+      });
     }
 
-    const alreadyaBlocked = await BlockUser.findOne({blockerId: userId, blockedId: blockId});
-    if (alreadyaBlocked) {
+    const alreadyBlocked = await BlockUser.findOne({ blockerId: userId, blockedId: blockId });
+    if (alreadyBlocked) {
       return res.status(BAD_REQUEST_CODE).json({
         success: false,
         message: "You already blocked this user",
       });
     }
 
-    const newBlock = new BlockUser ({
+    const newBlock = new BlockUser({
       blockerId: userId,
       blockedId: blockId
     })
 
     await newBlock.save();
 
-    if(buyer) {
+    if (buyer) {
       buyer.blockedList.push(newBlock._id);
       await buyer.save();
     } else {

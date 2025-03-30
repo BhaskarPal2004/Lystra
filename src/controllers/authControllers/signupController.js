@@ -53,7 +53,7 @@ export const signup = async (req, res) => {
 
     try {
       const contextData = {
-        port: role === 'buyer' ? process.env.FRONTEND_BUYER_PORT : process.env.FRONTEND_SELLER_PORT,
+        port: process.env.FRONTEND_PORT,
         token: registrationToken,
         name: name,
         role: role
