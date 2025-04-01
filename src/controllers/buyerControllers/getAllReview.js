@@ -4,8 +4,19 @@ import { SUCCESS_CODE, NOT_FOUND_CODE, INTERNAL_SERVER_ERROR_CODE } from "../../
 export const getAllReview = async (req, res) => {
   try {
     const buyerId = req.userId;
+    const { pageNum = 1 } = req.query
 
-    const reviews = await Review.find({ buyerId }).populate('sellerId', 'name email');
+    const page = pageNum<1 ? 1 : pageNum
+
+    const limit = 5 * 1
+    const skip = (page - 1) * limit
+
+
+    const totalReviewsCount = (await Review.find({ buyerId })).length
+
+    const maxPageCount = Math.ceil((totalReviewsCount / limit))
+
+    const reviews = await Review.find({ buyerId }).populate('sellerId', 'name email').skip(skip).limit(limit);
 
     if (!reviews.length) {
       return res.status(NOT_FOUND_CODE).json({
@@ -17,7 +28,9 @@ export const getAllReview = async (req, res) => {
     return res.status(SUCCESS_CODE).json({
       success: true,
       message: "Reviews fetched successfully",
-      totalReviews: reviews.length,
+      totalReviews: totalReviewsCount.length,
+      maxPageCount: maxPageCount,
+      total:reviews.length,
       data: reviews
     });
 

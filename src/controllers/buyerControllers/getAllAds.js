@@ -4,14 +4,15 @@ import { setAdsViews } from "../../helper/setAdsViews.js";
 import { findLocalAddressess } from "../../helper/findLocalAddresses.js";
 import { getLocationCoords } from "../../helper/getLocationCoords.js";
 import findAdsOfThisCategory from "../../helper/findAdsOfThisCategory.js";
-import Buyer from "../../models/buyerModel.js";
-import Seller from "../../models/sellerModel.js";
+import BlockUser from "../../models/blockUserModel.js";
+
 
 export const getAllAds = async (req, res) => {
   try {
-    let tempAds = []
-    const blockedAds = []
     const userId = req.userId
+    const blockedMe = []
+    const blockedUsers = []
+
 
     const {
       searchKeyword = "",
@@ -21,9 +22,12 @@ export const getAllAds = async (req, res) => {
       minPrice = 0,
       maxPrice = Infinity,
       condition = "",
-      city = ""
+      city = "",
+      pageNum = 1
     } = req.query;
 
+
+    const limit = 9 * 1;
 
     let longitude = null
     let latitude = null
@@ -31,15 +35,18 @@ export const getAllAds = async (req, res) => {
     if (city === "") {
       latitude = 22.5726459
       longitude = 88.3638953
-      maxDistance = 1000000 //(in m)
+      maxDistance = 1000 //(in m)
     }
+
+
 
     else {
       const cityCoordinates = await getLocationCoords(city)
       latitude = cityCoordinates.lat
       longitude = cityCoordinates.lng
-      maxDistance = 10000
+      maxDistance = 1000
     }
+
 
     let localAddresses = []
     let localAds = []
@@ -67,14 +74,29 @@ export const getAllAds = async (req, res) => {
     }
 
 
+
+
     // function to get localAds
     if (longitude && latitude && maxDistance) {
       localAddresses = await findLocalAddressess(longitude, latitude, maxDistance)
     }
 
+
     //function to get ads that match the category 
 
     const categorizedAds = await findAdsOfThisCategory(searchCategory)
+
+    //block functions
+    let temp = await BlockUser.find({ blockerId: userId }, { blockedId: 1 })
+    temp.forEach((obj) => {
+      blockedUsers.push(obj.blockedId)
+    })
+
+    temp = await BlockUser.find({ blockedId: userId }, { blockerId: 1 })
+    temp.forEach((obj) => {
+      blockedMe.push(obj.blockerId)
+    })
+
 
     //database query
 
@@ -103,16 +125,25 @@ export const getAllAds = async (req, res) => {
           ]
         }
       },
-
+      {
+        $match: {
+          sellerId: { $nin: [...blockedUsers, ...blockedMe] }
+        }
+      },
       {
         $sort: {
           [sortBy]: sortOrder === "asc" ? -1 : 1
         }
+      },
+      {
+        $skip: (Math.max(1, pageNum) - 1) * limit
+      },
+      {
+        $limit: limit * 1
       }
     ]);
 
 
-    filteredAds.sort((a, b) => b.boost?.isBoosted - a.boost?.isBoosted)
 
 
     if (longitude && latitude && maxDistance) {
@@ -127,7 +158,7 @@ export const getAllAds = async (req, res) => {
     }
 
 
-    if (!categorizedAds.length !== 0) {
+    if (categorizedAds.length !== 0) {
       localAds.map((element) => {
         if (categorizedAds.includes(element._id.toString())) {
           finalAds.push(element)
@@ -135,67 +166,26 @@ export const getAllAds = async (req, res) => {
       })
     }
 
-
-    //filtering based on block
-
-    const buyer = await Buyer.findOne({ _id: userId })
-
-    //buyer blocks seller
-
-    if (buyer.blockedList.length === 0) {
-      tempAds = finalAds
-    }
-    else {
-      buyer.blockedList.forEach((blockedId) => {
-        finalAds.forEach((ad) => {
-          if (ad.sellerId.toString() !== blockedId.toString()) {
-            tempAds.push(ad)
-          }
-        })
-      })
-    }
-
-    //seller blocks buyer 
-
-    const sellerIds = []
-    const allSeller = await Seller.find({})
-    allSeller.forEach((eachSeller) => {
-      eachSeller.blockedList.forEach((blockedBuyers) => {
-        if (blockedBuyers.toString() === userId.toString()) {
-          sellerIds.push(eachSeller._id)
-        }
-      })
-    })
+    //sorting based on boost
+    finalAds.sort((a, b) => b.boost?.isBoosted - a.boost?.isBoosted)
 
 
-    for (let i = 0; i < tempAds.length; i++) {
-      let flag = false;
-      for (let j = 0; j < sellerIds.length; j++) {
-        if (tempAds[i].sellerId.toString() === sellerIds[j].toString()) {
-          flag = true;
-          break;
-        }
-      }
 
-      if (!flag) {
-        blockedAds.push(tempAds[i]);
-      }
-    }
-    tempAds = blockedAds
-
-    if (tempAds.length === 0) {
+    if (finalAds.length === 0) {
       return res.status(NOT_FOUND_CODE).json({
         success: false,
         message: "No ads found"
       })
     }
 
-    setAdsViews(tempAds[0]._id)
+    setAdsViews(finalAds[0]._id)
+
 
     return res.status(SUCCESS_CODE).json({
       success: true,
-      total: tempAds.length,
-      ads: tempAds
+      total: finalAds.length,
+      ads: finalAds,
+
     });
   }
 
@@ -206,3 +196,4 @@ export const getAllAds = async (req, res) => {
     });
   }
 }
+

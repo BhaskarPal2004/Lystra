@@ -14,7 +14,7 @@ export const unBlockedUser = async (req, res) => {
 
     const user = await Buyer.findById(userId) || await Seller.findById(userId)
     const blockUser = await Buyer.findById(unBlockId) || await Seller.findById(unBlockId)
-    
+
     if (!blockUser) {
       return res.status(NOT_FOUND_CODE).json({
         success: false,
@@ -22,20 +22,20 @@ export const unBlockedUser = async (req, res) => {
       });
     }
 
-    const blockEntry = await BlockUser.findOne({blockerId: userId, blockedId: unBlockId})
+    const blockEntry = await BlockUser.findOne({ blockerId: userId, blockedId: unBlockId })
 
-    if(!blockEntry) {
+    if (!blockEntry) {
       return res.status(NOT_FOUND_CODE).json({
         success: false,
         message: "This user in not present in your blocklist",
       });
     }
 
-    await BlockUser.deleteOne({_id: blockEntry._id});
+    await BlockUser.deleteOne({ _id: blockEntry._id });
 
-    if(user.blockedList) {
+    if (user.blockedList) {
       const findindex = user.blockedList.indexOf(blockEntry._id);
-      if(findindex !== -1){
+      if (findindex !== -1) {
         user.blockedList.splice(findindex, 1);
         await user.save();
       }
