@@ -32,12 +32,6 @@ export const updateAd = async (req, res) => {
             updatedFields.address = newAddressId
         }
 
-        // if (updatedFields.expireInDays) {
-        //     const expiryDate = new Date();
-        //     expiryDate.setDate(expiryDate.getDate() + updatedFields.expireInDays);
-        //     delete updatedFields.expireInDays;
-        //     updatedFields.expiryDate = expiryDate;
-        // }
         
         if(updatedFields.category){
            const existingCategory = await Category.findOne({name:updatedFields.category})
