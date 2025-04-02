@@ -17,6 +17,8 @@ import { updatePasswordValidation } from "../validator/validateUpdatePassword.js
 import { getUserCoordinates } from '../controllers/userControllers/getUserCoordinates.js';
 import { callRequest } from '../controllers/userControllers/callRequest.js';
 import { adReportValidation } from '../validator/validateAdReport.js';
+import saveAd from '../controllers/userControllers/saveAd.js';
+import removeSavedAd from '../controllers/userControllers/removeSavedAd.js';
 
 const userRoute = express.Router();
 
@@ -32,6 +34,10 @@ userRoute.post('/unblockUser/:unBlockId', verifyAccessToken, isVerified, unBlock
 userRoute.post('/updatePassword', verifyAccessToken, isVerified, validateData(updatePasswordValidation), updatePassword);
 userRoute.get('/getCoordinates/:lat/:lng', getUserCoordinates)
 userRoute.post('/request/call/:calleeId', verifyAccessToken, isVerified, callRequest);
+userRoute.post('/saveAd/:adId', verifyAccessToken, isVerified, saveAd);
+userRoute.delete('/removeSavedAd/:adId', verifyAccessToken, isVerified, removeSavedAd);
+
+
 
 
 
