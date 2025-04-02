@@ -10,11 +10,10 @@ import Analytics from "../../models/analyticsModel.js";
 export const createNewAd = async (req, res) => {
     try {
         const userId = req.userId;
-        const { name, category, description, condition, price } = req.body;
-        const details = JSON.parse(req.body.details);
-        const address = JSON.parse(req.body.address);
+        const { name, category, description, condition, price, details, address } = req.body;
         const reqFiles = req.files
         const files = []
+
 
         const expiryDate = new Date();
         const expireInDays = 30

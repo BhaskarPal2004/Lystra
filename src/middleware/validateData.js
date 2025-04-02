@@ -3,6 +3,7 @@ import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE } from '../config/constant
 
 
 export const validateData = (schema) => {
+  let finalError = ""
   return (req, res, next) => {
     try {
       schema.parse(req.body);
@@ -11,13 +12,15 @@ export const validateData = (schema) => {
     } catch (error) {
       if (error instanceof ZodError) {
         const errorMessages = error.errors.map((issue) => ({
-          path: issue.path.toString(),
-          message: issue.message,
+          message: `${issue.path.join('.')} : ${issue.message}`,
         }));
-
+        errorMessages.forEach((obj) => {
+          finalError = finalError + ", " + obj.message;
+        })
+        finalError = finalError.slice(2)
         return res.status(BAD_REQUEST_CODE).json({
           success: false,
-          message: errorMessages
+          message: finalError
         });
 
       } else
@@ -28,3 +31,8 @@ export const validateData = (schema) => {
     }
   };
 }
+
+
+
+
+
