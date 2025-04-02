@@ -4,15 +4,27 @@ import { getLocationCoords } from "../../helper/getLocationCoords.js"
 import Address from "../../models/addressModel.js"
 import Ad from "../../models/adModel.js"
 import Category from "../../models/categoryModel.js"
+import fs from 'fs'
+
 
 export const updateAd = async (req, res) => {
     try {
         const adId = req.params.adId
-        const updatedFields = req.body
+        let updatedFields = req.body
+        const reqFiles = req.files
+        const files = []
 
+        //address gets updated
         if (updatedFields.address) {
-            const ad = await Ad.findById(adId, { address: 1 }).populate('address')
-            const existingAddress = await Address.findById(ad.address._id.toHexString())
+            const ad = await Ad.findById(adId).populate('address')
+            if (!ad) {
+                return res.status(NOT_FOUND_CODE).json({
+                    success: false,
+                    message: "Ad not found"
+                });
+            }
+            const existingAddress = await Address.findById(ad.address._id)
+
 
             const updatedAddress = {
                 line1: updatedFields.address.line1 || existingAddress.line1,
@@ -32,21 +44,58 @@ export const updateAd = async (req, res) => {
             updatedFields.address = newAddressId
         }
 
-        
-        if(updatedFields.category){
-           const existingCategory = await Category.findOne({name:updatedFields.category})
-           if(existingCategory){
-            delete updatedFields.category 
-            updatedFields.category = existingCategory._id
-           }
-           else {
-           const newCategory = await Category.create({name:updatedFields.category})
-           delete updatedFields.category 
-           updatedFields.category = newCategory._id
-           }
+        //category field updated
+        if (updatedFields.category) {
+            const existingCategory = await Category.findOne({ name: updatedFields.category })
+            if (existingCategory) {
+                delete updatedFields.category
+                updatedFields.category = existingCategory._id
+            }
+            else {
+                const newCategory = await Category.create({ name: updatedFields.category })
+                delete updatedFields.category
+                updatedFields.category = newCategory._id
+            }
         }
 
-        const ad = await Ad.findOneAndUpdate({ _id: adId }, { $set: updatedFields })
+        //delete all files
+
+        const previousAd = await Ad.findById(adId)
+        try {
+            if (previousAd.files.length > 0) {
+                previousAd.files.forEach((file) => {
+                    const existingFile = file.fileUrl.split('/').slice(-3).join('/')
+                    fs.unlink(existingFile, async (error) => {
+                        if (error) {
+                            return res.status(NOT_FOUND_CODE).json({
+                                success: false,
+                                message: error.message
+                            })
+                        }
+                    })
+                })
+
+                await Ad.updateOne(
+                    { _id: adId },
+                    { $set: { files: [] } }
+                );
+            }
+        }
+        catch (error) {
+            return res.status(INTERNAL_SERVER_ERROR_CODE).json({
+                success: false,
+                message: error.message
+            })
+        }
+
+
+        //files get updated
+        reqFiles.forEach((file) => {
+            const fileUrl = `http://localhost:3000/${file.path}`
+            files.push({ fileUrl, fileType: file.mimetype })
+        })
+
+        const ad = await Ad.findOneAndUpdate({ _id: adId }, { $set: updatedFields, files })
         if (!ad)
             return res.status(NOT_FOUND_CODE).json({
                 success: false,
@@ -66,3 +115,4 @@ export const updateAd = async (req, res) => {
         })
     }
 }
+

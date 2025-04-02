@@ -6,7 +6,7 @@ import Analytics from "../../models/analyticsModel.js";
 export const getAdById = async (req, res) => {
     try {
         const adId = req.params.adId;
-        const ad = await Ad.findById(adId).populate('sellerId', 'name email');
+        const ad = await Ad.findById(adId).populate('sellerId address');
         console.log(ad)
 
         if (!ad)

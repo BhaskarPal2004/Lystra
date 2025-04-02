@@ -3,7 +3,7 @@ import express from 'express'
 import { verifyAccessToken } from "../middleware/isAuthenticated.js"
 import { createNewAd } from '../controllers/adControllers/createNewAd.js'
 import { validateData } from "../middleware/validateData.js"
-import { updateAdSchema } from '../validator/validateAd.js'
+import { adSchema, updateAdSchema } from '../validator/validateAd.js'
 import { isSeller } from '../middleware/isSeller.js'
 import { deleteAd } from '../controllers/adControllers/deleteAd.js';
 import { updateAd } from '../controllers/adControllers/updateAd.js';
@@ -20,6 +20,7 @@ import { renewAd } from '../controllers/adControllers/renewAd.js';
 import { getFeaturedAds } from '../controllers/adControllers/getFeaturedAds.js'
 import { getCategories } from '../controllers/adControllers/getCategories.js'
 import { getAllAds } from '../controllers/buyerControllers/getAllAds.js'
+import { typeChange } from '../helper/typeChange.js'
 
 
 const adRoute = express.Router()
@@ -29,8 +30,8 @@ adRoute.get('/getNewAds', getNewAds);
 adRoute.get('/getFeaturedAds', getFeaturedAds);
 adRoute.get('/getAdById/:adId', getAdById);
 adRoute.get('/getAllAds', verifyAccessToken, isVerified, getAllAds)
-adRoute.post('/create', verifyAccessToken, isVerified, isSeller, uploadAdFiles, createNewAd)
-adRoute.put('/update/:adId', verifyAccessToken, isSeller, validateData(updateAdSchema), updateAd)
+adRoute.post('/create', verifyAccessToken, isVerified, isSeller, uploadAdFiles, typeChange, validateData(adSchema), createNewAd)
+adRoute.put('/update/:adId', verifyAccessToken, isSeller, uploadAdFiles, typeChange, validateData(updateAdSchema), updateAd)
 adRoute.delete('/deleteAd/:adId', verifyAccessToken, isVerified, isSeller, deleteAd);
 adRoute.delete('/deleteAllAds', verifyAccessToken, isVerified, isSeller, deleteAllAds)
 // adRoute.post('/uploadFiles/:adId', verifyAccessToken, isVerified, isSeller, uploadAdFiles, uploadAdFilesController)

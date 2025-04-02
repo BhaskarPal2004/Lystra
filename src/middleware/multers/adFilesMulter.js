@@ -32,7 +32,13 @@ export const uploadAdFiles = (req, res, next) => {
                     message: errorMessage || error.message,
                 })
             }
-            else next()
+            if (!req.files.length) {
+                return res.status(BAD_REQUEST_CODE).json({
+                    success: false,
+                    message: "At least 1 file must be uploaded.",
+                });
+            }
+            next()
         })
 
     } catch (error) {
