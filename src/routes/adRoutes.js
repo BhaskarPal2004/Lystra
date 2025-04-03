@@ -19,8 +19,8 @@ import { getNewAds } from '../controllers/adControllers/getNewAds.js'
 import { renewAd } from '../controllers/adControllers/renewAd.js';
 import { getFeaturedAds } from '../controllers/adControllers/getFeaturedAds.js'
 import { getCategories } from '../controllers/adControllers/getCategories.js'
-import { getAllAds } from '../controllers/buyerControllers/getAllAds.js'
 import { typeChange } from '../helper/typeChange.js'
+import { getAllAds } from '../controllers/adControllers/getAllAds.js'
 
 
 const adRoute = express.Router()

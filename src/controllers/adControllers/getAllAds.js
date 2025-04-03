@@ -1,7 +1,7 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
 import { setAdsViews } from "../../helper/setAdsViews.js";
-import { findLocalAddressess } from "../../helper/findLocalAddresses.js";
+import { findLocalAddresses } from "../../helper/findLocalAddresses.js";
 import { getLocationCoords } from "../../helper/getLocationCoords.js";
 import findAdsOfThisCategory from "../../helper/findAdsOfThisCategory.js";
 import BlockUser from "../../models/blockUserModel.js";
@@ -10,6 +10,7 @@ import BlockUser from "../../models/blockUserModel.js";
 export const getAllAds = async (req, res) => {
   try {
     const userId = req.userId
+    const role = req.role
     const blockedMe = []
     const blockedUsers = []
 
@@ -26,8 +27,7 @@ export const getAllAds = async (req, res) => {
       pageNum = 1
     } = req.query;
 
-
-    const limit = 9 * 1;
+    const limit = 9;
 
     let longitude = null
     let latitude = null
@@ -37,8 +37,6 @@ export const getAllAds = async (req, res) => {
       longitude = 88.3638953
       maxDistance = 1000 //(in m)
     }
-
-
 
     else {
       const cityCoordinates = await getLocationCoords(city)
@@ -78,7 +76,7 @@ export const getAllAds = async (req, res) => {
 
     // function to get localAds
     if (longitude && latitude && maxDistance) {
-      localAddresses = await findLocalAddressess(longitude, latitude, maxDistance)
+      localAddresses = await findLocalAddresses(longitude, latitude, maxDistance, role)
     }
 
 
@@ -135,12 +133,12 @@ export const getAllAds = async (req, res) => {
           [sortBy]: sortOrder === "asc" ? -1 : 1
         }
       },
-      {
-        $skip: (Math.max(1, pageNum) - 1) * limit
-      },
-      {
-        $limit: limit * 1
-      }
+      // {
+      //   $skip: (Math.max(1, pageNum) - 1) * limit
+      // },
+      // {
+      //   $limit: limit * 1
+      // }
     ]);
 
 
@@ -169,7 +167,15 @@ export const getAllAds = async (req, res) => {
     //sorting based on boost
     finalAds.sort((a, b) => b.boost?.isBoosted - a.boost?.isBoosted)
 
+    //filtering : seller will see only their ad
 
+    if (role === "seller") {
+      finalAds = finalAds.filter((ad) => {
+        return ad.sellerId.toString() === userId.toString()
+      })
+    }
+
+    finalAds = finalAds.slice((pageNum - 1) * limit, pageNum * limit)
 
     if (finalAds.length === 0) {
       return res.status(NOT_FOUND_CODE).json({
@@ -178,8 +184,7 @@ export const getAllAds = async (req, res) => {
       })
     }
 
-    setAdsViews(finalAds[0]._id)
-
+    setAdsViews(finalAds[0]?._id)
 
     return res.status(SUCCESS_CODE).json({
       success: true,
@@ -196,4 +201,3 @@ export const getAllAds = async (req, res) => {
     });
   }
 }
-

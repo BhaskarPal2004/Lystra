@@ -39,6 +39,10 @@ const sellerSchema = new mongoose.Schema(
       type: Number,
       default: null,
     },
+    favoriteAds: [{
+      type: mongoose.Schema.ObjectId,
+      ref: 'ad'
+    }],
     blockedList: [
       {
         type: mongoose.Schema.Types.ObjectId,

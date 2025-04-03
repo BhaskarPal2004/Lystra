@@ -1,14 +1,16 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
 import Buyer from "../../models/buyerModel.js";
+import Seller from "../../models/sellerModel.js";
 
 
 const removeSavedAd = async (req, res) => {
     try {
         const userId = req.userId;
         const adId = req.params.adId;
+        const role = req.role
+        const user = role === 'buyer' ? await Buyer.findById(userId) : await Seller.findById(userId)
 
-        const buyer = await Buyer.findById(userId);
         const ad = await Ad.findById(adId);
 
         if (!ad) {
@@ -17,15 +19,15 @@ const removeSavedAd = async (req, res) => {
                 message: "ad not found"
             })
         }
-        if (!buyer.favoriteAds?.includes(adId)) {
+        if (!user.favoriteAds?.includes(adId)) {
             return res.status(NOT_FOUND_CODE).json({
                 success: false,
                 message: "Ad is not saved in your wishlist"
             })
         }
 
-        buyer.favoriteAds?.remove(adId);
-        await buyer.save();
+        user.favoriteAds?.remove(adId);
+        await user.save();
 
         return res.status(SUCCESS_CODE).json({
             success: true,
