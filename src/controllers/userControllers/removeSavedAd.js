@@ -1,5 +1,6 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
+import Buyer from "../../models/buyerModel.js";
 import Seller from "../../models/sellerModel.js";
 
 
@@ -8,9 +9,7 @@ const removeSavedAd = async (req, res) => {
         const userId = req.userId;
         const adId = req.params.adId;
         const role = req.role
-        const user = role === 'user' ? await user.findById(userId) : await Seller.findById(userId)
-        console.log(user)
-
+        const user = role === 'buyer' ? await Buyer.findById(userId) : await Seller.findById(userId)
 
         const ad = await Ad.findById(adId);
 

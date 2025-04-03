@@ -19,6 +19,7 @@ import { callRequest } from '../controllers/userControllers/callRequest.js';
 import { adReportValidation } from '../validator/validateAdReport.js';
 import saveAd from '../controllers/userControllers/saveAd.js';
 import removeSavedAd from '../controllers/userControllers/removeSavedAd.js';
+import getSavedAds from '../controllers/userControllers/getSavedAds.js';
 
 const userRoute = express.Router();
 
@@ -36,6 +37,7 @@ userRoute.get('/getCoordinates/:lat/:lng', getUserCoordinates)
 userRoute.post('/request/call/:calleeId', verifyAccessToken, isVerified, callRequest);
 userRoute.post('/saveAd/:adId', verifyAccessToken, isVerified, saveAd);
 userRoute.delete('/removeSavedAd/:adId', verifyAccessToken, isVerified, removeSavedAd);
+userRoute.get("/getSavedAds",verifyAccessToken,isVerified,getSavedAds);
 
 
 
