@@ -9,6 +9,7 @@ const removeSavedAd = async (req, res) => {
         const adId = req.params.adId;
         const role = req.role
         const user = role === 'user' ? await user.findById(userId) : await Seller.findById(userId)
+        console.log(user)
 
 
         const ad = await Ad.findById(adId);

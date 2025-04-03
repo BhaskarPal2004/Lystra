@@ -1,20 +1,20 @@
-import Address from "../models/addressModel.js"
+import Address from "../models/addressModel.js";
 
-export const findLocalAddressess = async (longitude, latitude, maxDistance) => {
-  // console.log("latitude in func", latitude)
-  // console.log("long in func", longitude)
-  // console.log("maxDis in func", maxDistance)
-  let filteredAdresses = await Address.aggregate([
-    {
-      $geoNear: {
-        near: { type: 'Point', coordinates: [latitude, longitude] },
-        distanceField: 'distance',
-        maxDistance: maxDistance,
-        spherical: true,
-      }
-    }])
-  // console.log("address", filteredAdresses)
-  filteredAdresses = filteredAdresses.map(element => element._id.toString())
+export const findLocalAddresses = async (longitude, latitude, maxDistance, role) => {
+  const geoNearStage = {
+    $geoNear: {
+      near: { type: "Point", coordinates: [latitude, longitude] },
+      distanceField: "distance",
+      spherical: true,
+    },
+  };
 
-  return filteredAdresses;
-}
+  if (role !== "seller") {
+    geoNearStage.$geoNear.maxDistance = maxDistance; 
+  }
+  let filteredAddresses = await Address.aggregate([geoNearStage]);
+
+  filteredAddresses = filteredAddresses.map((element) => element._id.toString());
+
+  return filteredAddresses;
+};
