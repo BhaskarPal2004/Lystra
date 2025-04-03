@@ -114,6 +114,19 @@ export const getAllAds = async (req, res) => {
         }
       },
       {
+        $lookup: {
+          from: 'addresses',
+          localField: 'address',
+          foreignField: '_id',
+          as: "adLocation"
+        }
+      },
+      {
+        $addFields: {
+          adLocation: { $arrayElemAt: ["$adLocation", 0] }
+        }
+      },
+      {
         $match: {
           $or: [
             { name: new RegExp(searchKeyword.trim(), 'i') },
@@ -140,9 +153,6 @@ export const getAllAds = async (req, res) => {
       //   $limit: limit * 1
       // }
     ]);
-
-
-
 
     if (longitude && latitude && maxDistance) {
       filteredAds.map((element) => {
