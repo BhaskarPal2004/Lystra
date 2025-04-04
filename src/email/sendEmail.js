@@ -31,9 +31,11 @@ const sendEmail = async (emailID, templateName, contextData, subject) => {
 
     transporter.sendMail(mailConfigurations, function (error) {
         if (error) {
-            console.log(error.message)
+            console.log("error: ",error.message)
         }
+        else{
         console.log('Email Sent Successfully');
+        }
     });
 }
 export default sendEmail;

@@ -15,9 +15,9 @@ export const validateData = (schema) => {
           message: `${issue.path.join('.')} : ${issue.message}`,
         }));
         errorMessages.forEach((obj) => {
-          finalError = finalError + ", " + obj.message;
+          finalError = finalError.concat(obj.message, ", ")
         })
-        finalError = finalError.slice(2)
+        finalError = finalError.slice(0, -2)
         return res.status(BAD_REQUEST_CODE).json({
           success: false,
           message: finalError

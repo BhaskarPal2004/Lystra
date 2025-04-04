@@ -1,4 +1,4 @@
-import { INTERNAL_SERVER_ERROR_CODE, SUCCESS_CODE } from "../../config/constant.js"
+import { BAD_REQUEST_CODE, INTERNAL_SERVER_ERROR_CODE, SUCCESS_CODE } from "../../config/constant.js"
 import sendEmail from "../../email/sendEmail.js"
 import Buyer from "../../models/buyerModel.js"
 import Seller from "../../models/sellerModel.js"
@@ -9,19 +9,46 @@ export const callRequest = async (req, res) => {
         const userId = req.userId
         const calleeId = req.params.calleeId
 
-        const user = await Buyer.findById(userId) || await Seller.findById(userId)
+        const user = await Buyer.findById(userId) || await Seller.findById(userId);
+        if (!user) {
+            return res.status(BAD_REQUEST_CODE).json({
+                success: false,
+                message: "Caller not found."
+            });
+        }
 
-        const callee = await Seller.findById(calleeId)
+        const isBuyer = await Buyer.findById(calleeId);
+        if (isBuyer) {
+            return res.status(BAD_REQUEST_CODE).json({
+                success: false,
+                message: "Call requests can only be made to sellers."
+            });
+        }
+
+        const callee = await Seller.findById(calleeId);
+        if (!callee) {
+            return res.status(BAD_REQUEST_CODE).json({
+                success: false,
+                message: "Seller does not exist."
+            });
+        }
+
+        if (callee._id.toString() === userId.toString()) {
+            return res.status(BAD_REQUEST_CODE).json({
+                success: false,
+                message: "You can't call yourself."
+            });
+        }
 
         // sendMail function 
         const callRequestContextData = {
-            callerUsername : user.name,
-            callerEmail : user.email,
-            callerPhoneNum : user.phoneNumber,
-            callerAddress : user.address ? user.address : "Address not given",
+            callerUsername: user.name,
+            callerEmail: user.email,
+            callerPhoneNum: user.phoneNumber,
+            callerAddress: user.address ? user.address : "Address not given",
 
-            calleeName : callee.name,
-            calleeEmail : callee.email
+            calleeName: callee.name,
+            calleeEmail: callee.email
 
         };
         const subject = `Dear ${callee.name},You have a call request from ${user.name}`
