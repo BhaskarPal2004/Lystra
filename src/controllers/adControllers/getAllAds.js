@@ -9,11 +9,10 @@ import BlockUser from "../../models/blockUserModel.js";
 
 export const getAllAds = async (req, res) => {
   try {
-    const userId = req.userId
-    const role = req.role
-    const blockedMe = []
-    const blockedUsers = []
-
+    const userId = req.userId;
+    const role = req.role;
+    const blockedMe = [];
+    const blockedUsers = [];
 
     const {
       searchKeyword = "",
@@ -29,74 +28,53 @@ export const getAllAds = async (req, res) => {
 
     const limit = 9;
 
-    let longitude = null
-    let latitude = null
-    let maxDistance = null
+    let longitude = null;
+    let latitude = null;
+    let maxDistance = null;
+
     if (city === "") {
-      latitude = 22.5726459
-      longitude = 88.3638953
-      maxDistance = 1000 //(in m)
+      latitude = 22.5726459;
+      longitude = 88.3638953;
+      maxDistance = 1000;
+    } else {
+      const cityCoordinates = await getLocationCoords(city);
+      latitude = cityCoordinates.lat;
+      longitude = cityCoordinates.lng;
+      maxDistance = 1000;
     }
 
-    else {
-      const cityCoordinates = await getLocationCoords(city)
-      latitude = cityCoordinates.lat
-      longitude = cityCoordinates.lng
-      maxDistance = 1000
-    }
+    let localAddresses = [];
+    let localAds = [];
+    let finalAds = [];
 
+    const conditionArray = ["new", "used", "refurbished"];
+    const isValidCondition = conditionArray.includes(condition.trim().toLowerCase());
 
-    let localAddresses = []
-    let localAds = []
-    let finalAds = []
-
-    const conditionArray = ["new", "used", "refurbished"]
-    const isValidCondition = conditionArray.includes(condition.trim().toLowerCase())
-
-    //match conditions
-    let priceFilter = { $gte: 0, $lte: Infinity }
-    if (isNaN(minPrice) || isNaN(maxPrice)) {
-      priceFilter = { $gte: 0, $lte: Infinity }
-    }
-    else if (Number(minPrice) !== 0 || Number(maxPrice) !== Infinity) {
-      priceFilter = { $gte: Number(minPrice), $lte: Number(maxPrice) }
+    let priceFilter = { $gte: 0, $lte: Infinity };
+    if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+      priceFilter = { $gte: Number(minPrice), $lte: Number(maxPrice) };
     }
 
     const matchConditions = {
       price: priceFilter,
       isExpire: false
-    }
+    };
 
     if (isValidCondition) {
-      matchConditions.condition = condition.trim().toLowerCase()
+      matchConditions.condition = condition.trim().toLowerCase();
     }
 
-
-
-
-    // function to get localAds
     if (longitude && latitude && maxDistance) {
-      localAddresses = await findLocalAddresses(longitude, latitude, maxDistance, role)
+      localAddresses = await findLocalAddresses(longitude, latitude, maxDistance, role);
     }
 
+    const categorizedAds = await findAdsOfThisCategory(searchCategory);
 
-    //function to get ads that match the category 
+    let temp = await BlockUser.find({ blockerId: userId }, { blockedId: 1 });
+    temp.forEach((obj) => blockedUsers.push(obj.blockedId));
 
-    const categorizedAds = await findAdsOfThisCategory(searchCategory)
-
-    //block functions
-    let temp = await BlockUser.find({ blockerId: userId }, { blockedId: 1 })
-    temp.forEach((obj) => {
-      blockedUsers.push(obj.blockedId)
-    })
-
-    temp = await BlockUser.find({ blockedId: userId }, { blockerId: 1 })
-    temp.forEach((obj) => {
-      blockedMe.push(obj.blockerId)
-    })
-
-
-    //database query
+    temp = await BlockUser.find({ blockedId: userId }, { blockerId: 1 });
+    temp.forEach((obj) => blockedMe.push(obj.blockerId));
 
     const filteredAds = await Ad.aggregate([
       { $match: matchConditions },
@@ -132,7 +110,6 @@ export const getAllAds = async (req, res) => {
             { name: new RegExp(searchKeyword.trim(), 'i') },
             { description: new RegExp(searchKeyword.trim(), 'i') },
             { categoryName: new RegExp(searchKeyword.trim(), 'i') }
-
           ]
         }
       },
@@ -145,69 +122,62 @@ export const getAllAds = async (req, res) => {
         $sort: {
           [sortBy]: sortOrder === "asc" ? -1 : 1
         }
-      },
-      // {
-      //   $skip: (Math.max(1, pageNum) - 1) * limit
-      // },
-      // {
-      //   $limit: limit * 1
-      // }
+      }
     ]);
 
     if (longitude && latitude && maxDistance) {
-      filteredAds.map((element) => {
+      filteredAds.forEach((element) => {
         if (localAddresses.includes(element.address.toString())) {
-          localAds.push(element)
+          localAds.push(element);
         }
-      })
+      });
+    } else {
+      localAds = filteredAds;
     }
-    else {
-      localAds = filteredAds
-    }
-
 
     if (categorizedAds.length !== 0) {
-      localAds.map((element) => {
+      localAds.forEach((element) => {
         if (categorizedAds.includes(element._id.toString())) {
-          finalAds.push(element)
+          finalAds.push(element);
         }
-      })
+      });
+    } else {
+      finalAds = localAds;
     }
 
-    //sorting based on boost
-    finalAds.sort((a, b) => b.boost?.isBoosted - a.boost?.isBoosted)
-
-    //filtering : seller will see only their ad
+    // Boost sort
+    finalAds.sort((a, b) => b.boost?.isBoosted - a.boost?.isBoosted);
 
     if (role === "seller") {
-      finalAds = finalAds.filter((ad) => {
-        return ad.sellerId.toString() === userId.toString()
-      })
+      finalAds = finalAds.filter(ad => ad.sellerId.toString() === userId.toString());
     }
 
-    finalAds = finalAds.slice((pageNum - 1) * limit, pageNum * limit)
+    const totalCount = finalAds.length;
 
-    if (finalAds.length === 0) {
+    // ✅ Slice for pagination
+    const paginatedAds = finalAds.slice((pageNum - 1) * limit, pageNum * limit);
+
+    if (paginatedAds.length === 0) {
       return res.status(NOT_FOUND_CODE).json({
         success: false,
-        message: "No ads found"
-      })
+        message: "No ads found",
+      });
     }
 
-    setAdsViews(finalAds[0]?._id)
+    setAdsViews(paginatedAds[0]?._id);
 
     return res.status(SUCCESS_CODE).json({
       success: true,
-      total: finalAds.length,
-      ads: finalAds,
-
+      ads: paginatedAds,
+      totalCount,
+      isLastPage: pageNum * limit >= totalCount,
+      currentPage: pageNum
     });
-  }
 
-  catch (error) {
+  } catch (error) {
     return res.status(INTERNAL_SERVER_ERROR_CODE).json({
       success: false,
       message: error.message
     });
   }
-}
+};
