@@ -5,6 +5,7 @@ import { findLocalAddresses } from "../../helper/findLocalAddresses.js";
 import { getLocationCoords } from "../../helper/getLocationCoords.js";
 import findAdsOfThisCategory from "../../helper/findAdsOfThisCategory.js";
 import BlockUser from "../../models/blockUserModel.js";
+import { updateAdAnalytics } from "../../helper/updateAdAnalytics.js";
 
 
 export const getAllAds = async (req, res) => {
@@ -165,6 +166,8 @@ export const getAllAds = async (req, res) => {
     }
 
     setAdsViews(paginatedAds[0]?._id);
+
+    await updateAdAnalytics(paginatedAds[0]?._id, 1, 0);
 
     return res.status(SUCCESS_CODE).json({
       success: true,
