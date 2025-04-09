@@ -14,14 +14,16 @@ export const getAdAnalytics = async (req, res) => {
     }
 
     const startDate = new Date();
-    startDate.setDate(startDate.getDate() - parseInt(days));
+    startDate.setDate(startDate.getDate() - parseInt(days) + 1);
 
     const formattedStartDate = startDate.toISOString().split('T')[0];
+
+    console.log("formatted Start Date:", formattedStartDate);
 
     const analyticsData = await AdAnalytics.find({
       adId,
       date: { $gte: formattedStartDate }
-    }).sort({ date: -1 });
+    }).sort({ date: 1 });
 
     if (!analyticsData || analyticsData.length === 0) {
       return res.status(404).send({

@@ -44,7 +44,7 @@ adRoute.put('/renewAd/:adId', verifyAccessToken, isVerified, isSeller, renewAd);
 adRoute.get('/getCategory', getCategories);
 
 // analytics
-adRoute.get('/getAdAnalytics/:adId/:days', getAdAnalytics);
+adRoute.get('/getAdAnalytics/:adId/:days', verifyAccessToken, isVerified, isSeller, getAdAnalytics);
 
 
 
