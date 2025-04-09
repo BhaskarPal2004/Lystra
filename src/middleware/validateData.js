@@ -12,16 +12,17 @@ export const validateData = (schema) => {
     } catch (error) {
       if (error instanceof ZodError) {
         const errorMessages = error.errors.map((issue) => ({
-          message: `${issue.path.join('.')} : ${issue.message}`,
+          message: `${issue.message}`,
         }));
         errorMessages.forEach((obj) => {
           finalError = finalError.concat(obj.message, ", ")
         })
         finalError = finalError.slice(0, -2)
-        return res.status(BAD_REQUEST_CODE).json({
+        res.status(BAD_REQUEST_CODE).json({
           success: false,
           message: finalError
         });
+        finalError = ""
 
       } else
         return res.status(INTERNAL_SERVER_ERROR_CODE).json({
