@@ -7,7 +7,7 @@ export const findUserData = async (req, res) => {
   try {
     const userId = req.userId;
 
-    const user = await Buyer.findById(userId) || await Seller.findById(userId)
+    const user = await Buyer.findById(userId).populate('address') || await Seller.findById(userId).populate('address')
 
     if (!user) {
       return res.status(NOT_FOUND_CODE).json({

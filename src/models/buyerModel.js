@@ -29,11 +29,11 @@ const buyerSchema = new mongoose.Schema({
         type: String,
         default: ""
     },
-    address: [{
+    address: {
         type: mongoose.Schema.ObjectId,
-        ref: 'address',
-        default: null
-    }],
+        ref: "address",
+        default: null,
+    },
     interests: [{
         type: String
     }],
