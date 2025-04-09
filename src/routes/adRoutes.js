@@ -21,6 +21,7 @@ import { getFeaturedAds } from '../controllers/adControllers/getFeaturedAds.js'
 import { getCategories } from '../controllers/adControllers/getCategories.js'
 import { typeChange } from '../helper/typeChange.js'
 import { getAllAds } from '../controllers/adControllers/getAllAds.js'
+import { getAdAnalytics } from '../controllers/adControllers/getAdAnalytics.js'
 
 
 const adRoute = express.Router()
@@ -41,6 +42,10 @@ adRoute.delete('/removeFeature/:adId', verifyAccessToken, isVerified, isSeller, 
 adRoute.get('/getAllOrdersOnAd/:adId', verifyAccessToken, isVerified, isSeller, getAllOrdersOnAd);
 adRoute.put('/renewAd/:adId', verifyAccessToken, isVerified, isSeller, renewAd);
 adRoute.get('/getCategory', getCategories);
+
+// analytics
+adRoute.get('/getAdAnalytics/:adId/:days', verifyAccessToken, isVerified, isSeller, getAdAnalytics);
+
 
 
 export default adRoute

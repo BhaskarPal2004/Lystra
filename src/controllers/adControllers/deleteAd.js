@@ -1,6 +1,8 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
 import fs from "fs"
+import Analytics from "../../models/analyticsModel.js";
+import AdAnalytics from "../../models/adAnalytics.js";
 
 
 export const deleteAd = async (req, res) => {
@@ -38,6 +40,9 @@ export const deleteAd = async (req, res) => {
     }
     await Ad.deleteOne({ _id: adId });
 
+    await Analytics.deleteOne({ adId: adId });
+
+    await AdAnalytics.deleteMany({ adId: adId });
 
     return res.status(SUCCESS_CODE).json({
       success: true,

@@ -24,7 +24,8 @@ const analyticsSchema = new mongoose.Schema({
         type: Number,
         default: 0
     }
-})
+}, { timestamps: true }
+)
 
 const Analytics = mongoose.model('analytics', analyticsSchema)
 export default Analytics

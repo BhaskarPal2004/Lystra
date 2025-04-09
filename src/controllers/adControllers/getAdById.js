@@ -2,12 +2,13 @@ import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../
 import { setAnalytics } from "../../helper/setAnalytics.js";
 import Ad from "../../models/adModel.js";
 import Analytics from "../../models/analyticsModel.js";
+import { updateAdAnalytics } from "../../helper/updateAdAnalytics.js";
 
 export const getAdById = async (req, res) => {
     try {
         const adId = req.params.adId;
         const ad = await Ad.findById(adId).populate('sellerId address');
-        console.log(ad)
+        // console.log(ad)
 
         if (!ad)
             return res.status(NOT_FOUND_CODE).send({
@@ -18,9 +19,12 @@ export const getAdById = async (req, res) => {
 
         //increment clicks of the ad 
 
-        const analytics = await Analytics.findOne({adId})
-        analytics.performance.clicks =  analytics.performance.clicks + 1
+        const analytics = await Analytics.findOne({ adId })
+
+        analytics.performance.clicks = analytics.performance.clicks + 1
         await analytics.save()
+
+        await updateAdAnalytics(adId, 0, 1);
 
         setAnalytics(adId)
 
