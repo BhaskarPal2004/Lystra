@@ -23,24 +23,20 @@ export const getAllAds = async (req, res) => {
       maxPrice = Infinity,
       condition = "",
       city = "",
-      pageNum = 1
+      pageNum = 1,
+      lat = 22.5726459,
+      lng = 88.3638953
     } = req.query;
 
     const limit = 9;
+    let maxDistance = 10000;
+    let latitude = lat
+    let longitude = lng
 
-    let longitude = null;
-    let latitude = null;
-    let maxDistance = null;
-
-    if (city === "") {
-      latitude = 22.5726459;
-      longitude = 88.3638953;
-      maxDistance = 1000;
-    } else {
+    if (city !== "") {
       const cityCoordinates = await getLocationCoords(city);
       latitude = cityCoordinates.lat;
       longitude = cityCoordinates.lng;
-      maxDistance = 1000;
     }
 
     let localAddresses = [];

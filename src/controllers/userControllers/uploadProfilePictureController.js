@@ -8,7 +8,7 @@ export const uploadProfilePictureController = async (req, res) => {
         const file = req.file
         const userId = req.userId
         const role = req.role
-        console.log("file", file)
+
         if (!file) {
             console.log("file not found")
             return res.status(BAD_REQUEST_CODE).json({
