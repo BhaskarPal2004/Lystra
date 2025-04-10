@@ -15,6 +15,7 @@ import { replyValidation } from '../validator/validateReply.js';
 import { getAllReply } from '../controllers/replyController/getAllReply.js';
 import { handelReviewLikes } from '../controllers/reviewControllers/handelReviewLikes.js';
 import getReview from '../controllers/reviewControllers/getReview.js';
+import getAdReview from '../controllers/reviewControllers/getAdReviews.js';
 
 
 const reviewRoute = express.Router();
@@ -29,6 +30,7 @@ reviewRoute.post('/reply/:reviewId', verifyAccessToken, isVerified, validateData
 reviewRoute.get('/getAllReply/:reviewId', verifyAccessToken, isVerified, getAllReply);
 reviewRoute.post('/handleReviewLikes/:reviewId', verifyAccessToken, isVerified, handelReviewLikes);
 reviewRoute.get('/getReview', verifyAccessToken, isVerified, getReview);
+reviewRoute.get('/getAdReview/:adId',verifyAccessToken,isVerified,getAdReview);
 
 
 

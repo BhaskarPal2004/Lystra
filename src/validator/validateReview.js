@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export const reviewSchemaValidation = z
   .object({
-    productRating: z.number().int().gte(0).lte(5),
-    sellerRating: z.number().int().gte(0).lte(5),
+    productRating: z.number({ required_error: "product rating is required" }).int().gte(0).lte(5),
+    sellerRating: z.number({ required_error: "seller rating is required" }).int().gte(0).lte(5),
     feedbackTitle: z
       .string()
       .trim()

@@ -30,12 +30,12 @@ const reviewSchema = new mongoose.Schema({
         type: String,
         default: null,
     },
-    feedbackComment:{
+    feedbackComment: {
         type: String,
         default: null,
     },
-    likes:[{
-        type:mongoose.Schema.Types.ObjectId
+    likes: [{
+        type: mongoose.Schema.Types.ObjectId
     }]
 
 }, { timestamps: true });
