@@ -67,8 +67,9 @@ export const getAllAds = async (req, res) => {
 
     let categorizedAds = []
 
+    console.log('searchCategory', searchCategory)
     if (searchCategory.length !== 0) {
-      categorizedAds = await findAdsOfThisCategory(searchCategory?.split(','));
+      categorizedAds = await findAdsOfThisCategory(searchCategory);
 
       if (categorizedAds.length === 0) {
         return res.status(NOT_FOUND_CODE).json({
