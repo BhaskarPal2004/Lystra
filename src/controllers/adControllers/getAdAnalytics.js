@@ -1,4 +1,4 @@
-import { INTERNAL_SERVER_ERROR_CODE, SUCCESS_CODE } from "../../config/constant.js";
+import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import AdAnalytics from "../../models/adAnalytics.js";
 
 export const getAdAnalytics = async (req, res) => {
@@ -26,7 +26,7 @@ export const getAdAnalytics = async (req, res) => {
     }).sort({ date: 1 });
 
     if (!analyticsData || analyticsData.length === 0) {
-      return res.status(404).send({
+      return res.status(NOT_FOUND_CODE).send({
         success: false,
         message: "No analytics data found for this ad"
       });

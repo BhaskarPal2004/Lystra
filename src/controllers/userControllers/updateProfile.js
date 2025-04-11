@@ -19,13 +19,13 @@ const updateProfile = async (req, res) => {
         const existingAddress = await Address.findById(user.address);
 
         const updatedAddress = {
-            line1: address.line1 || existingAddress?.line1,
-            line2: address.line2 || existingAddress?.line2,
-            state: address.state || existingAddress?.state,
-            city: address.city || existingAddress?.city,
-            country: address.country || existingAddress?.country,
-            landMark: address.landMark || existingAddress?.landMark,
-            pinCode: address.pinCode || existingAddress?.pinCode
+            line1: address?.line1 || existingAddress?.line1,
+            line2: address?.line2 || existingAddress?.line2,
+            state: address?.state || existingAddress?.state,
+            city: address?.city || existingAddress?.city,
+            country: address?.country || existingAddress?.country,
+            landMark: address?.landMark || existingAddress?.landMark,
+            pinCode: address?.pinCode || existingAddress?.pinCode
         }
 
         const coordinates = await getLocationCoords(updatedAddress.city, updatedAddress.state)
