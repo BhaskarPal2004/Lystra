@@ -17,10 +17,11 @@ export const deleteAd = async (req, res) => {
         success: false,
         message: "Ad not found",
       });
+
     try {
       if (ad.files.length > 0) {
         ad.files.forEach((file) => {
-          const existingFile = file.fileUrl.split('/').slice(-3).join('/')
+          const existingFile = file?.fileUrl.split('/').slice(-3).join('/')
           fs.unlink(existingFile, async (error) => {
             if (error) {
               return res.status(NOT_FOUND_CODE).json({
