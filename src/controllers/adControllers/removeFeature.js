@@ -5,7 +5,7 @@ import {
   BAD_REQUEST_CODE,
 } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
-import Subscription from "../../models/subscriptionModel.js";
+// import Subscription from "../../models/subscriptionModel.js";
 
 export const removeFeature = async (req, res) => {
   try {
@@ -20,22 +20,22 @@ export const removeFeature = async (req, res) => {
         });
     }
 
-    const subscribe = await Subscription.findOne({sellerId:sellerId});
-    const currentDate = new Date(Date.now());
+    // const subscribe = await Subscription.findOne({sellerId:sellerId});
+    // const currentDate = new Date(Date.now());
 
-    if(!subscribe ){
-        return res.status(BAD_REQUEST_CODE).json({
-            success: false,
-            message: "subscribed first to change feature",
-          });
-    }
+    // if(subscribe ){
+    //     return res.status(BAD_REQUEST_CODE).json({
+    //         success: false,
+    //         message: "subscribed first to change feature",
+    //       });
+    // }
 
-    if( subscribe.subscriptionEndDate < currentDate){
-        return res.status(BAD_REQUEST_CODE).json({
-            success: false,
-            message: "Your Subscription expired renew subscription to change feature",
-          });
-    }
+    // if( subscribe.subscriptionEndDate < currentDate){
+    //     return res.status(BAD_REQUEST_CODE).json({
+    //         success: false,
+    //         message: "Your Subscription expired renew subscription to change feature",
+    //       });
+    // }
      
     if(!ad.isFeatured){
         return res.status(BAD_REQUEST_CODE).json({
@@ -46,8 +46,8 @@ export const removeFeature = async (req, res) => {
 
     ad.isFeatured = false;
     await ad.save();
-    subscribe.subscriptionAds.remove(ad);
-    await subscribe.save();
+    // subscribe.subscriptionAds.remove(ad);
+    // await subscribe.save();
 
 
     return res.status(SUCCESS_CODE).json({

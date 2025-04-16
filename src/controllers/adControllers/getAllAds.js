@@ -53,9 +53,12 @@ export const getAllAds = async (req, res) => {
     }
 
     const matchConditions = {
-      price: priceFilter,
-      isExpire: false
+      price: priceFilter
     };
+
+    if (role === 'buyer') {
+      matchConditions.isExpire = false;
+    }
 
     if (isValidCondition) {
       matchConditions.condition = condition.trim().toLowerCase();
