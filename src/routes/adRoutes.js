@@ -22,6 +22,7 @@ import { getCategories } from '../controllers/adControllers/getCategories.js'
 import { typeChange } from '../helper/typeChange.js'
 import { getAllAds } from '../controllers/adControllers/getAllAds.js'
 import { getAdAnalytics } from '../controllers/adControllers/getAdAnalytics.js'
+import { getAnalytics } from '../controllers/adControllers/getAnalytics.js'
 
 
 const adRoute = express.Router()
@@ -45,6 +46,7 @@ adRoute.get('/getCategory', getCategories);
 
 // analytics
 adRoute.get('/getAdAnalytics/:adId/:days', verifyAccessToken, isVerified, isSeller, getAdAnalytics);
+adRoute.get('/getAnalytics/:adId', verifyAccessToken, isVerified, isSeller, getAnalytics);
 
 
 
