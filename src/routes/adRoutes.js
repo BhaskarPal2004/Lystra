@@ -30,7 +30,7 @@ const adRoute = express.Router()
 //all api's of ad
 adRoute.get('/getNewAds', getNewAds);
 adRoute.get('/getFeaturedAds', getFeaturedAds);
-adRoute.get('/getAdById/:adId', getAdById);
+adRoute.get('/getAdById/:adId', verifyAccessToken, isVerified, getAdById);
 adRoute.get('/getAllAds', verifyAccessToken, isVerified, getAllAds)
 adRoute.post('/create', verifyAccessToken, isVerified, isSeller, uploadAdFiles, typeChange, validateData(adSchema), createNewAd)
 adRoute.put('/update/:adId', verifyAccessToken, isSeller, uploadAdFilesOnUpdate, typeChange, validateData(updateAdSchema), updateAd)
