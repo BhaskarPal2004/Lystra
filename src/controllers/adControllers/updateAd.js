@@ -13,6 +13,7 @@ export const updateAd = async (req, res) => {
         let updatedFields = req.body
         const reqFiles = req.files
         const files = []
+        const retainedFiles = JSON.parse(req.body.retainedFiles || "[]");
 
         //address gets updated
         if (updatedFields.address) {
@@ -62,23 +63,20 @@ export const updateAd = async (req, res) => {
 
         const previousAd = await Ad.findById(adId)
         try {
-            if (previousAd.files.length > 0) {
-                previousAd.files.forEach((file) => {
-                    const existingFile = file.fileUrl.split('/').slice(-3).join('/')
-                    fs.unlink(existingFile, async (error) => {
-                        if (error) {
-                            return res.status(NOT_FOUND_CODE).json({
-                                success: false,
-                                message: error.message
-                            })
-                        }
-                    })
-                })
 
-                await Ad.updateOne(
-                    { _id: adId },
-                    { $set: { files: [] } }
-                );
+            const retainedUrls = retainedFiles.map((f) => f.fileUrl);
+
+            const filesToDelete = previousAd.files.filter(
+                (file) => !retainedUrls.includes(file.fileUrl)
+            );
+
+            for (const file of filesToDelete) {
+                const pathToDelete = file.fileUrl.split('/').slice(-3).join('/');
+                fs.unlink(pathToDelete, (err) => {
+                    if (err) {
+                        console.error("File deletion error:", err.message);
+                    }
+                });
             }
         }
         catch (error) {
@@ -94,8 +92,8 @@ export const updateAd = async (req, res) => {
             const fileUrl = `http://localhost:3000/${file.path}`
             files.push({ fileUrl, fileType: file.mimetype })
         })
-
-        const ad = await Ad.findOneAndUpdate({ _id: adId }, { $set: updatedFields, files })
+        const combinedFiles = [...retainedFiles, ...files];
+        const ad = await Ad.findOneAndUpdate({ _id: adId }, { $set: updatedFields, files: combinedFiles })
         if (!ad)
             return res.status(NOT_FOUND_CODE).json({
                 success: false,

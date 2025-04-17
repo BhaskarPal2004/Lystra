@@ -1,10 +1,10 @@
 import Ad from "../../models/adModel.js"
 import { SUCCESS_CODE, NOT_FOUND_CODE } from "../../config/constant.js"
 import createAddress from "../../helper/createAddress.js";
-import { getLocationCoords } from "../../helper/getLocationCoords.js";
 import { createNewCategory } from "../../helper/createNewCategory.js";
 import Seller from "../../models/sellerModel.js";
 import Analytics from "../../models/analyticsModel.js";
+import { getLocationCoords } from "../../helper/getLocationCoords.js";
 
 
 export const createNewAd = async (req, res) => {
@@ -22,9 +22,17 @@ export const createNewAd = async (req, res) => {
         //address given at time of ad creation 
         let adAddress = null
         if (address) {
-            const coordinates = await getLocationCoords(`${address.city},${address.state}`)
-            address.location = { type: "Point", coordinates: [coordinates.lat, coordinates.lng] }
-            adAddress = await createAddress(address)
+            let coordinates = {
+                lat: address.lat,
+                lng: address.lng
+            };
+
+            if (!coordinates.lat || !coordinates.lng) {
+                coordinates = await getLocationCoords(`${address.city},${address.state}`);
+            }
+
+            address.location = { type: "Point", coordinates: [coordinates.lat, coordinates.lng] };
+            adAddress = await createAddress(address);
         }
         //address not given at time of ad creation => seller address is set as ad address
         else {

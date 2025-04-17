@@ -15,7 +15,7 @@ export const setFeature = async (req, res) => {
 
     const seller = await Seller.findById(sellerId);
 
-    if (!seller.isSubscribed) {
+    if (seller.isSubscribed) {
       return res.status(BAD_REQUEST_CODE).json({
         success: false,
         message: "subscribed first to add feature",
@@ -33,7 +33,7 @@ export const setFeature = async (req, res) => {
     const subscription = await Subscription.findOne({ sellerId: sellerId });
     const currentDate = new Date(Date.now());
 
-    if (subscription.subscriptionEndDate < currentDate) {
+    if (subscription?.subscriptionEndDate < currentDate) {
       return res.status(BAD_REQUEST_CODE).json({
         success: false,
         message:
@@ -66,11 +66,11 @@ export const setFeature = async (req, res) => {
       }
     });
 
-    subscription.subscriptionAds = [
-      ...subscription.subscriptionAds,
-      ...subArray,
-    ];
-    await subscription.save();
+    // subscription.subscriptionAds = [
+    //   ...subscription.subscriptionAds,
+    //   ...subArray,
+    // ];
+    // await subscription.save();
 
     return res.status(SUCCESS_CODE).json({
       success: true,

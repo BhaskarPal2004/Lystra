@@ -17,7 +17,7 @@ export const getAllAds = async (req, res) => {
 
     const {
       searchKeyword = "",
-      searchCategory = "",
+      searchCategory = [],
       sortBy = "createdAt",
       sortOrder = "asc",
       minPrice = 0,
@@ -53,9 +53,12 @@ export const getAllAds = async (req, res) => {
     }
 
     const matchConditions = {
-      price: priceFilter,
-      isExpire: false
+      price: priceFilter
     };
+
+    if (role === 'buyer') {
+      matchConditions.isExpire = false;
+    }
 
     if (isValidCondition) {
       matchConditions.condition = condition.trim().toLowerCase();
@@ -65,7 +68,19 @@ export const getAllAds = async (req, res) => {
       localAddresses = await findLocalAddresses(longitude, latitude, maxDistance, role);
     }
 
-    const categorizedAds = await findAdsOfThisCategory(searchCategory);
+    let categorizedAds = []
+
+    console.log('searchCategory', searchCategory)
+    if (searchCategory.length !== 0) {
+      categorizedAds = await findAdsOfThisCategory(searchCategory);
+
+      if (categorizedAds.length === 0) {
+        return res.status(NOT_FOUND_CODE).json({
+          success: false,
+          message: "Ad not found"
+        })
+      }
+    }
 
     let temp = await BlockUser.find({ blockerId: userId }, { blockedId: 1 });
     temp.forEach((obj) => blockedUsers.push(obj.blockedId));
@@ -142,7 +157,6 @@ export const getAllAds = async (req, res) => {
       finalAds = localAds;
     }
 
-    // Boost sort
     finalAds.sort((a, b) => b.boost?.isBoosted - a.boost?.isBoosted);
 
     if (role === "seller") {
@@ -151,7 +165,6 @@ export const getAllAds = async (req, res) => {
 
     const totalCount = finalAds.length;
 
-    // ✅ Slice for pagination
     const paginatedAds = finalAds.slice((pageNum - 1) * limit, pageNum * limit);
 
     if (paginatedAds.length === 0) {
@@ -169,10 +182,11 @@ export const getAllAds = async (req, res) => {
 
     return res.status(SUCCESS_CODE).json({
       success: true,
-      ads: paginatedAds,
+      totalPageAds: paginatedAds.length,
       totalCount,
       isLastPage: pageNum * limit >= totalCount,
-      currentPage: pageNum
+      currentPage: pageNum,
+      ads: paginatedAds,
     });
 
   } catch (error) {
