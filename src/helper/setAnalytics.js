@@ -13,7 +13,6 @@ export const setAnalytics = async (adId) => {
     analytics.conversionRate = conversionRate
     await analytics.save()
 
-
 }
 
 

@@ -38,6 +38,8 @@ export const getAdAnalytics = async (req, res) => {
       clicks: data.clicks
     }));
 
+    console.log(formattedData);
+
     return res.status(SUCCESS_CODE).send({
       success: true,
       message: 'Ad analytics fetched successfully',

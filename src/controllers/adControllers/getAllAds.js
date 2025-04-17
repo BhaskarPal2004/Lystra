@@ -1,6 +1,6 @@
 import { INTERNAL_SERVER_ERROR_CODE, NOT_FOUND_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import Ad from "../../models/adModel.js";
-import { setAdsViews } from "../../helper/setAdsViews.js";
+import { setAdsPerformance } from "../../helper/setAdsPerformance.js";
 import { findLocalAddresses } from "../../helper/findLocalAddresses.js";
 import { getLocationCoords } from "../../helper/getLocationCoords.js";
 import findAdsOfThisCategory from "../../helper/findAdsOfThisCategory.js";
@@ -161,9 +161,11 @@ export const getAllAds = async (req, res) => {
       });
     }
 
-    setAdsViews(paginatedAds[0]?._id);
 
-    await updateAdAnalytics(paginatedAds[0]?._id, 1, 0);
+    if (role !== "seller") {
+      setAdsPerformance(paginatedAds[0]?._id, 1, 0);
+      await updateAdAnalytics(paginatedAds[0]?._id, 1, 0);
+    }
 
     return res.status(SUCCESS_CODE).json({
       success: true,
