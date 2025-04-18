@@ -22,6 +22,8 @@ import { getCategories } from '../controllers/adControllers/getCategories.js'
 import { typeChange } from '../helper/typeChange.js'
 import { getAllAds } from '../controllers/adControllers/getAllAds.js'
 import { getAdAnalytics } from '../controllers/adControllers/getAdAnalytics.js'
+import { getAnalytics } from '../controllers/adControllers/getAnalytics.js'
+import { uploadAdFilesOnUpdate } from '../middleware/multers/updateAdFilesMulter.js'
 
 
 const adRoute = express.Router()
@@ -29,10 +31,10 @@ const adRoute = express.Router()
 //all api's of ad
 adRoute.get('/getNewAds', getNewAds);
 adRoute.get('/getFeaturedAds', getFeaturedAds);
-adRoute.get('/getAdById/:adId', getAdById);
+adRoute.get('/getAdById/:adId', verifyAccessToken, isVerified, getAdById);
 adRoute.get('/getAllAds', verifyAccessToken, isVerified, getAllAds)
 adRoute.post('/create', verifyAccessToken, isVerified, isSeller, uploadAdFiles, typeChange, validateData(adSchema), createNewAd)
-adRoute.put('/update/:adId', verifyAccessToken, isSeller, uploadAdFiles, typeChange, validateData(updateAdSchema), updateAd)
+adRoute.put('/update/:adId', verifyAccessToken, isSeller, uploadAdFilesOnUpdate, typeChange, validateData(updateAdSchema), updateAd)
 adRoute.delete('/deleteAd/:adId', verifyAccessToken, isVerified, isSeller, deleteAd);
 adRoute.delete('/deleteAllAds', verifyAccessToken, isVerified, isSeller, deleteAllAds)
 // adRoute.post('/uploadFiles/:adId', verifyAccessToken, isVerified, isSeller, uploadAdFiles, uploadAdFilesController)
@@ -45,6 +47,7 @@ adRoute.get('/getCategory', getCategories);
 
 // analytics
 adRoute.get('/getAdAnalytics/:adId/:days', verifyAccessToken, isVerified, isSeller, getAdAnalytics);
+adRoute.get('/getAnalytics/:adId', verifyAccessToken, isVerified, isSeller, getAnalytics);
 
 
 
