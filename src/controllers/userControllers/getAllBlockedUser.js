@@ -13,8 +13,6 @@ export const getAllBlockedUser = async (req, res) => {
         const blockUserDetails = []
         const findBlokerId = await BlockUser.find({ blockerId: blockerId })
 
-        console.log(findBlokerId);
-
 
         if (!findBlokerId.length) {
             return res.status(NOT_FOUND_CODE).json({
@@ -23,11 +21,12 @@ export const getAllBlockedUser = async (req, res) => {
             });
         }
 
-        findBlokerId.forEach(async (blockedId) => {
+
+        for (const blockedId of findBlokerId) {
             const blockUser = await Buyer.findById(blockedId.blockedId) || await Seller.findById(blockedId.blockedId);
-            console.log("block",blockUser);
+            console.log("block", blockUser);
             blockUserDetails.push(blockUser);
-        })
+        }
 
         return res.status(SUCCESS_CODE).json({
             success: true,
