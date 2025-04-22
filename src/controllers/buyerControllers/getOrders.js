@@ -5,7 +5,7 @@ export const getOrders = async (req, res) => {
   try {
     const buyerId = req.userId;
 
-    const orders = await Order.find({ buyerId })
+    const orders = await Order.find({ buyerId, paymentStatus: "paid" })
       .populate({
         path: "adId",
         select: "title images",
@@ -14,8 +14,8 @@ export const getOrders = async (req, res) => {
 
     return res.status(SUCCESS_CODE).json({
       success: true,
-      message: "Orders fetched successfully",
-      orders,
+      message: orders.length > 0 ? "Orders fetched successfully" : "No purchased items found",
+      data: orders,
     });
 
   } catch (error) {
