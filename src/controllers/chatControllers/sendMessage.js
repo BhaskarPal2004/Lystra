@@ -12,15 +12,27 @@ export const sendMessage = async (req, res) => {
         const receiverId = req.params.receiverId;
         const senderId = req.userId;
 
-        const isBlocked = await BlockUser.findOne({
+        const isBlocker = await BlockUser.findOne({
             blockerId: senderId,
             blockedId: receiverId,
+        });
+
+        if (isBlocker) {
+            return res.status(FORBIDDEN_CODE).json({
+                success: false,
+                message: "Please unblock to send message",
+            });
+        }
+
+        const isBlocked = await BlockUser.findOne({
+            blockerId: receiverId,
+            blockedId: senderId,
         });
 
         if (isBlocked) {
             return res.status(FORBIDDEN_CODE).json({
                 success: false,
-                message: "Please unblock to send message",
+                message: "You can not send message,You are blocked by this user",
             });
         }
 
