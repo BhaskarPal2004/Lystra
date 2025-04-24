@@ -13,23 +13,15 @@ export const callRequest = async (req, res) => {
         if (!user) {
             return res.status(BAD_REQUEST_CODE).json({
                 success: false,
-                message: "Caller not found."
+                message: "User not found."
             });
         }
 
-        const isBuyer = await Buyer.findById(calleeId);
-        if (isBuyer) {
-            return res.status(BAD_REQUEST_CODE).json({
-                success: false,
-                message: "Call requests can only be made to sellers."
-            });
-        }
-
-        const callee = await Seller.findById(calleeId);
+        const callee = await Seller.findById(calleeId) ||  await Buyer.findById(calleeId);
         if (!callee) {
             return res.status(BAD_REQUEST_CODE).json({
                 success: false,
-                message: "Seller does not exist."
+                message: "User does not exist."
             });
         }
 
@@ -66,7 +58,7 @@ export const callRequest = async (req, res) => {
 
         return res.status(SUCCESS_CODE).json({
             success: true,
-            message: "Call request send to seller successfully",
+            message: "Call request send to user successfully",
             caller: user,
             callee: callee
         })
