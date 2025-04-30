@@ -25,8 +25,7 @@ export const createUserReport = async (req, res) => {
             });
         }
 
-        const reports = buyer ? buyer.reports : seller.reports;
-        const isReported = reports.some(report => report.reporterId.toHexString() === reporterId);
+        const isReported = await ReportUser.findOne({ reportedId: userId, reporterId: reporterId });
 
         if (isReported) {
             return res.status(BAD_REQUEST_CODE).json({
