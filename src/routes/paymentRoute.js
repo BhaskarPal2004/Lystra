@@ -12,7 +12,7 @@ const paymentRoute = express.Router()
 
 paymentRoute.post('/boost/ad/payment/checkout/:adId', verifyAccessToken, isVerified, isSeller, boostedPaymentCheckout)
 paymentRoute.post('/boost/ad/payment/verification/:adId/:amount/:days', boostedPaymentVerification)
-paymentRoute.post('/paymentCheckout/:adId', paymentCheckout)
+paymentRoute.post('/paymentCheckout/:adId', verifyAccessToken, paymentCheckout)
 paymentRoute.post('/paymentVerification', paymentVerification)
 paymentRoute.post('/update/failed/payment/:razorpayOrderId/:razorpayPaymentId', paymentFailedUpdate)
 
