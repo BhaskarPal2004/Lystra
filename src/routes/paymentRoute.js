@@ -15,6 +15,7 @@ paymentRoute.post('/boost/ad/payment/verification/:adId/:amount/:days', boostedP
 paymentRoute.post('/paymentCheckout/:adId', verifyAccessToken, paymentCheckout)
 paymentRoute.post('/paymentVerification', paymentVerification)
 paymentRoute.post('/update/failed/payment/:razorpayOrderId/:razorpayPaymentId', paymentFailedUpdate)
+paymentRoute.post('/getPaymentDetails')
 
 
 export default paymentRoute
