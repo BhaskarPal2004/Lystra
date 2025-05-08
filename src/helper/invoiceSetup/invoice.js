@@ -16,7 +16,7 @@ export const invoiceCreateFunction = async (orderId) => {
     const [buyer, payment, ad] = await Promise.all([
         Buyer.findById(order.buyerId),
         Payment.findById(order.paymentId),
-        Ad.findById(order.adId),
+        Ad.findById(order.adId).populate('category'),
     ]);
 
     if (!buyer) throw new Error("Buyer not found");
@@ -26,8 +26,7 @@ export const invoiceCreateFunction = async (orderId) => {
     const seller = await Seller.findById(ad.sellerId);
     if (!seller) throw new Error("Seller not found");
 
-    const [sellerAddress, buyerAddress, adAddress] = await Promise.all([
-        Address.findById(seller.address),
+    const [buyerAddress, adAddress] = await Promise.all([
         Address.findById(buyer.address),
         Address.findById(ad.address),
     ]);
@@ -35,17 +34,19 @@ export const invoiceCreateFunction = async (orderId) => {
     // if (!sellerAddress) throw new Error("Seller address not found");
     // if (!buyerAddress) throw new Error("Buyer address not found");
     if (!adAddress) throw new Error("Ad billing address not found");
+    console.log("adAddress", adAddress);
+
 
     const invoice = {
         buyerName: buyer.name,
         buyerPhoneNo: buyer.phoneNumber,
-        billingAddress: adAddress,
-        sippingAddress: buyerAddress,
+        billingAddress: buyerAddress,
+        shippingAddress: buyerAddress,
         buyerEmail: buyer.email,
         sellerEmail: seller.email,
         contact: {
             sellerName: seller.name,
-            address: sellerAddress,
+            address: adAddress,
             contactInformation: seller.phoneNumber,
         },
         paymentId: payment._id,
@@ -53,8 +54,7 @@ export const invoiceCreateFunction = async (orderId) => {
         paymentStatus: payment.status,
         amountPaid: payment.amount,
         adName: ad.name,
-        adCategory: ad.category,
-        adSubcategory: ad.subCategory,
+        adCategory: ad.category.name,
         invoiceNumber: invoiceId,
 
     };
