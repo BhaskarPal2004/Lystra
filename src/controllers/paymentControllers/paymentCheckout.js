@@ -1,29 +1,46 @@
 import { INTERNAL_SERVER_ERROR_CODE, SUCCESS_CODE } from "../../config/constant.js";
 import { instance } from "../../config/razorpay.js";
 import Ad from "../../models/adModel.js";
+import Buyer from "../../models/buyerModel.js";
 import Order from "../../models/orderModel.js";
 
 export const paymentCheckout = async (req, res) => {
   try {
     const adId = req.params.adId;
     const ad = await Ad.findById(adId)
+    if (!ad) {
+      return res.status(404).json({
+        success: false,
+        message: "The ad you're trying to buy no longer exists. It may have been deleted by the seller.",
+      });
+    }
+
+    const buyer = await Buyer.findById(req.userId);
+    if (!buyer || !buyer.address) {
+      return res.status(400).json({
+        success: false,
+        message: "No address found. Please click 'Edit Profile' to add one and continue.",
+      });
+    }
 
     const options = {
-      amount: Number(req.body.amount * 100),
+      amount: Number(ad.price * 100),
       // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
       currency: "INR",
     };
 
     const order = await instance.orders.create(options)
 
+    console.log("userId", req.userId);
+
     console.log(order)
     const dbOrder = await Order.create({
       razorpayOrderId: order.id,
       adId: adId,
       amount: order.amount / 100,
-      buyerId: '67c964a28188f6cd0525ff24', //will set after setting header in frontend
+      buyerId: req.userId,
       billingAddress: ad.address,
-      shippingAddress: "67c96da94c6608143ef4b6e5", //will set after getting buyer
+      shippingAddress: buyer.address,
       paymentType: "online"
     })
 
@@ -35,7 +52,7 @@ export const paymentCheckout = async (req, res) => {
 
   } catch (error) {
     console.log(error);
-    
+
     return res.status(INTERNAL_SERVER_ERROR_CODE).json({
       success: false,
       message: error.message,
