@@ -32,13 +32,13 @@ export const boostedPaymentVerification = async (req, res) => {
         ad.boost.isBoosted = true
         ad.boost.expiryDate = expiryDate
         ad.boost.boostOrderId = razorpay_order_id
-        ad.boost.price = amount / 100
+        ad.boost.price = amount
         await ad.save()
 
         const payment = await Payment.create({
             adId: adId,
             razorpayOrderId: razorpay_order_id,
-            amount: amount / 100,
+            amount: amount,
             paymentType: 'online',
             razorpayPaymentId: razorpay_payment_id,
             razorpayPaymentSignature: razorpay_signature,
@@ -46,7 +46,7 @@ export const boostedPaymentVerification = async (req, res) => {
         })
 
         console.log(payment)
-        res.redirect(`http://localhost:5173`)
+        res.redirect(`http://localhost:5173/payment/success?reference=${razorpay_payment_id},${razorpay_order_id}`)
 
 
     } catch (error) {
