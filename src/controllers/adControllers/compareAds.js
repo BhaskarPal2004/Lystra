@@ -1,5 +1,8 @@
 import Ad from "../../models/adModel.js";
-import { SUCCESS_CODE, NOT_FOUND_CODE, INTERNAL_SERVER_ERROR_CODE, BAD_REQUEST_CODE } from "../../config/constant.js";
+import Category from "../../models/categoryModel.js";
+import Review from "../../models/reviewModel.js";
+import Seller from "../../models/sellerModel.js";
+import { SUCCESS_CODE, NOT_FOUND_CODE, INTERNAL_SERVER_ERROR_CODE,BAD_REQUEST_CODE} from "../../config/constant.js";
 
 export const compareAds = async (req, res) => {
   try {
@@ -14,29 +17,39 @@ export const compareAds = async (req, res) => {
       });
     }
 
-    const categories = ads.map(ad => ad.category);
-    const uniqueCategories = new Set(categories);
 
-    if (uniqueCategories.size > 1) {
+    const baseCategoryId = ads[0].category.toString();
+    const hasDifferentCategory = ads.some(
+      (ad) => ad.category.toString() !== baseCategoryId
+    );
+
+    if (hasDifferentCategory) {
       return res.status(BAD_REQUEST_CODE).json({
         success: false,
-        message: "All ads must belong to the same category for comparison."
+        message: "All ads must belong to the same category for comparison.",
       });
     }
+    
+    const comparisonData = await Promise.all(
+      ads.map(async (ad) => {
+        const category = await Category.findById(ad.category);
+        const seller = await Seller.findById(ad.sellerId);
+        const review = await Review.findById(ad.reviews);
 
-    const comparisonData = ads.map(ad => ({
-      name: ad.name,
-      category: ad.category,
-      subCategory: ad.subCategory,
-      details: ad.details.details,
-      summary: ad.description,
-      price: ad.price,
-      condition: ad.condition,
-      seller: ad.sellerId.name,
-      listedOn: ad.createdAt,
-      sellerAverageRating: ad.sellerId.averageReview.averageRating,
-      sellerAverageReview: ad.sellerId.averageReview.topReviews,
-    }));
+        return {
+          name: ad.name || '',
+          category: category?.name || '',
+          details: ad.details || '',
+          summary: ad.description || '',
+          price: ad.price || '',
+          condition: ad.condition || '',
+          seller: seller?.name || '',
+          listedOn: ad.createdAt || '',
+          sellerAverageRating: review?.sellerRating || '',
+          productAverageRating: review?.productRating || '',
+        };
+      })
+    );
 
     return res.status(SUCCESS_CODE).json({
       success: true,
@@ -51,3 +64,4 @@ export const compareAds = async (req, res) => {
     });
   }
 };
+
