@@ -8,8 +8,16 @@ export const boostedPaymentCheckout = async (req, res) => {
         const adId = req.params.adId
         const { days, amount } = req.body
         const ad = await Ad.findById(adId)
-        // ad not found check 
 
+        // ad not found check 
+        if (!ad) {
+            return res.status(BAD_REQUEST_CODE).json({
+                success: false,
+                message: "Ad not found"
+            });
+        }
+
+        // Seller authorization check
         if (ad.sellerId.toHexString() !== sellerId) {
             return res.status(UNAUTHORIZED_CODE).json({
                 success: false,
@@ -17,6 +25,7 @@ export const boostedPaymentCheckout = async (req, res) => {
             })
         }
 
+        // If the ad is already boosted
         if (ad.boost.isBoosted) {
             return res.status(BAD_REQUEST_CODE).json({
                 success: false,
