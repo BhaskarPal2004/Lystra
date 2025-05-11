@@ -5,7 +5,7 @@ export const getFeaturedAds = async (req, res) => {
     try {
         const featuredAds = await Ad.find({isFeatured:true}, {
             price: 1, boost: 1, address: 1,
-            createdAt: 1, name: 1,isFeatured:1,description:1
+            createdAt: 1, name: 1,isFeatured:1,description:1,files: 1
         }).populate('address').sort({createdAt:-1}).exec()
 
         featuredAds.sort((a, b) => b.boost.isBoosted - a.boost.isBoosted)

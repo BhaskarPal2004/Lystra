@@ -1,24 +1,24 @@
-import { INTERNAL_SERVER_ERROR_CODE, SUCCESS_CODE } from "../../config/constant.js"
-import Review from "../../models/reviewModel.js"
+import { INTERNAL_SERVER_ERROR_CODE, SUCCESS_CODE } from "../../config/constant.js";
+import Review from "../../models/reviewModel.js";
 
 const getReview = async (req, res) => {
     try {
-        const userId = req.userId
+        const userId = req.userId;
+
         const reviews = await Review.find({ sellerId: userId })
+            .populate('buyerId', 'name profilePicture'); // Populating only required fields
 
         return res.status(SUCCESS_CODE).json({
             success: true,
             data: reviews,
             totalReviews: reviews.length
-        })
-    }
-    catch (error) {
+        });
+    } catch (error) {
         return res.status(INTERNAL_SERVER_ERROR_CODE).json({
             success: false,
             message: error.message
-        })
+        });
     }
+};
 
-}
-
-export default getReview
+export default getReview;
