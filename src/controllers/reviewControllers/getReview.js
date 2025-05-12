@@ -4,9 +4,19 @@ import Review from "../../models/reviewModel.js";
 const getReview = async (req, res) => {
     try {
         const userId = req.userId;
+        const role = req.role;
 
-        const reviews = await Review.find({ sellerId: userId })
-            .populate('buyerId', 'name profilePicture'); // Populating only required fields
+        let reviews;
+
+        if (role === "seller") {
+            reviews = await Review.find({ sellerId: userId })
+                .populate('buyerId', 'name profilePicture')
+                .populate('adId', 'name'); 
+        } else  {
+            reviews = await Review.find({ buyerId: userId })
+                .populate('sellerId', 'name profilePicture')
+                .populate('adId', 'name'); 
+        } 
 
         return res.status(SUCCESS_CODE).json({
             success: true,
