@@ -8,8 +8,8 @@ export const resendMail = async (req, res) => {
     try {
         const { email } = req.body
 
-        const buyer = await Buyer.findOne({ email: email }, { name: 1 }).exec()
-        const seller = await Seller.findOne({ email: email }, { name: 1 }).exec()
+        const buyer = await Buyer.findOne({ email: email }, { name: 1, isVerified: 1 }).exec()
+        const seller = await Seller.findOne({ email: email }, { name: 1, isVerified: 1 }).exec()
 
         const user = buyer || seller || null
         const role = buyer ? 'buyer' : 'seller'
@@ -31,7 +31,7 @@ export const resendMail = async (req, res) => {
             const registrationToken = generateToken('registrationToken', email, '30m', role)
             try {
                 const contextData = {
-                    port: process.env.PORT,
+                    port: process.env.FRONTEND_PORT,
                     token: registrationToken,
                     name: user.name
                 };
