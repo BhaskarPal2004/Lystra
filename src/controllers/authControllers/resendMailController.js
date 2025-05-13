@@ -45,7 +45,7 @@ export const resendMail = async (req, res) => {
             }
             return res.status(SUCCESS_CODE).json({
                 success: true,
-                message: "Email send successfully",
+                message: "An email verification link send on your mail",
                 registrationToken
             })
         }
