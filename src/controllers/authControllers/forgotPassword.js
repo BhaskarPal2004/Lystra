@@ -5,25 +5,35 @@ import Buyer from "../../models/buyerModel.js";
 import Seller from "../../models/sellerModel.js";
 const forgotPassword = async (req, res) => {
     try {
-        const { email, role } = req.body;
+        const { email } = req.body;
+        const isSeller = await Seller.findOne({ email: email });
+        const isBuyer = await Buyer.findOne({ email: email });
+        let role = null;
+        if (isSeller) {
+            role = "seller";
+        }
+        if (isBuyer) {
+            role = "buyer"
+        }
+
         const forgotPasswordToken = generateToken("forgotPasswordToken", email, '30m', role);
         const User = (role === 'buyer') ? Buyer : Seller;
-        const user = await User.findOne({ email },{name:1}).exec();
+        const user = await User.findOne({ email }, { name: 1 }).exec();
         if (!user) return res.status(NOT_FOUND_CODE).send({
             success: false,
             message: "User not found"
         })
         try {
             const contextData = {
-                port: process.env.PORT,
+                port: process.env.FRONTEND_PORT,
                 token: forgotPasswordToken,
-                name:user.name
+                name: user.name
             };
             const subject = "Click here to set new password"
-            await sendEmail(email, 'emailForgotPasswordTemplate', contextData,subject);
+            await sendEmail(email, 'emailForgotPasswordTemplate', contextData, subject);
             return res.status(SUCCESS_CODE).send({
                 success: true,
-                message: "An email has been sent to you"
+                message: "Password reset link sent on your mail"
             })
         } catch (error) {
             return res.status(INTERNAL_SERVER_ERROR_CODE).json({

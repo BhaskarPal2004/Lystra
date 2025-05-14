@@ -3,30 +3,75 @@ import { SUCCESS_CODE, INTERNAL_SERVER_ERROR_CODE } from "../../config/constant.
 // import Seller from "../../models/sellerModel.js";
 import Ad from "../../models/adModel.js";
 
+// export const getOrders = async (req, res) => {
+//   try {
+//     const userId = req.userId;
+//     // const role = req.role;
+
+//     console.log(userId);
+
+//     const sellerAd = await Ad.find({ sellerId: userId })
+//     console.log("selllerAd", sellerAd);
+
+//     const orders = await Order.find({ userId, paymentStatus: "paid" })
+//       .populate({
+//         path: "adId",
+//         select: "name files",
+//       })
+//       .sort({ createdAt: -1 });
+
+
+//     return res.status(SUCCESS_CODE).json({
+//       success: true,
+//       message: orders.length > 0 ? "Orders fetched successfully" : "No purchased items found",
+//       data: orders,
+//     });
+
+//   } catch (error) {
+//     return res.status(INTERNAL_SERVER_ERROR_CODE).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+
 export const getOrders = async (req, res) => {
   try {
-    const buyerId = req.userId;
+    const userId = req.userId;
+    const role = req.role;
 
-    console.log(buyerId);
+    let orders = [];
 
-    const sellerAd = await Ad.find({ sellerId: buyerId })
-    console.log("selllerAd", sellerAd);
+    if (role === "buyer") {
+      orders = await Order.find({ buyerId: userId, paymentStatus: "paid" })
+        .populate({
+          path: "adId",
+          select: "name files",
+        })
+        .sort({ createdAt: -1 });
+    } else if (role === "seller") {
+      // Get all ads by this seller
+      const sellerAds = await Ad.find({ sellerId: userId }).select("_id");
+      const adIds = sellerAds.map((ad) => ad._id);
 
-    const orders = await Order.find({ buyerId, paymentStatus: "paid" })
-      .populate({
-        path: "adId",
-        select: "name files",
-      })
-      .sort({ createdAt: -1 });
-
+      // Find orders for those ads
+      orders = await Order.find({ adId: { $in: adIds }, paymentStatus: "paid" })
+        .populate({
+          path: "adId",
+          select: "name files",
+        })
+        .sort({ createdAt: -1 });
+    }
 
     return res.status(SUCCESS_CODE).json({
       success: true,
-      message: orders.length > 0 ? "Orders fetched successfully" : "No purchased items found",
+      message: orders.length > 0 ? "Orders fetched successfully" : "No orders found",
       data: orders,
     });
 
   } catch (error) {
+    console.error("Error in getOrders:", error);
     return res.status(INTERNAL_SERVER_ERROR_CODE).json({
       success: false,
       message: error.message,
