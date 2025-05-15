@@ -25,8 +25,8 @@ export const getAllAds = async (req, res) => {
       condition = "",
       city = "",
       pageNum = 1,
-      lat = 22.5726459,
-      lng = 88.3638953
+      lat ,
+      lng 
     } = req.query;
 
     const limit = 9;
@@ -189,7 +189,7 @@ export const getAllAds = async (req, res) => {
       ads: paginatedAds,
     });
 
-  } catch (error) {
+  } catch (error) {    
     return res.status(INTERNAL_SERVER_ERROR_CODE).json({
       success: false,
       message: error.message
