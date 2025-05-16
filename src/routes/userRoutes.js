@@ -22,6 +22,7 @@ import removeSavedAd from '../controllers/userControllers/removeSavedAd.js';
 import getSavedAds from '../controllers/userControllers/getSavedAds.js';
 import { getAllBlockedUser } from '../controllers/userControllers/getAllBlockedUser.js';
 import getAllCities from '../controllers/userControllers/getAllCity.js';
+import { getHighestAdPrice } from '../controllers/userControllers/getHeighesPrice.js';
 
 const userRoute = express.Router();
 
@@ -41,6 +42,7 @@ userRoute.post('/saveAd/:adId', verifyAccessToken, isVerified, saveAd);
 userRoute.delete('/removeSavedAd/:adId', verifyAccessToken, isVerified, removeSavedAd);
 userRoute.get("/getSavedAds",verifyAccessToken,isVerified,getSavedAds);
 userRoute.get("/getAllcities", verifyAccessToken, isVerified, getAllCities);
+userRoute.get("/getHeighestPrice", verifyAccessToken, isVerified, getHighestAdPrice)
 
 userRoute.get("/getBlockedUser/:blockerId", verifyAccessToken, isVerified, getAllBlockedUser);
 
