@@ -45,7 +45,16 @@ export const InvoiceCreation = async (req, res) => {
 
     await checkFileExists(filePath);
 
-    return res.sendFile(filePath);
+    console.log("Sending file from path:", filePath);
+
+    // return res.sendFile(filePath);
+
+    return res.status(200).sendFile(filePath, {
+      headers: {
+        'Content-Type': 'application/pdf',
+      },
+    });
+
 
   } catch (error) {
     return res.status(INTERNAL_SERVER_ERROR_CODE).json({
