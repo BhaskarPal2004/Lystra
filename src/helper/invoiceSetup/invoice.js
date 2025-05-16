@@ -61,7 +61,7 @@ export const invoiceCreateFunction = async (orderId) => {
 
     const fileName = `${invoiceId}.pdf`
     console.log("Invoice data:", JSON.stringify(invoice, null, 2));
-    createInvoice(invoice, `./invoices/${fileName}`)
+    await createInvoice(invoice, `./invoices/${fileName}`)
     return fileName;
 }
 
