@@ -14,7 +14,6 @@ export const createFollow = async (req, res) => {
     const followId = req.params.followId;
 
     const follow = await Seller.findById(followId) || await Buyer.findById(followId);
-    console.log(follow);
     
 
     if (!follow) {
@@ -33,9 +32,10 @@ export const createFollow = async (req, res) => {
 
     const findFollow = await Follow.findOne({ following: followId ,follower: userId});
     if (findFollow) {
-      return res.status(BAD_REQUEST_CODE).send({
-        success: false,
-        message: "You already follow this user",
+      await Follow.deleteOne({ following: followId,follower: userId});
+      return res.status(SUCCESS_CODE).send({
+        success: true,
+        message: "Unfollow successfully"
       });
     }
 
@@ -48,7 +48,7 @@ export const createFollow = async (req, res) => {
 
     return res.status(SUCCESS_CODE).send({
       success: true,
-      message: "Follow created successfully",
+      message: "You follow this user",
     });
   } catch (error) {
     return res.status(INTERNAL_SERVER_ERROR_CODE).send({
