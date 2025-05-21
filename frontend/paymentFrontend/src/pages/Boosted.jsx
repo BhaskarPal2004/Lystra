@@ -22,8 +22,6 @@ const Boosted = () => {
     const adId = '67dd16fe805e2bf18992a1ef'
 
     const handleSetData = (e) => {
-        console.log(e.target.innerText.split('Days')[0])
-        console.log(e.target.innerText.split('Days')[1].trim())
         setPlanDetails({
             days: e.target.innerText.split('Days')[0],
             amount: e.target.innerText.split('Days')[1].trim()
@@ -46,8 +44,6 @@ const Boosted = () => {
                 Authorization: `Bearer ${accessToken}`
             }
         });
-
-        console.log(response)
 
         const options = {
             key: key,

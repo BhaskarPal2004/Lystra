@@ -30,10 +30,7 @@ export const paymentCheckout = async (req, res) => {
     };
 
     const order = await instance.orders.create(options)
-
-    console.log("userId", req.userId);
-
-    console.log(order)
+    
     const dbOrder = await Order.create({
       razorpayOrderId: order.id,
       adId: adId,

@@ -6,10 +6,9 @@ export const paymentFailedUpdate = async (req, res) => {
     try {
         const { razorpayOrderId, razorpayPaymentId } = req.params
 
-        console.log('params :>> ', razorpayOrderId, razorpayPaymentId);
         const order = await Order.findOne({ razorpayOrderId })
 
-        console.log('order :>> ', order);
+
         if (!order)
             return res.status(NOT_FOUND_CODE).json({
                 success: false,
@@ -23,7 +22,6 @@ export const paymentFailedUpdate = async (req, res) => {
         const existingPayment = await Payment.findOne({ razorpayOrderId })
 
         if (!existingPayment) {
-            console.log('exists :>> ', existingPayment);
             const payment = await Payment.create({
                 adId: order.adId,
                 razorpayOrderId: order.razorpayOrderId,
@@ -42,17 +40,6 @@ export const paymentFailedUpdate = async (req, res) => {
             order.paymentId = existingPayment._id
         }
 
-        // console.log('this is failure', existingPayment)
-
-        // const payment = await Payment.create({
-        //     adId: order.adId,
-        //     razorpayOrderId: order.razorpayOrderId,
-        //     amount: order.amount,
-        //     paymentType: 'online',
-        //     razorpayPaymentId: razorpayPaymentId,
-        //     razorpayPaymentSignature: null,
-        //     status: 'failed'
-        // })
         return res.status(SUCCESS_CODE).json({
             success: false,
             message: "Status updated for failed payment",

@@ -24,7 +24,6 @@ export const getAllBlockedUser = async (req, res) => {
 
         for (const blockedId of findBlokerId) {
             const blockUser = await Buyer.findById(blockedId.blockedId) || await Seller.findById(blockedId.blockedId);
-            console.log("block", blockUser);
             blockUserDetails.push(blockUser);
         }
 

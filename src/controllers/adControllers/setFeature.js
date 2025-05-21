@@ -41,6 +41,20 @@ export const setFeature = async (req, res) => {
       });
     }
 
+    const alreadyFeaturedCount = await Ad.countDocuments({
+      sellerId,
+      isFeatured: true,
+    });
+
+    const remainingQuota = 2 - alreadyFeaturedCount;
+
+    if (remainingQuota <= 0) {
+      return res.status(BAD_REQUEST_CODE).json({
+        success: false,
+        message: "You have already featured 2 ads. Unfeature one to add another.",
+      });
+    }
+
     if (adIds.length === 0) {
       return res.status(NOT_FOUND_CODE).json({
         success: false,
