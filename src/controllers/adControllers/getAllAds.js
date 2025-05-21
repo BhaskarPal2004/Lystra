@@ -69,8 +69,7 @@ export const getAllAds = async (req, res) => {
     }
 
     let categorizedAds = []
-
-    console.log('searchCategory', searchCategory)
+    
     if (searchCategory.length !== 0) {
       categorizedAds = await findAdsOfThisCategory(searchCategory);
 
@@ -156,8 +155,19 @@ export const getAllAds = async (req, res) => {
     } else {
       finalAds = localAds;
     }
+    
+    finalAds.sort((a, b) => {
 
-    finalAds.sort((a, b) => b.boost?.isBoosted - a.boost?.isBoosted);
+      if (a.boost?.isBoosted && !b.boost?.isBoosted) return -1;
+      if (!a.boost?.isBoosted && b.boost?.isBoosted) return 1;
+
+
+      if (a.isFeatured && !b.isFeatured) return -1;
+      if (!a.isFeatured && b.isFeatured) return 1;
+
+
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
 
     if (role === "seller") {
       finalAds = finalAds.filter(ad => ad.sellerId.toString() === userId.toString());

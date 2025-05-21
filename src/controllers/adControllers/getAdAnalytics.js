@@ -4,7 +4,6 @@ import AdAnalytics from "../../models/adAnalytics.js";
 export const getAdAnalytics = async (req, res) => {
   try {
     const { adId, days } = req.params;
-    console.log(adId, days)
 
     if (!adId || !days) {
       return res.status(400).send({
@@ -18,7 +17,6 @@ export const getAdAnalytics = async (req, res) => {
 
     const formattedStartDate = startDate.toISOString().split('T')[0];
 
-    console.log("formatted Start Date:", formattedStartDate);
 
     const analyticsData = await AdAnalytics.find({
       adId,
@@ -38,7 +36,6 @@ export const getAdAnalytics = async (req, res) => {
       clicks: data.clicks
     }));
 
-    console.log(formattedData);
 
     return res.status(SUCCESS_CODE).send({
       success: true,

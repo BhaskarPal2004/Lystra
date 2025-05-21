@@ -70,7 +70,7 @@ export const getTransactions = async (req, res) => {
       success: true,
       message: "Transaction details fetched successfully",
       totalTransactions: transactionHistory.length,
-      data: transactionHistory,
+      data: transactionHistory.reverse(),
     });
   } catch (error) {
     console.error("Error in getTransactions:", error);

@@ -11,7 +11,6 @@ const findAdsOfThisCategory = async (searchCategory) => {
     const categories = await Category.find({ name: { $in: searchCategory } })
     if (!categories.length) return []
 
-    console.log(categories)
     const categoryIds = categories.map(category => category._id.toHexString())
     const ads = await Ad.find({ category: { $in: categoryIds } })
 

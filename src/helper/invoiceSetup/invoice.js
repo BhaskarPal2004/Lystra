@@ -31,8 +31,6 @@ export const invoiceCreateFunction = async (orderId) => {
         Address.findById(ad.address),
     ]);
 
-    // if (!sellerAddress) throw new Error("Seller address not found");
-    // if (!buyerAddress) throw new Error("Buyer address not found");
     if (!adAddress) throw new Error("Ad billing address not found");
     console.log("adAddress", adAddress);
 

@@ -11,7 +11,6 @@ export const uploadProfilePictureController = async (req, res) => {
         const role = req.role;
 
         if (!file) {
-            console.log("file not found");
             return res.status(BAD_REQUEST_CODE).json({
                 success: false,
                 message: "No files uploaded",
